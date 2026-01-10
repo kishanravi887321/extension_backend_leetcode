@@ -37,7 +37,6 @@ const Register = () => {
       const { confirmPassword, ...userData } = formData;
       const response = await registerUser(userData);
       console.log('Registration successful:', response);
-      alert('Registration successful! Please login.');
       navigate('/login');
     } catch (err) {
       setError(err.response?.data?.message || 'Registration failed. Please try again.');
@@ -49,7 +48,14 @@ const Register = () => {
   return (
     <div className="auth-container">
       <div className="auth-card">
-        <h2>Register</h2>
+        <div className="auth-logo">
+          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor">
+            <path strokeLinecap="round" strokeLinejoin="round" d="M17.25 6.75 22.5 12l-5.25 5.25m-10.5 0L1.5 12l5.25-5.25m7.5-3-4.5 16.5" />
+          </svg>
+        </div>
+        <h2>Create account</h2>
+        <p className="auth-subtitle">Get started with your free account</p>
+        
         <form onSubmit={handleSubmit}>
           {error && <div className="error-message">{error}</div>}
 
@@ -61,7 +67,7 @@ const Register = () => {
               name="username"
               value={formData.username}
               onChange={handleChange}
-              placeholder="Choose a username"
+              placeholder="johndoe"
               required
             />
           </div>
@@ -74,20 +80,20 @@ const Register = () => {
               name="name"
               value={formData.name}
               onChange={handleChange}
-              placeholder="Enter your full name"
+              placeholder="John Doe"
               required
             />
           </div>
 
           <div className="form-group">
-            <label htmlFor="email">Email</label>
+            <label htmlFor="email">Email address</label>
             <input
               type="email"
               id="email"
               name="email"
               value={formData.email}
               onChange={handleChange}
-              placeholder="Enter your email"
+              placeholder="name@company.com"
               required
             />
           </div>
@@ -100,7 +106,7 @@ const Register = () => {
               name="password"
               value={formData.password}
               onChange={handleChange}
-              placeholder="Create a password"
+              placeholder="••••••••"
               required
             />
           </div>
@@ -113,18 +119,18 @@ const Register = () => {
               name="confirmPassword"
               value={formData.confirmPassword}
               onChange={handleChange}
-              placeholder="Confirm your password"
+              placeholder="••••••••"
               required
             />
           </div>
 
           <button type="submit" className="auth-button" disabled={loading}>
-            {loading ? 'Registering...' : 'Register'}
+            {loading ? 'Creating account...' : 'Create account'}
           </button>
         </form>
 
         <p className="auth-link">
-          Already have an account? <Link to="/login">Login</Link>
+          Already have an account? <Link to="/login">Sign in</Link>
         </p>
       </div>
     </div>

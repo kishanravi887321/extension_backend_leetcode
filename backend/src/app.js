@@ -4,7 +4,7 @@ const app = express();
 app.use(express.json());
 app.use("/api/users", userRoutes);
 app.get("/",(req,res)=>{
-    res.send("server  is running...");
+    res.send("server  is running... ");
 });
 
 const PORT = 3000;
