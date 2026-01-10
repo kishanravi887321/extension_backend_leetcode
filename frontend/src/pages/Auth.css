@@ -3,7 +3,7 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  background: #f0f6ff;
   padding: 20px;
 }
 
@@ -11,15 +11,16 @@
   background: white;
   padding: 40px;
   border-radius: 16px;
-  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
+  box-shadow: 0 4px 24px rgba(37, 99, 235, 0.12);
   width: 100%;
   max-width: 400px;
+  border: 1px solid #e0eaff;
 }
 
 .auth-card h2 {
   text-align: center;
   margin-bottom: 30px;
-  color: #333;
+  color: #1e40af;
   font-size: 28px;
 }
 
@@ -30,72 +31,79 @@
 .form-group label {
   display: block;
   margin-bottom: 8px;
-  color: #555;
+  color: #1e3a8a;
   font-weight: 500;
 }
 
 .form-group input {
   width: 100%;
   padding: 12px 16px;
-  border: 2px solid #e1e1e1;
+  border: 2px solid #dbeafe;
   border-radius: 8px;
   font-size: 16px;
-  transition: border-color 0.3s ease;
+  transition: border-color 0.3s ease, box-shadow 0.3s ease;
   box-sizing: border-box;
+  background: #fafcff;
 }
 
 .form-group input:focus {
   outline: none;
-  border-color: #667eea;
+  border-color: #3b82f6;
+  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.15);
+  background: white;
 }
 
 .auth-button {
   width: 100%;
   padding: 14px;
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  background: #2563eb;
   color: white;
   border: none;
   border-radius: 8px;
   font-size: 16px;
   font-weight: 600;
   cursor: pointer;
-  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  transition: background 0.2s ease, transform 0.2s ease, box-shadow 0.2s ease;
 }
 
 .auth-button:hover:not(:disabled) {
+  background: #1d4ed8;
   transform: translateY(-2px);
-  box-shadow: 0 5px 20px rgba(102, 126, 234, 0.4);
+  box-shadow: 0 6px 20px rgba(37, 99, 235, 0.35);
 }
 
 .auth-button:disabled {
   opacity: 0.7;
   cursor: not-allowed;
+  background: #93c5fd;
 }
 
 .error-message {
-  background: #fee;
-  color: #c00;
+  background: #fef2f2;
+  color: #dc2626;
   padding: 12px;
   border-radius: 8px;
   margin-bottom: 20px;
   text-align: center;
   font-size: 14px;
+  border: 1px solid #fecaca;
 }
 
 .auth-link {
   text-align: center;
   margin-top: 20px;
-  color: #666;
+  color: #64748b;
 }
 
 .auth-link a {
-  color: #667eea;
+  color: #2563eb;
   text-decoration: none;
   font-weight: 600;
 }
 
 .auth-link a:hover {
   text-decoration: underline;
+  color: #1d4ed8;
 }
 
 .dashboard-container {
