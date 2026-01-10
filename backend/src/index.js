@@ -1,11 +1,15 @@
-const express = require("express");
-const { GoogleGenAI } = require("@google/genai");
+import express from "express";
+import { GoogleGenAI } from "@google/generative-ai";
+import dotenv from "dotenv";
+
+dotenv.config({path: "./.env"});
+console.log("API Key Loaded:", process.env.API_KEY ? "Yes" : "No");
 
 const app = express();
 const PORT = 3000;
 
 // Initialize Gemini AI with API key
-const ai = new GoogleGenAI({ apiKey: "AIzaSyBLILarNS1MU4EP02aWpUs2Xj1ETSDcK3U" });
+const ai = new GoogleGenAI({ apiKey: process.env.API_KEY });
 
 app.use(express.json());
 

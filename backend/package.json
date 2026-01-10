@@ -3,6 +3,7 @@
   "version": "1.0.0",
   "description": "Backend for LeetCode Extension with Gemini AI",
   "main": "src/index.js",
+  "type": "module",
   "scripts": {
     "start": "node src/index.js",
     "dev": "node --watch src/index.js"
@@ -10,5 +11,8 @@
   "dependencies": {
     "@google/genai": "^1.0.0",
     "express": "^4.18.2"
+  },
+  "devDependencies": {
+    "nodemon": "^3.1.11"
   }
 }
