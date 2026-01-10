@@ -1,9 +1,5 @@
 import mongoose from "mongoose";
-import cors from "cors";
 import app from "../src/app.js";
-
-// Add CORS for Vercel
-app.use(cors());
 
 // MongoDB connection caching for serverless
 let isConnected = false;
