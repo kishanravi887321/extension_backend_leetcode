@@ -39,6 +39,10 @@ app.use(async (req, res, next) => {
 });
 
 // Routes
+app.get("/", (req, res) => {
+  res.json({ message: "Backend Server is running on Vercel!" });
+});
+
 app.get("/api", (req, res) => {
   res.json({ message: "Backend API is running on Vercel!" });
 });
