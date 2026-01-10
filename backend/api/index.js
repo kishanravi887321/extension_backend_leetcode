@@ -1,13 +1,9 @@
-import express from "express";
 import mongoose from "mongoose";
 import cors from "cors";
-import { router as userRoutes } from "../src/routes/user.routes.js";
+import app from "../src/app.js";
 
-const app = express();
-
-// Middleware
+// Add CORS for Vercel
 app.use(cors());
-app.use(express.json());
 
 // MongoDB connection caching for serverless
 let isConnected = false;
@@ -28,7 +24,7 @@ const connectDB = async () => {
   }
 };
 
-// Connect to DB before handling requests
+// Connect to DB before handling requests (insert at beginning)
 app.use(async (req, res, next) => {
   try {
     await connectDB();
@@ -37,21 +33,6 @@ app.use(async (req, res, next) => {
     res.status(500).json({ message: "Database connection failed" });
   }
 });
-
-// Routes
-app.get("/", (req, res) => {
-  res.json({ message: "Backend Server is running on Vercel!" });
-});
-
-app.get("/api", (req, res) => {
-  res.json({ message: "Backend API is running on Vercel!" });
-});
-
-app.get("/api/health", (req, res) => {
-  res.json({ status: "ok", timestamp: new Date().toISOString() });
-});
-
-app.use("/api/users", userRoutes);
 
 // 404 handler
 app.use((req, res) => {
