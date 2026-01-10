@@ -2,7 +2,7 @@ import express from "express";
 import { GoogleGenAI } from "@google/genai";
 import dotenv from "dotenv";
 
-dotenv.config({path: "./.env"});
+dotenv.config({path: "../.env"});
 console.log("API Key Loaded:", process.env.API_KEY ? "Yes" : "No");
 
 const app = express();
