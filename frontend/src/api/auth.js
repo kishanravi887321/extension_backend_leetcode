@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-const API_BASE_URL = 'https://extension-backend-leetcode.vercel.app/api';
+const API_BASE_URL = 'https://cpbackend.saksin.online/api';
 
 const api = axios.create({
   baseURL: API_BASE_URL,
