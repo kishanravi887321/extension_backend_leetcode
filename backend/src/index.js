@@ -1,5 +1,5 @@
 import express from "express";
-import { GoogleGenAI } from "@google/generative-ai";
+import { GoogleGenAI } from "@google/genai";
 import dotenv from "dotenv";
 
 dotenv.config({path: "./.env"});
