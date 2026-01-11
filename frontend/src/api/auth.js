@@ -63,6 +63,15 @@ export const uploadProfileImage = async (formData) => {
   return response.data;
 };
 
+export const uploadCoverImage = async (formData) => {
+  const response = await api.post('/profile/upload-cover', formData, {
+    headers: {
+      'Content-Type': 'multipart/form-data',
+    },
+  });
+  return response.data;
+};
+
 export const getUserByUsername = async (username) => {
   const response = await api.get(`/profile/user/${username}`);
   return response.data;

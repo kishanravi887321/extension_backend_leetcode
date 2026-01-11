@@ -18,6 +18,7 @@ export const getProfile = async (req, res) => {
         name: user.name,
         email: user.email,
         picture: user.picture,
+        coverImage: user.coverImage || '',
         bio: user.bio || '',
         createdAt: user.createdAt,
       }
@@ -70,6 +71,7 @@ export const updateProfile = async (req, res) => {
         name: user.name,
         email: user.email,
         picture: user.picture,
+        coverImage: user.coverImage || '',
         bio: user.bio || '',
       }
     });
@@ -114,6 +116,44 @@ export const uploadProfileImage = async (req, res) => {
   } catch (error) {
     console.error("Upload image error:", error);
     res.status(500).json({ message: "Image upload failed", error: error.message });
+  }
+};
+
+// Upload cover image
+export const uploadCoverImage = async (req, res) => {
+  try {
+    if (!req.file) {
+      return res.status(400).json({ message: "No image file provided" });
+    }
+    
+    const userId = req.user.id;
+    const user = await User.findById(userId);
+    
+    if (!user) {
+      return res.status(404).json({ message: "User not found" });
+    }
+    
+    // Delete old cover image from Cloudinary if exists
+    if (user.coverImagePublicId) {
+      await deleteFromCloudinary(user.coverImagePublicId);
+    }
+    
+    // Upload new cover image to Cloudinary
+    const result = await uploadToCloudinary(req.file.buffer, 'cpcoders-covers');
+    
+    // Update user with new cover image URL
+    user.coverImage = result.secure_url;
+    user.coverImagePublicId = result.public_id;
+    await user.save();
+    
+    res.status(200).json({
+      success: true,
+      message: "Cover image updated successfully",
+      coverImage: result.secure_url,
+    });
+  } catch (error) {
+    console.error("Upload cover image error:", error);
+    res.status(500).json({ message: "Cover image upload failed", error: error.message });
   }
 };
 
