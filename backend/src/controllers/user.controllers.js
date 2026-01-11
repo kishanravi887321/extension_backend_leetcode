@@ -7,12 +7,14 @@ const client = new OAuth2Client(process.env.GOOGLE_CLIENT_ID);
 export const googleLogin = async (req, res) => {
   try {
     const { credential } = req.body;
-    
+    console.log("Received credential:", credential);
     // Verify Google token
     const ticket = await client.verifyIdToken({
       idToken: credential,
       audience: process.env.GOOGLE_CLIENT_ID,
     });
+    
+    console.log("Google ticket:", ticket);
     
     const payload = ticket.getPayload();
     const { sub: googleId, email, name, picture } = payload;
@@ -38,15 +40,22 @@ export const googleLogin = async (req, res) => {
         await user.save();
       }
     }
+
+    const acceeToken=Auth.generateAccessToken(user);
+    // console.log("Generated Access Token:", acceeToken);
+    const  refreshToken=Auth.generateRefreshToken(user);
+    // console.log("Generated Refresh Token:", refreshToken);
     
     res.status(200).json({
       message: "Login successful",
       user: {
-        id: user._id,
+     
         name: user.name,
         email: user.email,
         picture: user.picture,
       }
+
+        ,acceeToken,refreshToken
     });
   } catch (error) {
     console.error("Google login error:", error);
