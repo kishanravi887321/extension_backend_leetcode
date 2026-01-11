@@ -1,26 +1,7 @@
 import User from "../models/User.models.js";
+import Auth from "../utils/authTokens.js";
 
-export const registerUser = async (req, res) => {
-  try {
-    let { username, name, email, password } = req.body;
-    console.log(req.body);
-    const existingUser = await User.findOne({ $or: [{ username }, { email }] });
-    if (existingUser) {
-      return res.status(400).json({ message: "Username or Email already exists" });
-    }
-    email=email.toLowerCase().trim();
-    name=name.trim();
-    username=username.trim();
-    password=password.trim();
-    const newUser = new User({ username, name, email, password });
-    console.log("pass")
-    await newUser.save();
-     console.log("pass")
-    res.status(201).json({ message: "User registered successfully" });
-  } catch (error) {
-    res.status(500).json({ message: "Server error", error: error.message });
-  }
-};
+
 export const loginUser = async (req, res) => {
   try {
     let { email, password } = req.body;

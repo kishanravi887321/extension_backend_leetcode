@@ -1,38 +1,32 @@
 import { useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
-import { loginUser } from '../api/auth';
+import { useNavigate } from 'react-router-dom';
+import { GoogleLogin } from '@react-oauth/google';
+import { googleLogin } from '../api/auth';
 import './Auth.css';
 
 const Login = () => {
   const navigate = useNavigate();
-  const [formData, setFormData] = useState({
-    email: '',
-    password: '',
-  });
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
 
-  const handleChange = (e) => {
-    setFormData({
-      ...formData,
-      [e.target.name]: e.target.value,
-    });
-  };
-
-  const handleSubmit = async (e) => {
-    e.preventDefault();
+  const handleGoogleSuccess = async (credentialResponse) => {
     setError('');
     setLoading(true);
 
     try {
-      const response = await loginUser(formData);
+      const response = await googleLogin(credentialResponse.credential);
       console.log('Login successful:', response);
+      localStorage.setItem('user', JSON.stringify(response.user));
       navigate('/dashboard');
     } catch (err) {
       setError(err.response?.data?.message || 'Login failed. Please try again.');
     } finally {
       setLoading(false);
     }
+  };
+
+  const handleGoogleError = () => {
+    setError('Google login failed. Please try again.');
   };
 
   return (
@@ -43,45 +37,29 @@ const Login = () => {
             <path strokeLinecap="round" strokeLinejoin="round" d="M17.25 6.75 22.5 12l-5.25 5.25m-10.5 0L1.5 12l5.25-5.25m7.5-3-4.5 16.5" />
           </svg>
         </div>
-        <h2>Welcome back</h2>
-        <p className="auth-subtitle">Sign in to your account to continue</p>
+        <h2>Welcome to CPCoders</h2>
+        <p className="auth-subtitle">Sign in with your Google account to continue</p>
         
-        <form onSubmit={handleSubmit}>
-          {error && <div className="error-message">{error}</div>}
-          
-          <div className="form-group">
-            <label htmlFor="email">Email address</label>
-            <input
-              type="email"
-              id="email"
-              name="email"
-              value={formData.email}
-              onChange={handleChange}
-              placeholder="name@company.com"
-              required
+        {error && <div className="error-message">{error}</div>}
+        
+        <div className="google-login-wrapper">
+          {loading ? (
+            <div className="loading-spinner">Signing in...</div>
+          ) : (
+            <GoogleLogin
+              onSuccess={handleGoogleSuccess}
+              onError={handleGoogleError}
+              useOneTap
+              theme="outline"
+              size="large"
+              text="signin_with"
+              shape="rectangular"
             />
-          </div>
+          )}
+        </div>
 
-          <div className="form-group">
-            <label htmlFor="password">Password</label>
-            <input
-              type="password"
-              id="password"
-              name="password"
-              value={formData.password}
-              onChange={handleChange}
-              placeholder="••••••••"
-              required
-            />
-          </div>
-
-          <button type="submit" className="auth-button" disabled={loading}>
-            {loading ? 'Signing in...' : 'Sign in'}
-          </button>
-        </form>
-
-        <p className="auth-link">
-          Don't have an account? <Link to="/register">Create account</Link>
+        <p className="auth-terms">
+          By signing in, you agree to our Terms of Service and Privacy Policy
         </p>
       </div>
     </div>

@@ -203,3 +203,28 @@
   font-size: 15px;
   margin-bottom: 32px;
 }
+
+.google-login-wrapper {
+  display: flex;
+  justify-content: center;
+  margin: 24px 0;
+}
+
+.google-login-wrapper > div {
+  width: 100%;
+}
+
+.loading-spinner {
+  text-align: center;
+  padding: 14px;
+  color: #64748b;
+  font-size: 15px;
+}
+
+.auth-terms {
+  text-align: center;
+  color: #94a3b8;
+  font-size: 12px;
+  margin-top: 24px;
+  line-height: 1.5;
+}
