@@ -168,7 +168,9 @@ const Profile = () => {
         <div className="profile-banner">
           <div className="banner-gradient"></div>
           <div className="banner-pattern"></div>
-          <div className="banner-content">
+          
+          {/* Centered Avatar */}
+          <div className="banner-avatar-wrapper">
             <div className="profile-avatar-large">
               {profile?.picture ? (
                 <img src={profile.picture} alt={profile.name} />
@@ -178,26 +180,31 @@ const Profile = () => {
                 </div>
               )}
               <div className="avatar-status online"></div>
+              <div className="avatar-ring"></div>
             </div>
-            <div className="profile-header-info">
-              <h1>{profile?.name}</h1>
-              <p className="username">@{profile?.username}</p>
-              <div className="profile-badges">
-                <span className="badge badge-pro">
-                  <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor">
-                    <path strokeLinecap="round" strokeLinejoin="round" d="M9 12.75 11.25 15 15 9.75M21 12c0 1.268-.63 2.39-1.593 3.068a3.745 3.745 0 0 1-1.043 3.296 3.745 3.745 0 0 1-3.296 1.043A3.745 3.745 0 0 1 12 21c-1.268 0-2.39-.63-3.068-1.593a3.746 3.746 0 0 1-3.296-1.043 3.745 3.745 0 0 1-1.043-3.296A3.745 3.745 0 0 1 3 12c0-1.268.63-2.39 1.593-3.068a3.745 3.745 0 0 1 1.043-3.296 3.746 3.746 0 0 1 3.296-1.043A3.746 3.746 0 0 1 12 3c1.268 0 2.39.63 3.068 1.593a3.746 3.746 0 0 1 3.296 1.043 3.746 3.746 0 0 1 1.043 3.296A3.745 3.745 0 0 1 21 12Z" />
-                  </svg>
-                  Active Coder
-                </span>
-                <span className="badge badge-streak">🔥 {stats.streak} Day Streak</span>
-              </div>
-            </div>
-            <Link to="/profile/edit" className="edit-profile-btn">
+          </div>
+
+          {/* Edit Button */}
+          <Link to="/profile/edit" className="edit-profile-btn">
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor">
+              <path strokeLinecap="round" strokeLinejoin="round" d="m16.862 4.487 1.687-1.688a1.875 1.875 0 1 1 2.652 2.652L10.582 16.07a4.5 4.5 0 0 1-1.897 1.13L6 18l.8-2.685a4.5 4.5 0 0 1 1.13-1.897l8.932-8.931Zm0 0L19.5 7.125M18 14v4.75A2.25 2.25 0 0 1 15.75 21H5.25A2.25 2.25 0 0 1 3 18.75V8.25A2.25 2.25 0 0 1 5.25 6H10" />
+            </svg>
+            Edit Profile
+          </Link>
+        </div>
+
+        {/* Profile Info Section Below Banner */}
+        <div className="profile-info-section">
+          <h1>{profile?.name}</h1>
+          <p className="username">@{profile?.username}</p>
+          <div className="profile-badges">
+            <span className="badge badge-pro">
               <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor">
-                <path strokeLinecap="round" strokeLinejoin="round" d="m16.862 4.487 1.687-1.688a1.875 1.875 0 1 1 2.652 2.652L10.582 16.07a4.5 4.5 0 0 1-1.897 1.13L6 18l.8-2.685a4.5 4.5 0 0 1 1.13-1.897l8.932-8.931Zm0 0L19.5 7.125M18 14v4.75A2.25 2.25 0 0 1 15.75 21H5.25A2.25 2.25 0 0 1 3 18.75V8.25A2.25 2.25 0 0 1 5.25 6H10" />
+                <path strokeLinecap="round" strokeLinejoin="round" d="M9 12.75 11.25 15 15 9.75M21 12c0 1.268-.63 2.39-1.593 3.068a3.745 3.745 0 0 1-1.043 3.296 3.745 3.745 0 0 1-3.296 1.043A3.745 3.745 0 0 1 12 21c-1.268 0-2.39-.63-3.068-1.593a3.746 3.746 0 0 1-3.296-1.043 3.745 3.745 0 0 1-1.043-3.296A3.745 3.745 0 0 1 3 12c0-1.268.63-2.39 1.593-3.068a3.745 3.745 0 0 1 1.043-3.296 3.746 3.746 0 0 1 3.296-1.043A3.746 3.746 0 0 1 12 3c1.268 0 2.39.63 3.068 1.593a3.746 3.746 0 0 1 3.296 1.043 3.746 3.746 0 0 1 1.043 3.296A3.745 3.745 0 0 1 21 12Z" />
               </svg>
-              Edit Profile
-            </Link>
+              Active Coder
+            </span>
+            <span className="badge badge-streak">🔥 {stats.streak} Day Streak</span>
           </div>
         </div>
 
