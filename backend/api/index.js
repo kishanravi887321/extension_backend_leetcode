@@ -1,38 +1,55 @@
 import mongoose from "mongoose";
-import app from "../src/app.js";
+import dotenv from "dotenv";
+import path from "path";
+import { fileURLToPath } from "url";
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+
+// Load env variables before anything else
+dotenv.config({ path: path.resolve(__dirname, "../../.env") });
 
 // MongoDB connection caching for serverless
 let isConnected = false;
 
 const connectDB = async () => {
-  if (isConnected) {
+  if (isConnected && mongoose.connection.readyState === 1) {
     console.log("Using existing database connection");
     return;
   }
 
   try {
-    const db = await mongoose.connect(process.env.MONGO_URL);
+    mongoose.set('bufferCommands', false); // Disable buffering for serverless
+    
+    const db = await mongoose.connect(process.env.MONGO_URL, {
+      serverSelectionTimeoutMS: 5000,
+      socketTimeoutMS: 45000,
+    });
+    
     isConnected = db.connections[0].readyState === 1;
-    console.log("MongoDB connected");
+    console.log("MongoDB connected successfully");
   } catch (error) {
     console.error("DB connection failed:", error.message);
+    isConnected = false;
     throw error;
   }
 };
 
-// Connect to DB before handling requests (insert at beginning)
-app.use(async (req, res, next) => {
+// Import app AFTER setting up dotenv
+import app from "../src/app.js";
+
+// Wrap the app with DB connection middleware
+const handler = async (req, res) => {
   try {
     await connectDB();
-    next();
+    return app(req, res);
   } catch (error) {
-    res.status(500).json({ message: "Database connection failed" });
+    console.error("Handler error:", error);
+    return res.status(500).json({ 
+      message: "Database connection failed", 
+      error: error.message 
+    });
   }
-});
+};
 
-// 404 handler
-app.use((req, res) => {
-  res.status(404).json({ message: "Route not found" });
-});
-
-export default app;
+export default handler;
