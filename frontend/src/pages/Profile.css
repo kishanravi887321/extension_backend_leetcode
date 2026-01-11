@@ -307,8 +307,8 @@
 .banner-avatar-wrapper {
   position: absolute;
   left: 50%;
-  bottom: 0;
-  transform: translate(-50%, 50%);
+  bottom: -90px;
+  transform: translateX(-50%);
   z-index: 20;
   animation: avatarPop 0.6s ease backwards;
 }
@@ -316,18 +316,18 @@
 @keyframes avatarPop {
   from {
     opacity: 0;
-    transform: translate(-50%, 50%) scale(0.5);
+    transform: translateX(-50%) scale(0.5);
   }
   to {
     opacity: 1;
-    transform: translate(-50%, 50%) scale(1);
+    transform: translateX(-50%) scale(1);
   }
 }
 
 .profile-avatar-large {
   position: relative;
-  width: 180px;
-  height: 180px;
+  width: 160px;
+  height: 160px;
 }
 
 .profile-avatar-large img,
@@ -417,8 +417,8 @@
 /* Profile Info Section Below Banner */
 .profile-info-section {
   text-align: center;
-  padding: 100px 20px 30px;
-  background: white;
+  padding: 110px 20px 30px;
+  background: #f8fafc;
   animation: fadeInUp 0.5s ease 0.2s backwards;
 }
 
