@@ -41,21 +41,24 @@ export const googleLogin = async (req, res) => {
       }
     }
 
-    const acceeToken=Auth.generateAccessToken(user);
-    // console.log("Generated Access Token:", acceeToken);
-    const  refreshToken=Auth.generateRefreshToken(user);
+    const accessToken = Auth.generateAccessToken(user);
+    // console.log("Generated Access Token:", accessToken);
+    const refreshToken = Auth.generateRefreshToken(user);
     // console.log("Generated Refresh Token:", refreshToken);
     
     res.status(200).json({
+      success: true,
       message: "Login successful",
       user: {
-     
+        id: user._id,
         name: user.name,
         email: user.email,
         picture: user.picture,
-      }
-
-        ,acceeToken,refreshToken
+        username: user.username,
+        bio: user.bio,
+      },
+      accessToken,
+      refreshToken
     });
   } catch (error) {
     console.error("Google login error:", error);

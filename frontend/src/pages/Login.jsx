@@ -1,13 +1,21 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { GoogleLogin } from '@react-oauth/google';
 import { googleLogin } from '../api/auth';
+import { useAuth } from '../context/AuthContext';
 import './Auth.css';
 
 const Login = () => {
   const navigate = useNavigate();
+  const { login, isAuthenticated } = useAuth();
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
+
+  useEffect(() => {
+    if (isAuthenticated) {
+      navigate('/dashboard');
+    }
+  }, [isAuthenticated, navigate]);
 
   const handleGoogleSuccess = async (credentialResponse) => {
     setError('');
@@ -16,7 +24,7 @@ const Login = () => {
     try {
       const response = await googleLogin(credentialResponse.credential);
       console.log('Login successful:', response);
-      localStorage.setItem('user', JSON.stringify(response.user));
+      login(response.user, response.accessToken, response.refreshToken);
       navigate('/dashboard');
     } catch (err) {
       setError(err.response?.data?.message || 'Login failed. Please try again.');

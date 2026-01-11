@@ -28,9 +28,27 @@ const UserSchema = new mongoose.Schema({
     picture:{
         type:String,
         required:false,
+    },
+    bio:{
+        type:String,
+        required:false,
+        maxlength: 500,
+        default: '',
+    },
+    profileImagePublicId:{
+        type:String,
+        required:false,
+    },
+    createdAt:{
+        type:Date,
+        default:Date.now,
+    },
+    updatedAt:{
+        type:Date,
+        default:Date.now,
     }
   
-});
+}, { timestamps: true });
 
 UserSchema.pre("save", async function () {
     if (!this.password || !this.isModified("password")) return;
