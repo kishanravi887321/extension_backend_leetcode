@@ -84,3 +84,36 @@ export const loginUser = async (req, res) => {
     res.status(500).json({ message: "Server error", error: error.message });
   }
 };  
+
+// Refresh Token endpoint
+export const refreshToken = async (req, res) => {
+  try {
+    const { refreshToken } = req.body;
+    
+    if (!refreshToken) {
+      return res.status(401).json({ success: false, message: "Refresh token required" });
+    }
+
+    // Verify the refresh token
+    const decoded = Auth.verifyRefreshToken(refreshToken);
+    
+    // Find user
+    const user = await User.findById(decoded.id);
+    if (!user) {
+      return res.status(401).json({ success: false, message: "User not found" });
+    }
+
+    // Generate new access token
+    const newAccessToken = Auth.generateAccessToken(user);
+    const newRefreshToken = Auth.generateRefreshToken(user);
+
+    res.status(200).json({
+      success: true,
+      accessToken: newAccessToken,
+      refreshToken: newRefreshToken
+    });
+  } catch (error) {
+    console.error("Refresh token error:", error);
+    res.status(401).json({ success: false, message: "Invalid or expired refresh token" });
+  }
+};
