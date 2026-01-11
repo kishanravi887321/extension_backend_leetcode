@@ -166,8 +166,14 @@ const Profile = () => {
       <main className="profile-main">
         {/* Profile Header Banner */}
         <div className="profile-banner">
-          <div className="banner-gradient"></div>
-          <div className="banner-pattern"></div>
+          {profile?.coverImage ? (
+            <div className="banner-cover-image" style={{ backgroundImage: `url(${profile.coverImage})` }}></div>
+          ) : (
+            <>
+              <div className="banner-gradient"></div>
+              <div className="banner-pattern"></div>
+            </>
+          )}
           
           {/* Centered Avatar */}
           <div className="banner-avatar-wrapper">
@@ -179,7 +185,6 @@ const Profile = () => {
                   {profile?.name?.charAt(0).toUpperCase()}
                 </div>
               )}
-              <div className="avatar-status online"></div>
               <div className="avatar-ring"></div>
             </div>
           </div>
