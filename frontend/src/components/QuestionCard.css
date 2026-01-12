@@ -1,0 +1,369 @@
+/* Question Card */
+.question-card {
+  position: relative;
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 12px;
+  padding: 1.25rem;
+  transition: all 0.3s ease;
+}
+
+.question-card:hover {
+  transform: translateY(-2px);
+  border-color: rgba(255, 255, 255, 0.15);
+  background: rgba(255, 255, 255, 0.05);
+}
+
+.question-card.solved {
+  border-left: 3px solid #10b981;
+}
+
+.question-card.unsolved {
+  border-left: 3px solid #f59e0b;
+}
+
+.question-card.for-future {
+  border-left: 3px solid #3b82f6;
+}
+
+/* Card Header */
+.card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 0.75rem;
+}
+
+.card-title-section {
+  flex: 1;
+  min-width: 0;
+}
+
+.question-number {
+  font-size: 0.8rem;
+  color: #888;
+  font-weight: 500;
+}
+
+.question-name {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  color: #fff;
+  font-size: 1rem;
+  font-weight: 600;
+  text-decoration: none;
+  margin-top: 0.25rem;
+  transition: color 0.2s ease;
+}
+
+.question-name:hover {
+  color: #6366f1;
+}
+
+.external-link-icon {
+  width: 14px;
+  height: 14px;
+  opacity: 0;
+  transition: opacity 0.2s ease;
+}
+
+.question-name:hover .external-link-icon {
+  opacity: 1;
+}
+
+/* Bookmark Button */
+.bookmark-btn {
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 0.25rem;
+  color: #888;
+  transition: all 0.2s ease;
+}
+
+.bookmark-btn:hover,
+.bookmark-btn.active {
+  color: #ec4899;
+}
+
+.bookmark-btn svg {
+  width: 20px;
+  height: 20px;
+}
+
+/* Card Meta */
+.card-meta {
+  display: flex;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+  margin-bottom: 0.75rem;
+}
+
+.platform-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  background: rgba(255, 255, 255, 0.05);
+  border-radius: 20px;
+  padding: 0.25rem 0.75rem;
+  font-size: 0.75rem;
+  color: #aaa;
+}
+
+.difficulty-badge {
+  display: inline-flex;
+  align-items: center;
+  border-radius: 20px;
+  padding: 0.25rem 0.75rem;
+  font-size: 0.75rem;
+  font-weight: 500;
+}
+
+.difficulty-badge.easy {
+  background: rgba(16, 185, 129, 0.15);
+  color: #10b981;
+}
+
+.difficulty-badge.medium {
+  background: rgba(245, 158, 11, 0.15);
+  color: #f59e0b;
+}
+
+.difficulty-badge.hard {
+  background: rgba(239, 68, 68, 0.15);
+  color: #ef4444;
+}
+
+.status-badge {
+  display: inline-flex;
+  align-items: center;
+  border-radius: 20px;
+  padding: 0.25rem 0.75rem;
+  font-size: 0.75rem;
+  font-weight: 500;
+}
+
+.status-badge.solved {
+  background: rgba(16, 185, 129, 0.15);
+  color: #10b981;
+}
+
+.status-badge.unsolved {
+  background: rgba(245, 158, 11, 0.15);
+  color: #f59e0b;
+}
+
+.status-badge.for-future {
+  background: rgba(59, 130, 246, 0.15);
+  color: #3b82f6;
+}
+
+/* Card Topics */
+.card-topics {
+  display: flex;
+  gap: 0.35rem;
+  flex-wrap: wrap;
+  margin-bottom: 0.75rem;
+}
+
+.topic-tag {
+  background: rgba(99, 102, 241, 0.15);
+  color: #a5b4fc;
+  border-radius: 4px;
+  padding: 0.2rem 0.5rem;
+  font-size: 0.7rem;
+}
+
+.topic-tag.more {
+  background: rgba(255, 255, 255, 0.1);
+  color: #888;
+}
+
+/* Card Notes */
+.card-notes {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.5rem;
+  background: rgba(255, 255, 255, 0.03);
+  border-radius: 6px;
+  padding: 0.5rem 0.75rem;
+  margin-bottom: 0.75rem;
+}
+
+.card-notes svg {
+  width: 14px;
+  height: 14px;
+  color: #888;
+  flex-shrink: 0;
+  margin-top: 2px;
+}
+
+.notes-preview {
+  font-size: 0.8rem;
+  color: #888;
+  line-height: 1.4;
+}
+
+/* Card Footer */
+.card-footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 0.5rem;
+  padding-top: 0.75rem;
+  border-top: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.card-dates {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.date-item {
+  display: flex;
+  align-items: center;
+  gap: 0.35rem;
+  font-size: 0.7rem;
+  color: #666;
+}
+
+.date-item svg {
+  width: 12px;
+  height: 12px;
+}
+
+.date-item.revised {
+  color: #6366f1;
+}
+
+/* Card Actions */
+.card-actions {
+  display: flex;
+  align-items: center;
+}
+
+.action-buttons {
+  display: flex;
+  gap: 0.35rem;
+}
+
+.action-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 6px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.action-btn svg {
+  width: 16px;
+  height: 16px;
+}
+
+.action-btn:hover {
+  background: rgba(255, 255, 255, 0.1);
+}
+
+.action-btn.solve {
+  color: #10b981;
+}
+
+.action-btn.solve:hover {
+  background: rgba(16, 185, 129, 0.2);
+  border-color: #10b981;
+}
+
+.action-btn.future {
+  color: #3b82f6;
+}
+
+.action-btn.future:hover {
+  background: rgba(59, 130, 246, 0.2);
+  border-color: #3b82f6;
+}
+
+.action-btn.unsolved {
+  color: #f59e0b;
+}
+
+.action-btn.unsolved:hover {
+  background: rgba(245, 158, 11, 0.2);
+  border-color: #f59e0b;
+}
+
+.action-btn.more {
+  color: #888;
+}
+
+.action-btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+/* More Actions Dropdown */
+.more-actions {
+  position: relative;
+}
+
+.actions-dropdown {
+  position: absolute;
+  bottom: 100%;
+  right: 0;
+  background: #1e1e2e;
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  border-radius: 8px;
+  padding: 0.5rem;
+  min-width: 120px;
+  z-index: 100;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4);
+  margin-bottom: 0.5rem;
+}
+
+.actions-dropdown button {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  width: 100%;
+  background: transparent;
+  border: none;
+  padding: 0.5rem 0.75rem;
+  color: #ddd;
+  font-size: 0.85rem;
+  cursor: pointer;
+  border-radius: 4px;
+  transition: background 0.2s ease;
+}
+
+.actions-dropdown button:hover {
+  background: rgba(255, 255, 255, 0.1);
+}
+
+.actions-dropdown button.delete {
+  color: #ef4444;
+}
+
+.actions-dropdown button.delete:hover {
+  background: rgba(239, 68, 68, 0.1);
+}
+
+.actions-dropdown svg {
+  width: 16px;
+  height: 16px;
+}
+
+/* Actions Overlay */
+.actions-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 99;
+}

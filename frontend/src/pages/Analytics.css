@@ -1,0 +1,392 @@
+/* Analytics Page Layout */
+.analytics-layout {
+  display: flex;
+  min-height: 100vh;
+  background: linear-gradient(135deg, #0f0f1a 0%, #1a1a2e 50%, #16213e 100%);
+}
+
+.analytics-content {
+  padding-bottom: 2rem;
+}
+
+/* Analytics Section */
+.analytics-section {
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 16px;
+  padding: 1.5rem;
+  margin-bottom: 1.5rem;
+}
+
+.analytics-section h2 {
+  color: #fff;
+  font-size: 1.1rem;
+  font-weight: 600;
+  margin: 0 0 1rem;
+}
+
+.section-description {
+  color: #888;
+  font-size: 0.85rem;
+  margin: -0.5rem 0 1rem;
+}
+
+/* Overview Grid */
+.overview-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 1rem;
+}
+
+.overview-card {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 12px;
+  padding: 1.25rem;
+  transition: all 0.3s ease;
+}
+
+.overview-card:hover {
+  transform: translateY(-2px);
+  background: rgba(255, 255, 255, 0.05);
+}
+
+.overview-icon {
+  font-size: 2rem;
+}
+
+.overview-details {
+  display: flex;
+  flex-direction: column;
+}
+
+.overview-value {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: #fff;
+}
+
+.overview-label {
+  font-size: 0.85rem;
+  color: #888;
+}
+
+.overview-card.total { border-left: 3px solid #6366f1; }
+.overview-card.total .overview-value { color: #6366f1; }
+
+.overview-card.solved { border-left: 3px solid #10b981; }
+.overview-card.solved .overview-value { color: #10b981; }
+
+.overview-card.unsolved { border-left: 3px solid #f59e0b; }
+.overview-card.unsolved .overview-value { color: #f59e0b; }
+
+.overview-card.completion { border-left: 3px solid #ec4899; }
+.overview-card.completion .overview-value { color: #ec4899; }
+
+/* Difficulty Grid */
+.difficulty-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1rem;
+}
+
+.difficulty-card {
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 12px;
+  padding: 1.25rem;
+  text-align: center;
+}
+
+.difficulty-card h3 {
+  margin: 0 0 0.75rem;
+  font-size: 0.9rem;
+  font-weight: 500;
+}
+
+.difficulty-card.easy h3 { color: #10b981; }
+.difficulty-card.medium h3 { color: #f59e0b; }
+.difficulty-card.hard h3 { color: #ef4444; }
+
+.difficulty-stats {
+  margin-bottom: 0.75rem;
+}
+
+.solved-count {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: #fff;
+}
+
+.total-count {
+  color: #888;
+  font-size: 0.9rem;
+}
+
+.progress-bar {
+  height: 6px;
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 3px;
+  overflow: hidden;
+}
+
+.progress-fill {
+  height: 100%;
+  border-radius: 3px;
+  transition: width 0.5s ease;
+}
+
+.difficulty-card.easy .progress-fill { background: #10b981; }
+.difficulty-card.medium .progress-fill { background: #f59e0b; }
+.difficulty-card.hard .progress-fill { background: #ef4444; }
+
+/* Topic Progress */
+.topic-progress-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.topic-progress-item {
+  padding: 0.75rem 1rem;
+  background: rgba(255, 255, 255, 0.03);
+  border-radius: 8px;
+}
+
+.topic-info {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 0.5rem;
+}
+
+.topic-progress-item .topic-name {
+  color: #fff;
+  font-size: 0.9rem;
+}
+
+.topic-stats {
+  color: #888;
+  font-size: 0.85rem;
+}
+
+.topic-progress-item .progress-bar {
+  height: 4px;
+}
+
+.topic-progress-item .progress-fill {
+  background: linear-gradient(90deg, #6366f1 0%, #8b5cf6 100%);
+}
+
+/* Weak Areas */
+.weak-areas-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  gap: 1rem;
+}
+
+.weak-area-card {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  background: rgba(239, 68, 68, 0.1);
+  border: 1px solid rgba(239, 68, 68, 0.2);
+  border-radius: 12px;
+  padding: 1rem;
+}
+
+.weak-topic {
+  color: #fff;
+  font-weight: 600;
+}
+
+.weak-stats {
+  color: #888;
+  font-size: 0.85rem;
+}
+
+.practice-link {
+  color: #6366f1;
+  font-size: 0.85rem;
+  text-decoration: none;
+  margin-top: auto;
+}
+
+.practice-link:hover {
+  text-decoration: underline;
+}
+
+/* Needs Revision */
+.revision-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.revision-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0.75rem 1rem;
+  background: rgba(255, 255, 255, 0.03);
+  border-radius: 8px;
+  gap: 1rem;
+}
+
+.revision-name {
+  color: #fff;
+  font-size: 0.9rem;
+  flex: 1;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.revision-platform {
+  color: #888;
+  font-size: 0.8rem;
+  text-transform: capitalize;
+}
+
+.revision-link {
+  color: #6366f1;
+  font-size: 0.85rem;
+  text-decoration: none;
+  white-space: nowrap;
+}
+
+.revision-link:hover {
+  text-decoration: underline;
+}
+
+/* Heatmap */
+.heatmap-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1rem;
+}
+
+.heatmap-header h2 {
+  margin: 0;
+}
+
+.year-selector {
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  border-radius: 6px;
+  padding: 0.5rem 1rem;
+  color: #fff;
+  font-size: 0.85rem;
+  cursor: pointer;
+}
+
+.heatmap-container {
+  display: grid;
+  grid-template-columns: repeat(6, 1fr);
+  gap: 1rem;
+  margin-bottom: 1rem;
+}
+
+@media (max-width: 900px) {
+  .heatmap-container {
+    grid-template-columns: repeat(4, 1fr);
+  }
+}
+
+@media (max-width: 600px) {
+  .heatmap-container {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+.heatmap-month {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.month-label {
+  color: #888;
+  font-size: 0.75rem;
+  text-transform: uppercase;
+}
+
+.month-days {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 2px;
+}
+
+.heatmap-day {
+  width: 10px;
+  height: 10px;
+  border-radius: 2px;
+  cursor: pointer;
+}
+
+.heatmap-day.level-0 { background: rgba(255, 255, 255, 0.05); }
+.heatmap-day.level-1 { background: rgba(16, 185, 129, 0.3); }
+.heatmap-day.level-2 { background: rgba(16, 185, 129, 0.5); }
+.heatmap-day.level-3 { background: rgba(16, 185, 129, 0.7); }
+.heatmap-day.level-4 { background: #10b981; }
+
+.heatmap-legend {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  color: #888;
+  font-size: 0.75rem;
+}
+
+.legend-boxes {
+  display: flex;
+  gap: 3px;
+}
+
+.legend-boxes .heatmap-day {
+  cursor: default;
+}
+
+/* Platform Grid */
+.platform-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+  gap: 1rem;
+}
+
+.platform-card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.5rem;
+  background: rgba(255, 255, 255, 0.03);
+  border-radius: 12px;
+  padding: 1rem;
+  text-align: center;
+}
+
+.platform-name {
+  color: #fff;
+  font-size: 0.9rem;
+  text-transform: capitalize;
+}
+
+.platform-stats {
+  color: #888;
+  font-size: 0.85rem;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .difficulty-grid {
+    grid-template-columns: 1fr;
+  }
+  
+  .overview-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
