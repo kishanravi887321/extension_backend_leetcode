@@ -13,7 +13,8 @@ import {
   getQuestStats,
   getAllTopics,
   bulkCreateQuests,
-  getHeatmapData
+  getHeatmapData,
+  upsertQuest
 } from "../controllers/quest.controllers.js";
 
 const router = express.Router();
@@ -29,6 +30,9 @@ router.get("/heatmap", getHeatmapData);
 
 // Bulk operations
 router.post("/bulk", bulkCreateQuests);
+
+// Upsert route (create or update)
+router.post("/upsert", upsertQuest);
 
 // CRUD routes
 router.route("/")

@@ -1,6 +1,76 @@
 import Quest from "../models/Quest.models.js";
 import mongoose from "mongoose";
 
+// @desc    Upsert a question (create or update based on questNumber + platform + user)
+// @route   POST /api/quests/upsert
+// @access  Private
+export const upsertQuest = async (req, res) => {
+  try {
+    const { questName, questNumber, questLink, platform, difficulty, topics, status, notes, description, bookmarked } = req.body;
+
+    // Validate required fields
+    if (!questName || !questNumber || !questLink || !platform) {
+      return res.status(400).json({
+        success: false,
+        message: "Please provide questName, questNumber, questLink, and platform"
+      });
+    }
+
+    // Build update object with only provided fields
+    const updateData = {
+      questName,
+      questLink,
+      platform,
+    };
+
+    // Only include optional fields if they are provided
+    if (difficulty !== undefined) updateData.difficulty = difficulty;
+    if (topics !== undefined) updateData.topics = topics;
+    if (status !== undefined) updateData.status = status;
+    if (notes !== undefined) updateData.notes = notes;
+    if (description !== undefined) updateData.description = description;
+    if (bookmarked !== undefined) updateData.bookmarked = bookmarked;
+
+    // Find and update, or create if not exists
+    const quest = await Quest.findOneAndUpdate(
+      {
+        user: req.user.id,
+        questNumber: questNumber,
+        platform: platform
+      },
+      {
+        $set: updateData,
+        $setOnInsert: {
+          user: req.user.id,
+          questNumber: questNumber,
+          createdAt: new Date()
+        }
+      },
+      {
+        new: true,           // Return the modified document
+        upsert: true,        // Create if not found
+        runValidators: true  // Run schema validators
+      }
+    );
+
+    // Check if it was an insert or update by comparing timestamps
+    const isNew = quest.createdAt.getTime() === quest.updatedAt.getTime();
+
+    res.status(isNew ? 201 : 200).json({
+      success: true,
+      message: isNew ? "Question created successfully" : "Question updated successfully",
+      isNew,
+      quest
+    });
+  } catch (error) {
+    console.error("Upsert quest error:", error);
+    res.status(500).json({
+      success: false,
+      message: "Server error while upserting question"
+    });
+  }
+};
+
 // @desc    Create a new question
 // @route   POST /api/quests
 // @access  Private
