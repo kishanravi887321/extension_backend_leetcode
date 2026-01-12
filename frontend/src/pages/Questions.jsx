@@ -11,7 +11,7 @@ import {
   createQuest,
   updateQuest
 } from '../api/quests';
-import QuestionCard from '../components/QuestionCard';
+import QuestionList from '../components/QuestionList';
 import AddQuestionModal from '../components/AddQuestionModal';
 import EditQuestionModal from '../components/EditQuestionModal';
 import './Dashboard.css'; // For sidebar styles
