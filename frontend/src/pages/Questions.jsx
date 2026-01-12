@@ -71,6 +71,7 @@ const Questions = () => {
   const [availableTopics, setAvailableTopics] = useState([]);
   const [stats, setStats] = useState(null);
   const [topicsExpanded, setTopicsExpanded] = useState(true);
+  const [showAllTopics, setShowAllTopics] = useState(false);
 
   // Modal states
   const [showAddModal, setShowAddModal] = useState(false);
@@ -442,7 +443,7 @@ const Questions = () => {
             </div>
             {topicsExpanded && (
               <div className="topics-list">
-                {availableTopics.slice(0, 15).map(({ topic, count }) => (
+                {(showAllTopics ? availableTopics : availableTopics.slice(0, 7)).map(({ topic, count }) => (
                   <button
                     key={topic}
                     className={`topic-item ${selectedTopics.includes(topic) ? 'selected' : ''}`}
@@ -452,9 +453,12 @@ const Questions = () => {
                     <span className="topic-count">{count}</span>
                   </button>
                 ))}
-                {availableTopics.length > 15 && (
-                  <button className="show-more-topics">
-                    +{availableTopics.length - 15} more
+                {availableTopics.length > 7 && (
+                  <button 
+                    className="show-more-topics"
+                    onClick={() => setShowAllTopics(!showAllTopics)}
+                  >
+                    {showAllTopics ? 'Show less' : `+${availableTopics.length - 7} more`}
                   </button>
                 )}
               </div>
