@@ -30,7 +30,7 @@ const QuestSchema = new mongoose.Schema({
   },
   questNumber: {
     type: String,
-    required: true,
+    // required: true,
   },
   questLink: {
     type: String,
