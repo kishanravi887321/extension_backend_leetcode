@@ -79,7 +79,7 @@ const QuestionList = ({
       <div className="list-header">
         <div className="col-status">Status</div>
         <div className="col-title">Title</div>
-        <div className="col-topics">Topics</div>
+        <div className="col-platform">Platform</div>
         <div className="col-difficulty">Difficulty</div>
         <div className="col-actions">Actions</div>
       </div>
@@ -128,32 +128,13 @@ const QuestionList = ({
                   <span className="question-number">{question.questNumber}.</span>
                   <span className="question-name">{question.questName}</span>
                 </a>
-                {getPlatformIcon(question.platform)}
               </div>
 
-              {/* Topics Column */}
-              <div className="col-topics">
-                {question.topics && question.topics.length > 0 ? (
-                  <div className="topics-list">
-                    {question.topics.slice(0, 2).map((topic, i) => (
-                      <span 
-                        key={i} 
-                        className="topic-chip"
-                        onClick={(e) => {
-                          e.stopPropagation();
-                          onTopicClick && onTopicClick(topic);
-                        }}
-                      >
-                        {topic}
-                      </span>
-                    ))}
-                    {question.topics.length > 2 && (
-                      <span className="topic-more">+{question.topics.length - 2}</span>
-                    )}
-                  </div>
-                ) : (
-                  <span className="no-topics">-</span>
-                )}
+              {/* Platform Column - Click to expand and see topics */}
+              <div className="col-platform">
+                <div className="platform-badge" title="Click row to see topics">
+                  {getPlatformIcon(question.platform)}
+                </div>
               </div>
 
               {/* Difficulty Column */}
