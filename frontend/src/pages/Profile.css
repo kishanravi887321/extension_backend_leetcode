@@ -2,7 +2,7 @@
 .profile-layout {
   display: flex;
   min-height: 100vh;
-  background: #f8fafc;
+  background: #0a0a0f;
 }
 
 .profile-loading {
@@ -426,7 +426,7 @@
 .profile-info-section {
   text-align: center;
   padding: 100px 20px 30px;
-  background: #f8fafc;
+  background: #0a0a0f;
   animation: fadeInUp 0.5s ease 0.2s backwards;
 }
 
@@ -444,13 +444,13 @@
 .profile-info-section h1 {
   font-size: 32px;
   font-weight: 700;
-  color: #0f172a;
+  color: #fff;
   margin: 0 0 4px 0;
 }
 
 .profile-info-section .username {
   font-size: 16px;
-  color: #64748b;
+  color: #888;
   margin: 0 0 16px 0;
 }
 
@@ -504,13 +504,14 @@
 }
 
 .profile-stat-card {
-  background: white;
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(255, 255, 255, 0.08);
   border-radius: 16px;
   padding: 20px;
   display: flex;
   align-items: center;
   gap: 16px;
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
   transition: all 0.3s;
   animation: slideUp 0.5s ease backwards;
   position: relative;
@@ -554,23 +555,24 @@
 }
 
 .stat-icon.solved {
-  background: linear-gradient(135deg, #dcfce7 0%, #bbf7d0 100%);
-  color: #16a34a;
+  background: rgba(34, 197, 94, 0.15);
+  color: #22c55e;
 }
 
 .stat-icon.bookmarked {
-  background: linear-gradient(135deg, #fef3c7 0%, #fde68a 100%);
-  color: #d97706;
+  background: rgba(234, 179, 8, 0.15);
+  color: #eab308;
 }
 
 .stat-icon.streak {
-  background: linear-gradient(135deg, #fee2e2 0%, #fecaca 100%);
-  color: #dc2626;
+  background: rgba(239, 68, 68, 0.15);
+  color: #ef4444;
 }
 
-.stat-icon.accuracy {
-  background: linear-gradient(135deg, #e0e7ff 0%, #c7d2fe 100%);
-  color: #4f46e5;
+.stat-icon.accuracy,
+.stat-icon.total {
+  background: rgba(99, 102, 241, 0.15);
+  color: #6366f1;
 }
 
 .stat-details {
@@ -582,13 +584,13 @@
 .stat-number {
   font-size: 28px;
   font-weight: 700;
-  color: #0f172a;
+  color: #fff;
   line-height: 1;
 }
 
 .stat-label {
   font-size: 13px;
-  color: #64748b;
+  color: #888;
   margin-top: 4px;
 }
 
@@ -624,9 +626,10 @@
 
 /* Profile Cards */
 .profile-card {
-  background: white;
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(255, 255, 255, 0.08);
   border-radius: 16px;
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
   overflow: hidden;
   animation: fadeIn 0.5s ease backwards;
 }
@@ -641,13 +644,13 @@
   align-items: center;
   justify-content: space-between;
   padding: 20px 24px;
-  border-bottom: 1px solid #f1f5f9;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
 }
 
 .card-header h3 {
   font-size: 16px;
   font-weight: 600;
-  color: #0f172a;
+  color: #fff;
   margin: 0;
 }
 
@@ -657,13 +660,13 @@
 
 /* About Card */
 .bio-text {
-  color: #475569;
+  color: #ccc;
   line-height: 1.7;
   margin: 0 0 24px 0;
 }
 
 .bio-empty {
-  color: #94a3b8;
+  color: #666;
   font-style: italic;
   margin: 0 0 24px 0;
 }
@@ -678,14 +681,14 @@
   display: flex;
   align-items: center;
   gap: 12px;
-  color: #64748b;
+  color: #888;
   font-size: 14px;
 }
 
 .detail-item svg {
   width: 18px;
   height: 18px;
-  color: #94a3b8;
+  color: #666;
 }
 
 /* Progress Ring */
@@ -709,14 +712,14 @@
 
 .progress-ring-bg {
   fill: none;
-  stroke: #f1f5f9;
+  stroke: rgba(255, 255, 255, 0.1);
   stroke-width: 8;
 }
 
 .progress-ring-fill {
   fill: none;
   stroke: url(#progressGradient);
-  stroke: #3b82f6;
+  stroke: #6366f1;
   stroke-width: 8;
   stroke-linecap: round;
   transition: stroke-dashoffset 1s ease;
@@ -734,13 +737,13 @@
   display: block;
   font-size: 24px;
   font-weight: 700;
-  color: #0f172a;
+  color: #fff;
 }
 
 .progress-label {
   display: block;
   font-size: 12px;
-  color: #64748b;
+  color: #888;
 }
 
 .progress-details {
@@ -754,7 +757,7 @@
   align-items: center;
   gap: 10px;
   font-size: 14px;
-  color: #475569;
+  color: #ccc;
 }
 
 .progress-dot {
@@ -869,10 +872,10 @@
   transform: scale(1.2);
 }
 
-.heatmap-cell.level-0 { background: #f1f5f9; }
-.heatmap-cell.level-1 { background: #bbf7d0; }
-.heatmap-cell.level-2 { background: #86efac; }
-.heatmap-cell.level-3 { background: #4ade80; }
+.heatmap-cell.level-0 { background: rgba(255, 255, 255, 0.05); }
+.heatmap-cell.level-1 { background: rgba(34, 197, 94, 0.3); }
+.heatmap-cell.level-2 { background: rgba(34, 197, 94, 0.5); }
+.heatmap-cell.level-3 { background: rgba(34, 197, 94, 0.7); }
 .heatmap-cell.level-4 { background: #22c55e; }
 
 .heatmap-legend {
@@ -892,6 +895,112 @@
 .legend-cells .heatmap-cell {
   width: 14px;
   height: 14px;
+}
+
+/* ===== DIFFICULTY BREAKDOWN ===== */
+.difficulty-breakdown {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.difficulty-row {
+  display: grid;
+  grid-template-columns: 70px 1fr 60px;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.difficulty-row .diff-label {
+  font-weight: 600;
+  font-size: 0.85rem;
+}
+
+.difficulty-row .diff-label.easy { color: #22c55e; }
+.difficulty-row .diff-label.medium { color: #eab308; }
+.difficulty-row .diff-label.hard { color: #ef4444; }
+
+.diff-bar-wrapper {
+  flex: 1;
+}
+
+.difficulty-row .diff-bar {
+  height: 10px;
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 5px;
+  overflow: hidden;
+}
+
+.difficulty-row .diff-fill {
+  height: 100%;
+  border-radius: 5px;
+  transition: width 0.5s ease;
+}
+
+.difficulty-row .diff-fill.easy { background: #22c55e; }
+.difficulty-row .diff-fill.medium { background: #eab308; }
+.difficulty-row .diff-fill.hard { background: #ef4444; }
+
+.difficulty-row .diff-count {
+  font-size: 0.85rem;
+  color: #64748b;
+  text-align: right;
+}
+
+/* ===== TOPICS LIST ===== */
+.topics-list-profile {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.topic-item {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.topic-name {
+  min-width: 100px;
+  font-size: 0.9rem;
+  color: #fff;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.topic-progress {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.topic-bar {
+  flex: 1;
+  height: 8px;
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 4px;
+  overflow: hidden;
+}
+
+.topic-fill {
+  height: 100%;
+  background: linear-gradient(90deg, #6366f1, #8b5cf6);
+  border-radius: 4px;
+  transition: width 0.5s ease;
+}
+
+.topic-stats {
+  font-size: 0.8rem;
+  color: #64748b;
+  min-width: 40px;
+  text-align: right;
+}
+
+/* ===== PROGRESS DOT COLORS ===== */
+.progress-dot.yellow {
+  background: #eab308;
 }
 
 /* ===== RESPONSIVE ===== */
