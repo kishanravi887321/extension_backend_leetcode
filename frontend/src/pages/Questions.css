@@ -651,8 +651,15 @@
 }
 
 /* Responsive */
+@media (max-width: 1024px) {
+  .questions-layout .main-content {
+    margin-left: 80px;
+  }
+}
+
 @media (max-width: 768px) {
   .questions-layout .main-content {
+    margin-left: 0;
     padding: 1rem;
   }
   

@@ -14,6 +14,7 @@ import {
 import QuestionCard from '../components/QuestionCard';
 import AddQuestionModal from '../components/AddQuestionModal';
 import EditQuestionModal from '../components/EditQuestionModal';
+import './Dashboard.css'; // For sidebar styles
 import './Questions.css';
 
 // Debounce hook

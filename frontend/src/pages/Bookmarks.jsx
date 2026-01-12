@@ -4,6 +4,7 @@ import { useAuth } from '../context/AuthContext';
 import { getQuests, updateQuestStatus, toggleBookmark, deleteQuest, updateQuest } from '../api/quests';
 import QuestionCard from '../components/QuestionCard';
 import EditQuestionModal from '../components/EditQuestionModal';
+import './Dashboard.css'; // For sidebar styles
 import './Questions.css';
 
 const Bookmarks = () => {
