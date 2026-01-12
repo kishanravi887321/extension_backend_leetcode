@@ -6,6 +6,9 @@ import Login from './pages/Login';
 import Dashboard from './pages/Dashboard';
 import Profile from './pages/Profile';
 import EditProfile from './pages/EditProfile';
+import Questions from './pages/Questions';
+import Analytics from './pages/Analytics';
+import Bookmarks from './pages/Bookmarks';
 import './App.css';
 
 const GOOGLE_CLIENT_ID = '768344103052-7i9achpngakskdrnvunosqg81rvfpu9o.apps.googleusercontent.com';
@@ -23,6 +26,46 @@ function App() {
               element={
                 <ProtectedRoute>
                   <Dashboard />
+                </ProtectedRoute>
+              } 
+            />
+            <Route 
+              path="/questions" 
+              element={
+                <ProtectedRoute>
+                  <Questions />
+                </ProtectedRoute>
+              } 
+            />
+            <Route 
+              path="/problems" 
+              element={
+                <ProtectedRoute>
+                  <Questions />
+                </ProtectedRoute>
+              } 
+            />
+            <Route 
+              path="/bookmarks" 
+              element={
+                <ProtectedRoute>
+                  <Bookmarks />
+                </ProtectedRoute>
+              } 
+            />
+            <Route 
+              path="/analytics" 
+              element={
+                <ProtectedRoute>
+                  <Analytics />
+                </ProtectedRoute>
+              } 
+            />
+            <Route 
+              path="/progress" 
+              element={
+                <ProtectedRoute>
+                  <Analytics />
                 </ProtectedRoute>
               } 
             />
