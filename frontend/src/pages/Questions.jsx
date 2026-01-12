@@ -273,6 +273,16 @@ const Questions = () => {
     setShowEditModal(true);
   };
 
+  // Handle clicking on a topic from the question list - filters to show only that topic
+  const handleTopicClick = (topic) => {
+    // Set only this topic as selected (replaces current selection)
+    setSelectedTopics([topic]);
+    // Reset to page 1 when changing filters
+    const params = new URLSearchParams(searchParams);
+    params.set('page', '1');
+    setSearchParams(params);
+  };
+
   const handleAddQuestion = async (questionData) => {
     try {
       const response = await createQuest(questionData);
@@ -699,18 +709,14 @@ const Questions = () => {
             </div>
           ) : (
             <>
-              <div className="questions-grid">
-                {questions.map(question => (
-                  <QuestionCard
-                    key={question._id}
-                    question={question}
-                    onStatusChange={handleStatusChange}
-                    onBookmarkToggle={handleBookmarkToggle}
-                    onDelete={handleDelete}
-                    onEdit={handleEditClick}
-                  />
-                ))}
-              </div>
+              <QuestionList
+                questions={questions}
+                onStatusChange={handleStatusChange}
+                onBookmarkToggle={handleBookmarkToggle}
+                onDelete={handleDelete}
+                onEdit={handleEditClick}
+                onTopicClick={handleTopicClick}
+              />
 
               {/* Pagination */}
               {pagination.totalPages > 1 && (

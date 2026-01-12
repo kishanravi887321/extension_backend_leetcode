@@ -2,7 +2,7 @@ import { useState, useEffect, useCallback } from 'react';
 import { Link, useNavigate, useLocation } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import { getQuests, updateQuestStatus, toggleBookmark, deleteQuest, updateQuest } from '../api/quests';
-import QuestionCard from '../components/QuestionCard';
+import QuestionList from '../components/QuestionList';
 import EditQuestionModal from '../components/EditQuestionModal';
 import './Dashboard.css'; // For sidebar styles
 import './Questions.css';
@@ -248,18 +248,14 @@ const Bookmarks = () => {
             </div>
           ) : (
             <>
-              <div className="questions-grid">
-                {questions.map(question => (
-                  <QuestionCard
-                    key={question._id}
-                    question={question}
-                    onStatusChange={handleStatusChange}
-                    onBookmarkToggle={handleBookmarkToggle}
-                    onDelete={handleDelete}
-                    onEdit={handleEditClick}
-                  />
-                ))}
-              </div>
+              <QuestionList
+                questions={questions}
+                onStatusChange={handleStatusChange}
+                onBookmarkToggle={handleBookmarkToggle}
+                onDelete={handleDelete}
+                onEdit={handleEditClick}
+                onTopicClick={(topic) => navigate(`/questions?topics=${topic}`)}
+              />
 
               {pagination.totalPages > 1 && (
                 <div className="pagination">
