@@ -45,18 +45,39 @@ const allowedOrigins = [
   'https://cpcoders.saksin.online', 
   'http://cpcoders.saksin.online',
   'https://cp.saksin.online',
-  'https://leetcode.com', // Strict match
+  'https://leetcode.com',
   'https://www.leetcode.com',
   'http://cp.saksin.online'
 ];
 
+// Helper to check if origin is allowed (including browser extensions)
+const isOriginAllowed = (origin) => {
+  // No origin = browser extension, mobile app, curl, or same-origin request
+  if (!origin) return true;
+  
+  // Check exact matches
+  if (allowedOrigins.includes(origin)) return true;
+  
+  // Check if it's a leetcode subdomain
+  if (origin.endsWith('.leetcode.com')) return true;
+  
+  // Allow browser extension origins (chrome-extension://, moz-extension://, safari-extension://)
+  if (origin.startsWith('chrome-extension://') || 
+      origin.startsWith('moz-extension://') || 
+      origin.startsWith('safari-extension://')) {
+    return true;
+  }
+  
+  return false;
+};
+
 // Helper to set CORS headers manually (Nuclear option for Vercel)
 const setCorsHeaders = (req, res) => {
   const origin = req.headers.origin;
-  const isAllowed = origin && (allowedOrigins.includes(origin) || origin.endsWith('.leetcode.com'));
   
-  if (isAllowed) {
-    res.setHeader('Access-Control-Allow-Origin', origin);
+  if (isOriginAllowed(origin)) {
+    // If no origin, use wildcard (for extensions/curl)
+    res.setHeader('Access-Control-Allow-Origin', origin || '*');
     res.setHeader('Access-Control-Allow-Credentials', 'true');
     res.setHeader('Access-Control-Allow-Methods', 'GET,OPTIONS,PATCH,DELETE,POST,PUT');
     res.setHeader('Access-Control-Allow-Headers', 'X-CSRF-Token, X-Requested-With, Accept, Accept-Version, Content-Length, Content-MD5, Content-Type, Date, X-Api-Version, Authorization');
@@ -65,17 +86,19 @@ const setCorsHeaders = (req, res) => {
 
 // Wrap the app with DB connection middleware
 const handler = async (req, res) => {
-  // 1. Handle CORS Preflight manually - FAST EXIT
+  // 1. ALWAYS set CORS headers first for ALL requests
+  setCorsHeaders(req, res);
+  
+  // 2. Handle CORS Preflight - FAST EXIT
   if (req.method === 'OPTIONS') {
-    setCorsHeaders(req, res);
     return res.status(200).end();
   }
 
   try {
-    // 2. Connect to DB
+    // 3. Connect to DB
     await connectDB();
     
-    // 3. Forward to Express App
+    // 4. Forward to Express App
     return app(req, res);
   } catch (error) {
     console.error("Handler error:", error);

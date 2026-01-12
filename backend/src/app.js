@@ -20,8 +20,15 @@ const projectOrigins = [
 // CORS configuration
 const corsOptions = {
   origin: function (origin, callback) {
-    // Allow requests with no origin (like mobile apps or curl requests)
+    // Allow requests with no origin (like mobile apps, curl, or browser extensions)
     if (!origin) return callback(null, true);
+    
+    // Allow browser extension origins
+    if (origin.startsWith('chrome-extension://') || 
+        origin.startsWith('moz-extension://') || 
+        origin.startsWith('safari-extension://')) {
+      return callback(null, true);
+    }
     
     if (projectOrigins.indexOf(origin) !== -1 || origin.endsWith('.leetcode.com')) {
       callback(null, true);
