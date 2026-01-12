@@ -5,6 +5,19 @@
   background: linear-gradient(135deg, #0f0f1a 0%, #1a1a2e 50%, #16213e 100%);
 }
 
+/* Main Content for Analytics */
+.analytics-layout .main-content {
+  flex: 1;
+  margin-left: 260px;
+  padding: 1.5rem 2rem;
+  overflow-y: auto;
+  transition: margin-left 0.3s ease;
+}
+
+.analytics-layout .sidebar.collapsed ~ .main-content {
+  margin-left: 80px;
+}
+
 .analytics-content {
   padding-bottom: 2rem;
 }

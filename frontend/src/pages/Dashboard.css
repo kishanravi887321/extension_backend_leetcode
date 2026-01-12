@@ -238,20 +238,20 @@
 }
 
 /* ===== MAIN CONTENT ===== */
-.main-content {
+.dashboard-layout .main-content {
   flex: 1;
   margin-left: 260px;
   transition: margin-left 0.3s ease;
   min-height: 100vh;
 }
 
-.sidebar.collapsed + .main-content,
-.sidebar.collapsed ~ .main-content {
+.sidebar.collapsed + .dashboard-layout .main-content,
+.dashboard-layout .sidebar.collapsed ~ .main-content {
   margin-left: 80px;
 }
 
 /* Header */
-.content-header {
+.dashboard-layout .content-header {
   background: white;
   padding: 20px 32px;
   display: flex;
@@ -275,20 +275,20 @@
   }
 }
 
-.header-left h1 {
+.dashboard-layout .header-left h1 {
   font-size: 24px;
   font-weight: 700;
   color: #0f172a;
   margin: 0;
 }
 
-.header-left p {
+.dashboard-layout .header-left p {
   font-size: 14px;
   color: #64748b;
   margin: 4px 0 0 0;
 }
 
-.search-box {
+.dashboard-layout .search-box {
   display: flex;
   align-items: center;
   gap: 10px;
@@ -299,18 +299,18 @@
   transition: all 0.2s;
 }
 
-.search-box:focus-within {
+.dashboard-layout .search-box:focus-within {
   background: white;
   box-shadow: 0 0 0 2px #3b82f6;
 }
 
-.search-box svg {
+.dashboard-layout .search-box svg {
   width: 18px;
   height: 18px;
   color: #94a3b8;
 }
 
-.search-box input {
+.dashboard-layout .search-box input {
   border: none;
   background: transparent;
   outline: none;
@@ -319,7 +319,7 @@
   width: 100%;
 }
 
-.search-box input::placeholder {
+.dashboard-layout .search-box input::placeholder {
   color: #94a3b8;
 }
 
@@ -634,7 +634,7 @@
     justify-content: center;
   }
 
-  .main-content {
+  .dashboard-layout .main-content {
     margin-left: 80px;
   }
 }
@@ -644,35 +644,19 @@
     transform: translateX(-100%);
   }
 
-  .main-content {
+  .dashboard-layout .main-content {
     margin-left: 0;
   }
 
-  .content-header {
+  .dashboard-layout .content-header {
     padding: 16px 20px;
     flex-direction: column;
     gap: 16px;
     align-items: stretch;
   }
 
-  .search-box {
+  .dashboard-layout .search-box {
     width: 100%;
-  }
-
-  .dashboard-content {
-    padding: 20px;
-  }
-
-  .welcome-card {
-    padding: 24px;
-  }
-
-  .welcome-info h2 {
-    font-size: 22px;
-  }
-
-  .welcome-illustration {
-    display: none;
   }
 
   .stats-grid {
