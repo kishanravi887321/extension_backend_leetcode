@@ -45,7 +45,8 @@ export const googleLogin = async (req, res) => {
     // console.log("Generated Access Token:", accessToken);
     const refreshToken = Auth.generateRefreshToken(user);
     // console.log("Generated Refresh Token:", refreshToken);
-    
+    const extensionToken = Auth.generateExtensionToken(user);
+
     res.status(200).json({
       success: true,
       message: "Login successful",
@@ -58,7 +59,8 @@ export const googleLogin = async (req, res) => {
         bio: user.bio,
       },
       accessToken,
-      refreshToken
+      refreshToken,
+      extensionToken
     });
   } catch (error) {
     console.error("Google login error:", error);

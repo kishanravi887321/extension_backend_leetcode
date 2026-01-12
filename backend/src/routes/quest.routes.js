@@ -1,5 +1,5 @@
 import express from "express";
-import { authenticateToken } from "../middleware/auth.middleware.js";
+import { authenticateToken, authenticateExtensionToken } from "../middleware/auth.middleware.js";
 import {
   createQuest,
   getQuests,
@@ -19,6 +19,9 @@ import {
 
 const router = express.Router();
 
+// Upsert route (create or update) - dedicated for extension
+router.post("/upsert", authenticateExtensionToken, upsertQuest);
+
 // All routes are protected
 router.use(authenticateToken);
 
@@ -30,9 +33,6 @@ router.get("/heatmap", getHeatmapData);
 
 // Bulk operations
 router.post("/bulk", bulkCreateQuests);
-
-// Upsert route (create or update)
-router.post("/upsert", upsertQuest);
 
 // CRUD routes
 router.route("/")

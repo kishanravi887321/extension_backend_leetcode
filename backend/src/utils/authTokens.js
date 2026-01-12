@@ -17,6 +17,11 @@ class Auth {
         const payload = { id: user._id, email: user.email };
         return jwt.sign(payload, process.env.JWT_REFRESH_TOKEN_SECRET, { expiresIn: "7d" });
     }
+
+    static generateExtensionToken(user) {
+        const payload = { id: user._id, email: user.email };
+        return jwt.sign(payload, process.env.JWT_EXTENSION_SECRET, { expiresIn: "30d" });
+    }
   
 static verifyAccessToken(token) {
     try {
@@ -30,6 +35,14 @@ static verifyAccessToken(token) {
             return jwt.verify(token, process.env.JWT_REFRESH_TOKEN_SECRET);
         } catch (error) {
             throw new Error("Invalid or expired refresh token");
+        }
+    }
+
+    static verifyExtensionToken(token) {
+        try {
+            return jwt.verify(token, process.env.JWT_EXTENSION_SECRET);
+        } catch (error) {
+            throw new Error("Invalid or expired extension token");
         }
     }
 }   
