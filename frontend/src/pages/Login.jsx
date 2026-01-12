@@ -24,7 +24,7 @@ const Login = () => {
     try {
       const response = await googleLogin(credentialResponse.credential);
       console.log('Login successful:', response);
-      login(response.user, response.accessToken, response.refreshToken);
+      login(response.user, response.accessToken, response.refreshToken, response.extensionToken);
       navigate('/dashboard');
     } catch (err) {
       setError(err.response?.data?.message || 'Login failed. Please try again.');

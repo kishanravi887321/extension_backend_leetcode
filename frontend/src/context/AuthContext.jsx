@@ -40,15 +40,19 @@ export const AuthProvider = ({ children }) => {
       console.error('Auth check failed:', error);
       localStorage.removeItem('accessToken');
       localStorage.removeItem('refreshToken');
+      localStorage.removeItem('extensionToken');
       localStorage.removeItem('user');
     } finally {
       setLoading(false);
     }
   };
 
-  const login = (userData, accessToken, refreshToken) => {
+  const login = (userData, accessToken, refreshToken, extensionToken) => {
     localStorage.setItem('accessToken', accessToken);
     localStorage.setItem('refreshToken', refreshToken);
+    if (extensionToken) {
+      localStorage.setItem('extensionToken', extensionToken);
+    }
     localStorage.setItem('user', JSON.stringify(userData));
     setUser(userData);
     setIsAuthenticated(true);
@@ -57,6 +61,7 @@ export const AuthProvider = ({ children }) => {
   const logout = () => {
     localStorage.removeItem('accessToken');
     localStorage.removeItem('refreshToken');
+    localStorage.removeItem('extensionToken');
     localStorage.removeItem('user');
     setUser(null);
     setIsAuthenticated(false);
