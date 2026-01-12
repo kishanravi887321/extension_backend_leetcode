@@ -143,4 +143,25 @@ export const getUserByUsername = async (username) => {
   return response.data;
 };
 
+// Quest/Problem APIs
+export const getQuestStats = async () => {
+  const response = await api.get('/quests/stats');
+  return response.data;
+};
+
+export const getQuests = async (params = {}) => {
+  const response = await api.get('/quests', { params });
+  return response.data;
+};
+
+export const getHeatmapData = async (year) => {
+  const response = await api.get('/quests/heatmap', { params: { year } });
+  return response.data;
+};
+
+export const getAllTopics = async () => {
+  const response = await api.get('/quests/topics');
+  return response.data;
+};
+
 export default api;
