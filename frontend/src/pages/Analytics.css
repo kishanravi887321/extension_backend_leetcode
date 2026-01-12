@@ -14,7 +14,9 @@
   transition: margin-left 0.3s ease;
 }
 
-.analytics-layout .sidebar.collapsed ~ .main-content {
+/* Collapsed sidebar - main-content adjustment */
+.sidebar.collapsed + .main-content,
+.sidebar.collapsed ~ .main-content {
   margin-left: 80px;
 }
 
