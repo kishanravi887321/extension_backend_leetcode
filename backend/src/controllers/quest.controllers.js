@@ -16,7 +16,7 @@ export const createQuest = async (req, res) => {
     }
 
     const quest = await Quest.create({
-      user: req.user.userId,
+      user: req.user.id,
       questName,
       questNumber,
       questLink,
@@ -72,7 +72,7 @@ export const getQuests = async (req, res) => {
     const skip = (pageNum - 1) * limitNum;
 
     // Build query
-    const query = { user: req.user.userId };
+    const query = { user: req.user.id };
 
     // Status filter
     if (status && status !== "all") {
@@ -190,7 +190,7 @@ export const getQuestById = async (req, res) => {
       });
     }
 
-    const quest = await Quest.findOne({ _id: id, user: req.user.userId });
+    const quest = await Quest.findOne({ _id: id, user: req.user.id });
 
     if (!quest) {
       return res.status(404).json({
@@ -227,7 +227,7 @@ export const updateQuest = async (req, res) => {
       });
     }
 
-    const quest = await Quest.findOne({ _id: id, user: req.user.userId });
+    const quest = await Quest.findOne({ _id: id, user: req.user.id });
 
     if (!quest) {
       return res.status(404).json({
@@ -283,7 +283,7 @@ export const updateQuestStatus = async (req, res) => {
     }
 
     const quest = await Quest.findOneAndUpdate(
-      { _id: id, user: req.user.userId },
+      { _id: id, user: req.user.id },
       { 
         status,
         lastRevisedAt: status === "solved" ? new Date() : undefined
@@ -326,7 +326,7 @@ export const toggleBookmark = async (req, res) => {
       });
     }
 
-    const quest = await Quest.findOne({ _id: id, user: req.user.userId });
+    const quest = await Quest.findOne({ _id: id, user: req.user.id });
 
     if (!quest) {
       return res.status(404).json({
@@ -367,7 +367,7 @@ export const markAsRevised = async (req, res) => {
     }
 
     const quest = await Quest.findOneAndUpdate(
-      { _id: id, user: req.user.userId },
+      { _id: id, user: req.user.id },
       { lastRevisedAt: new Date() },
       { new: true }
     );
@@ -407,7 +407,7 @@ export const deleteQuest = async (req, res) => {
       });
     }
 
-    const quest = await Quest.findOneAndDelete({ _id: id, user: req.user.userId });
+    const quest = await Quest.findOneAndDelete({ _id: id, user: req.user.id });
 
     if (!quest) {
       return res.status(404).json({
@@ -436,7 +436,7 @@ export const getQuestsGroupedByTopic = async (req, res) => {
   try {
     const { status, difficulty, platform } = req.query;
 
-    const matchStage = { user: new mongoose.Types.ObjectId(req.user.userId) };
+    const matchStage = { user: new mongoose.Types.ObjectId(req.user.id) };
     
     if (status && status !== "all") matchStage.status = status;
     if (difficulty && difficulty !== "all") matchStage.difficulty = difficulty;
@@ -500,7 +500,7 @@ export const getQuestsGroupedByTopic = async (req, res) => {
 // @access  Private
 export const getQuestStats = async (req, res) => {
   try {
-    const userId = new mongoose.Types.ObjectId(req.user.userId);
+    const userId = new mongoose.Types.ObjectId(req.user.id);
 
     const [
       totalStats,
@@ -665,7 +665,7 @@ export const getQuestStats = async (req, res) => {
 export const getAllTopics = async (req, res) => {
   try {
     const topics = await Quest.aggregate([
-      { $match: { user: new mongoose.Types.ObjectId(req.user.userId) } },
+      { $match: { user: new mongoose.Types.ObjectId(req.user.id) } },
       { $unwind: "$topics" },
       { $group: { _id: "$topics", count: { $sum: 1 } } },
       { $sort: { count: -1 } },
@@ -707,7 +707,7 @@ export const bulkCreateQuests = async (req, res) => {
     }
 
     const questsToInsert = quests.map(q => ({
-      user: req.user.userId,
+      user: req.user.id,
       questName: q.questName,
       questNumber: q.questNumber,
       questLink: q.questLink,
@@ -756,7 +756,7 @@ export const getHeatmapData = async (req, res) => {
     const heatmapData = await Quest.aggregate([
       {
         $match: {
-          user: new mongoose.Types.ObjectId(req.user.userId),
+          user: new mongoose.Types.ObjectId(req.user.id),
           lastRevisedAt: { $gte: startDate, $lte: endDate }
         }
       },
