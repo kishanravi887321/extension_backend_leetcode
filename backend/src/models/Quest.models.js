@@ -1,20 +1,29 @@
+import mongoose from "mongoose";
+
 const QuestSchema = new mongoose.Schema({
   user: {
     type: mongoose.Schema.Types.ObjectId,
-    ref: User,
+    ref: 'User',
     required: true,
   },
   platform: {
     type: String,
-    enum: ["leetcode", "codeforces", "gfg", "interviewbit", "hackerrank"],
+    enum: ["leetcode", "codeforces", "gfg", "interviewbit", "hackerrank", "codechef", "atcoder", "spoj", "other"],
     required: true,
   },
   difficulty: {
     type: String,
     enum: ["easy", "medium", "hard"],
+    default: "medium",
   },
-  notes: String,
-  lastRevisedAt: Date,
+  notes: {
+    type: String,
+    default: "",
+  },
+  lastRevisedAt: {
+    type: Date,
+    default: null,
+  },
   bookmarked: {
     type: Boolean,
     default: false,
@@ -32,20 +41,48 @@ const QuestSchema = new mongoose.Schema({
     enum: ['solved', 'unsolved', 'for-future'],
     default: 'unsolved',
   },
-  topics: [String],
+  topics: {
+    type: [String],
+    default: [],
+    index: true,
+  },
   questName: {
     type: String,
     required: true,
   },
-  description: String,
+  description: {
+    type: String,
+    default: "",
+  },
   createdAt: {
     type: Date,
     default: Date.now,
+  },
+  updatedAt: {
+    type: Date,
+    default: Date.now,
   }
-});
+}, { timestamps: true });
 
-// Compound unique index
+// Compound unique index for preventing duplicate questions per user
 QuestSchema.index({ user: 1, platform: 1, questNumber: 1 }, { unique: true });
+
+// Text index for fast search on questName and questNumber
+QuestSchema.index({ questName: 'text', questNumber: 'text', description: 'text' });
+
+// Index for filtering and sorting
+QuestSchema.index({ user: 1, status: 1 });
+QuestSchema.index({ user: 1, difficulty: 1 });
+QuestSchema.index({ user: 1, platform: 1 });
+QuestSchema.index({ user: 1, bookmarked: 1 });
+QuestSchema.index({ user: 1, lastRevisedAt: -1 });
+QuestSchema.index({ user: 1, createdAt: -1 });
+
+// Pre-save middleware to update the updatedAt field
+QuestSchema.pre('save', function(next) {
+  this.updatedAt = new Date();
+  next();
+});
 
 const Quest = mongoose.model('Quest', QuestSchema);
 export default Quest;
