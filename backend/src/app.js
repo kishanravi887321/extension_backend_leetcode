@@ -6,21 +6,37 @@ import {router as questRoutes} from "./routes/quest.routes.js";
 
 const app = express();
 
+const projectOrigins = [
+  'http://localhost:5173', 
+  'http://localhost:3000', 
+  'https://cpcoders.saksin.online', 
+  'http://cpcoders.saksin.online',
+  'https://cp.saksin.online',
+  'https://leetcode.com',
+  'https://www.leetcode.com',
+  'http://cp.saksin.online'
+];
+
 // CORS configuration
-app.use(cors({
-  origin: [
-    'http://localhost:5173', 
-    'http://localhost:3000', 
-    'https://cpcoders.saksin.online', 
-    'http://cpcoders.saksin.online',
-    'https://cp.saksin.online',
-    'https://leetcode.com',
-    'http://cp.saksin.online'
-  ],
+const corsOptions = {
+  origin: function (origin, callback) {
+    // Allow requests with no origin (like mobile apps or curl requests)
+    if (!origin) return callback(null, true);
+    
+    if (projectOrigins.indexOf(origin) !== -1 || origin.endsWith('.leetcode.com')) {
+      callback(null, true);
+    } else {
+      console.log("Blocked by CORS:", origin);
+      callback(new Error('Not allowed by CORS'));
+    }
+  },
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH', 'OPTIONS'],
   allowedHeaders: ['Content-Type', 'Authorization'],
   credentials: true
-}));
+};
+
+app.use(cors(corsOptions));
+app.options('*', cors(corsOptions));
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));

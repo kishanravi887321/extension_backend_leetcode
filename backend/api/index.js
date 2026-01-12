@@ -40,6 +40,11 @@ import app from "../src/app.js";
 
 // Wrap the app with DB connection middleware
 const handler = async (req, res) => {
+  // Handle CORS preflight without DB connection
+  if (req.method === 'OPTIONS') {
+    return app(req, res);
+  }
+
   try {
     await connectDB();
     return app(req, res);
