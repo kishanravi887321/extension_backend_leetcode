@@ -53,14 +53,6 @@ const QuestSchema = new mongoose.Schema({
   description: {
     type: String,
     default: "",
-  },
-  createdAt: {
-    type: Date,
-    default: Date.now,
-  },
-  updatedAt: {
-    type: Date,
-    default: Date.now,
   }
 }, { timestamps: true });
 
@@ -77,12 +69,6 @@ QuestSchema.index({ user: 1, platform: 1 });
 QuestSchema.index({ user: 1, bookmarked: 1 });
 QuestSchema.index({ user: 1, lastRevisedAt: -1 });
 QuestSchema.index({ user: 1, createdAt: -1 });
-
-// Pre-save middleware to update the updatedAt field
-QuestSchema.pre('save', function(next) {
-  this.updatedAt = new Date();
-  next();
-});
 
 const Quest = mongoose.model('Quest', QuestSchema);
 export default Quest;
