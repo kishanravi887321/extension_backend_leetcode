@@ -14,6 +14,7 @@ app.use(cors({
     'https://cpcoders.saksin.online', 
     'http://cpcoders.saksin.online',
     'https://cp.saksin.online',
+    'https://leetcode.com',
     'http://cp.saksin.online'
   ],
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH', 'OPTIONS'],
