@@ -10,27 +10,41 @@ const __dirname = path.dirname(__filename);
 dotenv.config({ path: path.resolve(__dirname, "../../.env") });
 
 // MongoDB connection caching for serverless
-let isConnected = false;
+let cached = global.mongoose;
+
+if (!cached) {
+  cached = global.mongoose = { conn: null, promise: null };
+}
 
 const connectDB = async () => {
-  if (isConnected && mongoose.connection.readyState === 1) {
+  // If we have a cached connection that's ready, use it
+  if (cached.conn && mongoose.connection.readyState === 1) {
     console.log("Using existing database connection");
-    return;
+    return cached.conn;
+  }
+
+  // If a connection is in progress, wait for it
+  if (cached.promise) {
+    console.log("Waiting for existing connection promise");
+    cached.conn = await cached.promise;
+    return cached.conn;
   }
 
   try {
     mongoose.set('bufferCommands', false); // Disable buffering for serverless
     
-    const db = await mongoose.connect(process.env.MONGO_URL, {
+    cached.promise = mongoose.connect(process.env.MONGO_URL, {
       serverSelectionTimeoutMS: 5000,
       socketTimeoutMS: 45000,
     });
     
-    isConnected = db.connections[0].readyState === 1;
+    cached.conn = await cached.promise;
     console.log("MongoDB connected successfully");
+    return cached.conn;
   } catch (error) {
     console.error("DB connection failed:", error.message);
-    isConnected = false;
+    cached.promise = null; // Reset promise so next request can retry
+    cached.conn = null;
     throw error;
   }
 };
