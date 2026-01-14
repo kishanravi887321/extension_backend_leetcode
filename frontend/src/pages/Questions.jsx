@@ -544,23 +544,57 @@ const Questions = () => {
         {/* Stats Cards */}
         {stats && (
           <div className="stats-row">
-            <div className="stat-card">
+            <div 
+              className={`stat-card ${activeTab === 'all' && !bookmarkedOnly ? 'active' : ''}`}
+              onClick={() => {
+                setActiveTab('all');
+                setBookmarkedOnly(false);
+                handlePageChange(1);
+              }}
+            >
               <div className="stat-value">{stats.overview.total}</div>
               <div className="stat-label">Total</div>
             </div>
-            <div className="stat-card solved">
+            <div 
+              className={`stat-card solved ${activeTab === 'solved' ? 'active' : ''}`}
+              onClick={() => {
+                setActiveTab('solved');
+                setBookmarkedOnly(false);
+                handlePageChange(1);
+              }}
+            >
               <div className="stat-value">{stats.overview.solved}</div>
               <div className="stat-label">Solved</div>
             </div>
-            <div className="stat-card unsolved">
+            <div 
+              className={`stat-card unsolved ${activeTab === 'unsolved' ? 'active' : ''}`}
+              onClick={() => {
+                setActiveTab('unsolved');
+                setBookmarkedOnly(false);
+                handlePageChange(1);
+              }}
+            >
               <div className="stat-value">{stats.overview.unsolved}</div>
               <div className="stat-label">Unsolved</div>
             </div>
-            <div className="stat-card for-future">
+            <div 
+              className={`stat-card for-future ${activeTab === 'for-future' ? 'active' : ''}`}
+              onClick={() => {
+                setActiveTab('for-future');
+                setBookmarkedOnly(false);
+                handlePageChange(1);
+              }}
+            >
               <div className="stat-value">{stats.overview.forFuture}</div>
               <div className="stat-label">For Future</div>
             </div>
-            <div className="stat-card bookmarked">
+            <div 
+              className={`stat-card bookmarked ${bookmarkedOnly ? 'active' : ''}`}
+              onClick={() => {
+                setBookmarkedOnly(!bookmarkedOnly);
+                handlePageChange(1);
+              }}
+            >
               <div className="stat-value">{stats.overview.bookmarked}</div>
               <div className="stat-label">Bookmarked</div>
             </div>
