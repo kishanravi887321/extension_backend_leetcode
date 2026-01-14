@@ -16,6 +16,8 @@ const projectOrigins = [
   'https://www.leetcode.com',
   'http://cp.saksin.online',
   'https://www.interviewbit.com',
+  'https://www.geeksforgeeks.org',
+  'https://geeksforgeeks.org',
   'https://interviewbit.com'
 ];
 
