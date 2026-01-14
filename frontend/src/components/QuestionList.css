@@ -288,7 +288,83 @@
   cursor: pointer;
 }
 
-/* Company Icon Tooltip */
+/* Company Logo Wrapper */
+.company-logo-wrapper {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 26px;
+  height: 26px;
+  border-radius: 6px;
+  transition: transform 0.2s ease;
+  position: relative;
+  cursor: pointer;
+  overflow: hidden;
+}
+
+.company-logo-wrapper:hover {
+  transform: scale(1.15);
+}
+
+/* Company Logo SVG */
+.company-logo {
+  width: 22px;
+  height: 22px;
+}
+
+/* Special cases for logos that need background */
+.company-logo.apple-logo,
+.company-logo.twitter-logo,
+.company-logo.uber-logo,
+.company-logo.bytedance-logo {
+  color: #fff;
+}
+
+/* Company Logo Tooltip */
+.company-logo-wrapper::after {
+  content: attr(title);
+  position: absolute;
+  bottom: calc(100% + 8px);
+  left: 50%;
+  transform: translateX(-50%);
+  background: #1a1a2e;
+  color: #fff;
+  padding: 6px 10px;
+  border-radius: 6px;
+  font-size: 0.7rem;
+  font-weight: 500;
+  white-space: nowrap;
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 0.2s ease, visibility 0.2s ease;
+  pointer-events: none;
+  z-index: 100;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+}
+
+.company-logo-wrapper::before {
+  content: '';
+  position: absolute;
+  bottom: calc(100% + 2px);
+  left: 50%;
+  transform: translateX(-50%);
+  border: 6px solid transparent;
+  border-top-color: #1a1a2e;
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 0.2s ease, visibility 0.2s ease;
+  pointer-events: none;
+  z-index: 100;
+}
+
+.company-logo-wrapper:hover::after,
+.company-logo-wrapper:hover::before {
+  opacity: 1;
+  visibility: visible;
+}
+
+/* Company Icon Tooltip (for default letter icons) */
 .company-icon::after {
   content: attr(title);
   position: absolute;
@@ -332,13 +408,33 @@
   opacity: 1;
   visibility: visible;
 }
-}
 
 .company-icon:hover {
   transform: scale(1.1);
 }
 
-/* Big Tech */
+/* Default company icon (fallback letter) */
+.company-icon.default { 
+  background: rgba(99, 102, 241, 0.2); 
+  color: #818cf8; 
+}
+
+/* Company dropdown item logo styling */
+.company-dropdown-item .company-logo-wrapper {
+  width: 22px;
+  height: 22px;
+}
+
+.company-dropdown-item .company-logo {
+  width: 18px;
+  height: 18px;
+}
+
+.company-dropdown-item .company-icon {
+  width: 22px;
+  height: 22px;
+  font-size: 0.65rem;
+}
 .company-icon.google { background: linear-gradient(135deg, #4285F4, #34A853, #FBBC05, #EA4335); color: white; }
 .company-icon.amazon { background: #FF9900; color: #232F3E; }
 .company-icon.microsoft { background: linear-gradient(135deg, #F25022, #7FBA00, #00A4EF, #FFB900); color: white; }
