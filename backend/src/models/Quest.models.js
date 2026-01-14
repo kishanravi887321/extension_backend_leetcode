@@ -70,29 +70,23 @@ const QuestSchema = new mongoose.Schema({
 }, { timestamps: true });
 
 // Pre-save middleware to generate uniqueId and questionId
-QuestSchema.pre('save', function(next) {
-  try {
-    const platform = this.platform.toLowerCase();
-    
-    // Generate unique ID based on platform type
-    this.uniqueId = generateUniqueId({
-      platform: this.platform,
-      questNumber: this.questNumber,
-      questName: this.questName,
-      userId: this.user.toString()
-    });
-    
-    // Generate question ID (without user component)
-    this.questionId = generateQuestionId({
-      platform: this.platform,
-      questNumber: this.questNumber,
-      questName: this.questName
-    });
-    
-    next();
-  } catch (error) {
-    next(error);
-  }
+QuestSchema.pre('save', async function() {
+  const platform = this.platform.toLowerCase();
+  
+  // Generate unique ID based on platform type
+  this.uniqueId = generateUniqueId({
+    platform: this.platform,
+    questNumber: this.questNumber,
+    questName: this.questName,
+    userId: this.user.toString()
+  });
+  
+  // Generate question ID (without user component)
+  this.questionId = generateQuestionId({
+    platform: this.platform,
+    questNumber: this.questNumber,
+    questName: this.questName
+  });
 });
 
 // Pre findOneAndUpdate middleware to generate uniqueId
