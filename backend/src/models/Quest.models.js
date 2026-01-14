@@ -15,13 +15,10 @@ const QuestSchema = new mongoose.Schema({
   // Unique identifier: platform + (questNumber|normalizedTitle) + userId
   uniqueId: {
     type: String,
-    unique: true,
-    index: true,
   },
   // Question identifier (without user): platform + (questNumber|normalizedTitle)
   questionId: {
     type: String,
-    index: true,
   },
   difficulty: {
     type: String,
@@ -147,8 +144,8 @@ QuestSchema.index({ uniqueId: 1 }, { unique: true, sparse: true });
 // Index for finding same question across users
 QuestSchema.index({ questionId: 1 });
 
-// Compound unique index for backward compatibility
-QuestSchema.index({ user: 1, platform: 1, questNumber: 1 }, { unique: true, sparse: true });
+// Compound index for querying (non-unique since uniqueId handles deduplication)
+QuestSchema.index({ user: 1, platform: 1, questNumber: 1 }, { sparse: true });
 
 // Text index for fast search on questName and questNumber
 QuestSchema.index({ questName: 'text', questNumber: 'text', description: 'text' });
