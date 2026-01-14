@@ -791,6 +791,14 @@
   padding: 0.75rem;
   background: rgba(255, 255, 255, 0.02);
   border-radius: 8px;
+  text-decoration: none;
+  cursor: pointer;
+  transition: background 0.2s ease, transform 0.2s ease;
+}
+
+.dashboard-layout .revision-item:hover {
+  background: rgba(255, 255, 255, 0.08);
+  transform: translateX(4px);
 }
 
 .dashboard-layout .revision-name {

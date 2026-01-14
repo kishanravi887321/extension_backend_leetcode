@@ -379,10 +379,16 @@ const Dashboard = () => {
               <p className="revision-subtitle">Problems you haven't revised in over 7 days</p>
               <div className="revision-list">
                 {stats.needsRevision.slice(0, 5).map((quest) => (
-                  <div key={quest._id} className="revision-item">
+                  <a 
+                    key={quest._id} 
+                    className="revision-item" 
+                    href={quest.questLink} 
+                    target="_blank" 
+                    rel="noopener noreferrer"
+                  >
                     <span className="revision-name">{quest.questNumber}. {quest.questName}</span>
                     <span className="revision-date">Last revised: {formatDate(quest.lastRevisedAt)}</span>
-                  </div>
+                  </a>
                 ))}
               </div>
             </div>
