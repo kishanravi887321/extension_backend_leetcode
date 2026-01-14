@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import './QuestionList.css';
 
 const QuestionList = ({ 
@@ -11,6 +11,24 @@ const QuestionList = ({
 }) => {
   const [expandedRow, setExpandedRow] = useState(null);
   const [companyDropdown, setCompanyDropdown] = useState(null);
+  const dropdownRef = useRef(null);
+
+  // Close dropdown when clicking outside
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
+        setCompanyDropdown(null);
+      }
+    };
+
+    if (companyDropdown) {
+      document.addEventListener('mousedown', handleClickOutside);
+    }
+
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, [companyDropdown]);
 
   const handleStatusToggle = async (e, id, currentStatus) => {
     e.stopPropagation();
