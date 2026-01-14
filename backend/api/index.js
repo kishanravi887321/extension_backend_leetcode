@@ -61,6 +61,8 @@ const allowedOrigins = [
   'https://cp.saksin.online',
   'https://leetcode.com',
   'https://www.leetcode.com',
+  'https://www.interviewbit.com',
+  'https://interviewbit.com',
   'http://cp.saksin.online'
 ];
 

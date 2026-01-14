@@ -1,14 +1,30 @@
 /**
  * One-time script to fix duplicate/conflicting indexes
  * Run with: node scripts/fix-indexes.js
+ * Or with explicit URI: MONGO_URL=your_uri node scripts/fix-indexes.js
  */
 
 import mongoose from 'mongoose';
 import dotenv from 'dotenv';
+import { fileURLToPath } from 'url';
+import { dirname, resolve } from 'path';
 
-dotenv.config({path: '../.env'});
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = dirname(__filename);
 
-const MONGODB_URI = process.env.MONGODB_URI || process.env.MONGO_URI;
+// Try loading .env from multiple possible locations
+dotenv.config({ path: resolve(__dirname, '../.env') });
+dotenv.config({ path: resolve(__dirname, '../../.env') });
+dotenv.config();
+
+const MONGODB_URI = process.env.MONGO_URL || process.env.MONGODB_URI || process.env.MONGO_URI;
+
+if (!MONGODB_URI) {
+  console.error('Error: No MongoDB URI found!');
+  console.error('Please set MONGO_URL environment variable or create a .env file');
+  console.error('Example: MONGO_URL=mongodb+srv://... node scripts/fix-indexes.js');
+  process.exit(1);
+}
 
 async function fixIndexes() {
   try {

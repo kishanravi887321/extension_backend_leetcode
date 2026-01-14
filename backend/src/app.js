@@ -14,7 +14,9 @@ const projectOrigins = [
   'https://cp.saksin.online',
   'https://leetcode.com',
   'https://www.leetcode.com',
-  'http://cp.saksin.online'
+  'http://cp.saksin.online',
+  'https://www.interviewbit.com',
+  'https://interviewbit.com'
 ];
 
 // CORS configuration
