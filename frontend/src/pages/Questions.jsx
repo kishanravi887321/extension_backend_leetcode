@@ -113,6 +113,7 @@ const Questions = () => {
 
   // Sort options
   const sortOptions = [
+    { value: 'companyCount', label: 'Most Asked (Companies)' },
     { value: 'createdAt', label: 'Date Added' },
     { value: 'lastRevisedAt', label: 'Last Revised' },
     { value: 'difficulty', label: 'Difficulty' },

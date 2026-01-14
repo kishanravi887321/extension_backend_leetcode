@@ -227,7 +227,39 @@ export const getQuests = async (req, res) => {
 
     // Build sort object
     const sortOptions = {};
-    const validSortFields = ["createdAt", "updatedAt", "lastRevisedAt", "difficulty", "questNumber", "questName"];
+    const validSortFields = ["createdAt", "updatedAt", "lastRevisedAt", "difficulty", "questNumber", "questName", "companyCount"];
+    
+    // Special handling for companyCount sorting (sort by array length)
+    if (sortBy === "companyCount") {
+      // Use aggregation for sorting by array length
+      const pipeline = [
+        { $match: query },
+        { $addFields: { companyTagsCount: { $size: { $ifNull: ["$companyTags", []] } } } },
+        { $sort: { companyTagsCount: sortOrder === "asc" ? 1 : -1, createdAt: -1 } },
+        { $skip: skip },
+        { $limit: limitNum }
+      ];
+      
+      const [quests, totalCount] = await Promise.all([
+        Quest.aggregate(pipeline),
+        Quest.countDocuments(query)
+      ]);
+      
+      const totalPages = Math.ceil(totalCount / limitNum);
+      
+      return res.json({
+        success: true,
+        quests,
+        pagination: {
+          currentPage: pageNum,
+          totalPages,
+          totalCount,
+          limit: limitNum,
+          hasNextPage: pageNum < totalPages,
+          hasPrevPage: pageNum > 1
+        }
+      });
+    }
     
     if (validSortFields.includes(sortBy)) {
       if (sortBy === "difficulty") {
