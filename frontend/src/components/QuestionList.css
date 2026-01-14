@@ -9,7 +9,7 @@
 /* List Header */
 .list-header {
   display: grid;
-  grid-template-columns: 60px 1fr 160px 80px 100px 120px;
+  grid-template-columns: 60px 1fr 200px 80px 100px 120px;
   gap: 0.5rem;
   padding: 0.875rem 1rem;
   background: rgba(255, 255, 255, 0.03);
@@ -54,7 +54,7 @@
 
 .row-main {
   display: grid;
-  grid-template-columns: 60px 1fr 160px 80px 100px 120px;
+  grid-template-columns: 60px 1fr 200px 80px 100px 120px;
   gap: 0.5rem;
   padding: 0.75rem 1rem;
   align-items: center;
@@ -298,17 +298,16 @@
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  width: 24px;
-  height: 24px;
-  border-radius: 6px;
-  transition: transform 0.2s ease;
+  width: 22px;
+  height: 22px;
+  border-radius: 4px;
   position: relative;
   cursor: pointer;
-  overflow: hidden;
+  overflow: visible;
 }
 
 .company-logo-wrapper:hover {
-  transform: scale(1.15);
+  transform: scale(1.1);
 }
 
 /* Company Logo SVG */
@@ -337,6 +336,39 @@
   font-weight: 700;
   color: white;
   text-transform: uppercase;
+  position: relative;
+  cursor: pointer;
+}
+
+.company-icon-custom:hover {
+  transform: scale(1.1);
+}
+
+/* Tooltip for custom icons */
+.company-icon-custom::after {
+  content: attr(title);
+  position: absolute;
+  bottom: calc(100% + 6px);
+  left: 50%;
+  transform: translateX(-50%);
+  background: #1a1a2e;
+  color: #fff;
+  padding: 4px 8px;
+  border-radius: 4px;
+  font-size: 0.65rem;
+  font-weight: 500;
+  white-space: nowrap;
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+  z-index: 100;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  text-transform: none;
+}
+
+.company-icon-custom:hover::after {
+  opacity: 1;
+  visibility: visible;
 }
 
 .company-icon-custom.ola { background: linear-gradient(135deg, #1C8F3C, #0D6B2E); }
@@ -361,42 +393,24 @@
 .company-logo-wrapper::after {
   content: attr(title);
   position: absolute;
-  bottom: calc(100% + 8px);
+  bottom: calc(100% + 6px);
   left: 50%;
   transform: translateX(-50%);
   background: #1a1a2e;
   color: #fff;
-  padding: 6px 10px;
-  border-radius: 6px;
-  font-size: 0.7rem;
+  padding: 4px 8px;
+  border-radius: 4px;
+  font-size: 0.65rem;
   font-weight: 500;
   white-space: nowrap;
   opacity: 0;
   visibility: hidden;
-  transition: opacity 0.2s ease, visibility 0.2s ease;
   pointer-events: none;
   z-index: 100;
   border: 1px solid rgba(255, 255, 255, 0.1);
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
 }
 
-.company-logo-wrapper::before {
-  content: '';
-  position: absolute;
-  bottom: calc(100% + 2px);
-  left: 50%;
-  transform: translateX(-50%);
-  border: 6px solid transparent;
-  border-top-color: #1a1a2e;
-  opacity: 0;
-  visibility: hidden;
-  transition: opacity 0.2s ease, visibility 0.2s ease;
-  pointer-events: none;
-  z-index: 100;
-}
-
-.company-logo-wrapper:hover::after,
-.company-logo-wrapper:hover::before {
+.company-logo-wrapper:hover::after {
   opacity: 1;
   visibility: visible;
 }
@@ -405,43 +419,25 @@
 .company-icon::after {
   content: attr(title);
   position: absolute;
-  bottom: calc(100% + 8px);
+  bottom: calc(100% + 6px);
   left: 50%;
   transform: translateX(-50%);
   background: #1a1a2e;
   color: #fff;
-  padding: 6px 10px;
-  border-radius: 6px;
-  font-size: 0.7rem;
+  padding: 4px 8px;
+  border-radius: 4px;
+  font-size: 0.65rem;
   font-weight: 500;
   white-space: nowrap;
   opacity: 0;
   visibility: hidden;
-  transition: opacity 0.2s ease, visibility 0.2s ease;
   pointer-events: none;
   z-index: 100;
   border: 1px solid rgba(255, 255, 255, 0.1);
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
   text-transform: none;
 }
 
-.company-icon::before {
-  content: '';
-  position: absolute;
-  bottom: calc(100% + 2px);
-  left: 50%;
-  transform: translateX(-50%);
-  border: 6px solid transparent;
-  border-top-color: #1a1a2e;
-  opacity: 0;
-  visibility: hidden;
-  transition: opacity 0.2s ease, visibility 0.2s ease;
-  pointer-events: none;
-  z-index: 100;
-}
-
-.company-icon:hover::after,
-.company-icon:hover::before {
+.company-icon:hover::after {
   opacity: 1;
   visibility: visible;
 }

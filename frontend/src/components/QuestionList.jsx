@@ -364,16 +364,16 @@ const QuestionList = ({
                 {question.companyTags && question.companyTags.length > 0 ? (
                   <div className="company-badges-wrapper" ref={companyDropdown === question._id ? dropdownRef : null}>
                     <div className="company-badges">
-                      {question.companyTags.slice(0, 4).map((company, idx) => (
+                      {question.companyTags.slice(0, 5).map((company, idx) => (
                         <span key={idx}>{getCompanyIcon(company)}</span>
                       ))}
-                      {question.companyTags.length > 4 && (
+                      {question.companyTags.length > 5 && (
                         <button 
                           className="company-more"
                           onClick={(e) => handleCompanyDropdownToggle(e, question._id)}
-                          title={`+${question.companyTags.length - 4} more companies`}
+                          title={`+${question.companyTags.length - 5} more companies`}
                         >
-                          +{question.companyTags.length - 4}
+                          +{question.companyTags.length - 5}
                         </button>
                       )}
                     </div>
