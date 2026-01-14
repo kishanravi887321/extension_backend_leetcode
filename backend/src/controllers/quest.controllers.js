@@ -1,7 +1,8 @@
 import Quest from "../models/Quest.models.js";
 import mongoose from "mongoose";
+import { generateUniqueId, generateQuestionId, normalizeTitle } from "../utils/uniqueId.js";
 
-// @desc    Upsert a question (create or update based on questNumber + platform + user)
+// @desc    Upsert a question (create or update based on uniqueId)
 // @route   POST /api/quests/upsert
 // @access  Private
 export const upsertQuest = async (req, res) => {
@@ -9,21 +10,48 @@ export const upsertQuest = async (req, res) => {
     const { questName, questNumber, questLink, platform, difficulty, topics, status, notes, description, bookmarked } = req.body;
 
     // Validate required fields
-    if (!questName || !questNumber || !questLink || !platform) {
+    if (!questName  || !questLink || !platform) {
       return res.status(400).json({
         success: false,
-        message: "Please provide questName, questNumber, questLink, and platform"
+        message: "Please provide questName, questLink, and platform"
       });
     }
+
+    // For LeetCode, questNumber is required
+    const normalizedPlatform = platform.toLowerCase();
+    if (normalizedPlatform === 'leetcode' && !questNumber) {
+      return res.status(400).json({
+        success: false,
+        message: "Question number is required for LeetCode platform"
+      });
+    }
+
+    // Generate unique ID for this question
+    const uniqueId = generateUniqueId({
+      platform,
+      questNumber,
+      questName,
+      userId: req.user.id
+    });
+
+    // Generate question ID (without user)
+    const questionId = generateQuestionId({
+      platform,
+      questNumber,
+      questName
+    });
 
     // Build update object with only provided fields
     const updateData = {
       questName,
       questLink,
       platform,
+      uniqueId,
+      questionId,
     };
 
     // Only include optional fields if they are provided
+    if (questNumber !== undefined) updateData.questNumber = questNumber;
     if (difficulty !== undefined) updateData.difficulty = difficulty;
     if (topics !== undefined) updateData.topics = topics;
     if (status !== undefined) updateData.status = status;
@@ -31,18 +59,15 @@ export const upsertQuest = async (req, res) => {
     if (description !== undefined) updateData.description = description;
     if (bookmarked !== undefined) updateData.bookmarked = bookmarked;
 
-    // Find and update, or create if not exists
+    // Find by uniqueId and update, or create if not exists
     const quest = await Quest.findOneAndUpdate(
       {
-        user: req.user.id,
-        questNumber: questNumber,
-        platform: platform
+        uniqueId: uniqueId
       },
       {
         $set: updateData,
         $setOnInsert: {
           user: req.user.id,
-          questNumber: questNumber,
           createdAt: new Date()
         }
       },
