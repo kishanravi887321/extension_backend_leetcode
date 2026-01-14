@@ -160,7 +160,7 @@ export const getQuests = async (req, res) => {
       bookmarked,
       search,
       searchBy,
-      sortBy = "createdAt",
+      sortBy = "companyCount",
       sortOrder = "desc"
     } = req.query;
 

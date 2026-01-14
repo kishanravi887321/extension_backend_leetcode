@@ -59,7 +59,7 @@ const Questions = () => {
   const [platform, setPlatform] = useState(searchParams.get('platform') || 'all');
   const [selectedTopics, setSelectedTopics] = useState([]);
   const [bookmarkedOnly, setBookmarkedOnly] = useState(searchParams.get('bookmarked') === 'true');
-  const [sortBy, setSortBy] = useState(searchParams.get('sortBy') || 'createdAt');
+  const [sortBy, setSortBy] = useState(searchParams.get('sortBy') || 'companyCount');
   const [sortOrder, setSortOrder] = useState(searchParams.get('sortOrder') || 'desc');
 
   // Search state
@@ -192,7 +192,7 @@ const Questions = () => {
     if (difficulty !== 'all') params.set('difficulty', difficulty);
     if (platform !== 'all') params.set('platform', platform);
     if (bookmarkedOnly) params.set('bookmarked', 'true');
-    if (sortBy !== 'createdAt') params.set('sortBy', sortBy);
+    if (sortBy !== 'companyCount') params.set('sortBy', sortBy);
     if (sortOrder !== 'desc') params.set('sortOrder', sortOrder);
     if (debouncedSearch) {
       params.set('search', debouncedSearch);
@@ -333,7 +333,7 @@ const Questions = () => {
     setSelectedTopics([]);
     setBookmarkedOnly(false);
     setSearchQuery('');
-    setSortBy('createdAt');
+    setSortBy('companyCount');
     setSortOrder('desc');
     setSearchParams({});
   };
@@ -675,8 +675,8 @@ const Questions = () => {
                 value={sortOrder}
                 onChange={(e) => setSortOrder(e.target.value)}
               >
-                <option value="desc">Newest First</option>
-                <option value="asc">Oldest First</option>
+                <option value="desc">High to Low</option>
+                <option value="asc">Low to High</option>
               </select>
             </div>
 
