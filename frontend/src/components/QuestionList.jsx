@@ -1,6 +1,6 @@
 import { useState, useEffect, useRef } from 'react';
 import { FcGoogle } from 'react-icons/fc';
-import { FaMicrosoft, FaTwitter } from 'react-icons/fa';
+import { FaMicrosoft, FaTwitter, FaYahoo } from 'react-icons/fa';
 import { 
   SiAmazon, SiMeta, SiFacebook, SiApple, SiNetflix, SiUber, SiAdobe, 
   SiOracle, SiNvidia, SiLinkedin, SiX, SiStripe, SiPaypal, SiSpotify, SiAirbnb, 
@@ -8,7 +8,14 @@ import {
   SiAccenture, SiIntel, SiCisco, SiVmware, SiSamsung, SiCognizant,
   SiRobinhood, SiCoinbase, SiSnapchat,
   SiBytedance, SiTiktok, SiLyft, SiDoordash, SiInstacart, SiShopify, SiDropbox,
-  SiZoom, SiSlack, SiTwilio, SiDatabricks, SiSnowflake, SiPalantir
+  SiZoom, SiSlack, SiTwilio, SiDatabricks, SiSnowflake, SiPalantir,
+  // New icons
+  SiGeeksforgeeks, SiHackerrank, SiCodechef, SiCodeforces, SiGoldmansachs,
+  SiVisa, SiMastercard, SiExpedia, SiIntuit, SiEpicgames, SiQualcomm,
+  SiSwiggy, SiZomato, SiPhonepe, SiPaytm, SiRazorpay, SiGrab, SiTcs, SiHcl,
+  SiMahindra, SiPayoneer, SiChase, SiDeutschebank, SiBarclays, SiHsbc,
+  SiBankofamerica, SiHdfcbank, SiIcicibank, SiGithub, SiGitlab, SiBitbucket,
+  SiJira, SiConfluence, SiPinterest, SiReddit, SiQuora, SiDell, SiHp, SiSap, SiSony
 } from 'react-icons/si';
 import './QuestionList.css';
 
@@ -263,14 +270,16 @@ const QuestionList = ({
                 {question.companyTags && question.companyTags.length > 0 ? (
                   <div className="company-badges-wrapper" ref={companyDropdown === question._id ? dropdownRef : null}>
                     <div className="company-badges">
-                      {getCompanyIcon(question.companyTags[0])}
-                      {question.companyTags.length > 1 && (
+                      {question.companyTags.slice(0, 4).map((company, idx) => (
+                        <span key={idx}>{getCompanyIcon(company)}</span>
+                      ))}
+                      {question.companyTags.length > 4 && (
                         <button 
                           className="company-more"
                           onClick={(e) => handleCompanyDropdownToggle(e, question._id)}
-                          title={`+${question.companyTags.length - 1} more companies`}
+                          title={`+${question.companyTags.length - 4} more companies`}
                         >
-                          +{question.companyTags.length - 1}
+                          +{question.companyTags.length - 4}
                         </button>
                       )}
                     </div>

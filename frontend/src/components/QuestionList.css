@@ -9,7 +9,7 @@
 /* List Header */
 .list-header {
   display: grid;
-  grid-template-columns: 60px 1fr 120px 80px 100px 120px;
+  grid-template-columns: 60px 1fr 160px 80px 100px 120px;
   gap: 0.5rem;
   padding: 0.875rem 1rem;
   background: rgba(255, 255, 255, 0.03);
@@ -54,7 +54,7 @@
 
 .row-main {
   display: grid;
-  grid-template-columns: 60px 1fr 120px 80px 100px 120px;
+  grid-template-columns: 60px 1fr 160px 80px 100px 120px;
   gap: 0.5rem;
   padding: 0.75rem 1rem;
   align-items: center;
@@ -169,13 +169,13 @@
 .col-company {
   display: flex;
   align-items: center;
-  justify-content: center;
+  justify-content: flex-start;
 }
 
 .col-company .company-badges {
   display: flex;
   align-items: center;
-  gap: 0.35rem;
+  gap: 0.3rem;
 }
 
 .col-company .company-badge {
@@ -293,8 +293,8 @@
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  width: 26px;
-  height: 26px;
+  width: 24px;
+  height: 24px;
   border-radius: 6px;
   transition: transform 0.2s ease;
   position: relative;
@@ -308,8 +308,8 @@
 
 /* Company Logo SVG */
 .company-logo {
-  width: 22px;
-  height: 22px;
+  width: 20px;
+  height: 20px;
 }
 
 /* Special cases for logos that need background */
