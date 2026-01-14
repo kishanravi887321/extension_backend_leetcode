@@ -10,6 +10,7 @@ const QuestionList = ({
   onTopicClick
 }) => {
   const [expandedRow, setExpandedRow] = useState(null);
+  const [companyDropdown, setCompanyDropdown] = useState(null);
 
   const handleStatusToggle = async (e, id, currentStatus) => {
     e.stopPropagation();
@@ -58,69 +59,82 @@ const QuestionList = ({
   const getCompanyIcon = (company) => {
     const companyLower = company.toLowerCase();
     const companyIcons = {
-      google: <span className="company-icon google">G</span>,
-      amazon: <span className="company-icon amazon">a</span>,
-      microsoft: <span className="company-icon microsoft">M</span>,
-      meta: <span className="company-icon meta">m</span>,
-      facebook: <span className="company-icon meta">m</span>,
-      apple: <span className="company-icon apple">A</span>,
-      netflix: <span className="company-icon netflix">N</span>,
-      uber: <span className="company-icon uber">U</span>,
-      salesforce: <span className="company-icon salesforce">S</span>,
-      adobe: <span className="company-icon adobe">A</span>,
-      oracle: <span className="company-icon oracle">O</span>,
-      ibm: <span className="company-icon ibm">I</span>,
-      intel: <span className="company-icon intel">i</span>,
-      cisco: <span className="company-icon cisco">C</span>,
-      vmware: <span className="company-icon vmware">V</span>,
-      flipkart: <span className="company-icon flipkart">F</span>,
-      walmart: <span className="company-icon walmart">W</span>,
-      deloitte: <span className="company-icon deloitte">D</span>,
-      accenture: <span className="company-icon accenture">A</span>,
-      tcs: <span className="company-icon tcs">T</span>,
-      infosys: <span className="company-icon infosys">I</span>,
-      wipro: <span className="company-icon wipro">W</span>,
-      cognizant: <span className="company-icon cognizant">C</span>,
-      paypal: <span className="company-icon paypal">P</span>,
-      stripe: <span className="company-icon stripe">S</span>,
-      twitter: <span className="company-icon twitter">X</span>,
-      linkedin: <span className="company-icon linkedin">in</span>,
-      airbnb: <span className="company-icon airbnb">A</span>,
-      spotify: <span className="company-icon spotify">S</span>,
-      snap: <span className="company-icon snap">S</span>,
-      nvidia: <span className="company-icon nvidia">N</span>,
-      samsung: <span className="company-icon samsung">S</span>,
-      jpmorgan: <span className="company-icon jpmorgan">JP</span>,
-      goldman: <span className="company-icon goldman">GS</span>,
-      bloomberg: <span className="company-icon bloomberg">B</span>,
-      atlassian: <span className="company-icon atlassian">A</span>,
-      shopify: <span className="company-icon shopify">S</span>,
-      dropbox: <span className="company-icon dropbox">D</span>,
-      zoom: <span className="company-icon zoom">Z</span>,
-      slack: <span className="company-icon slack">S</span>,
-      twilio: <span className="company-icon twilio">T</span>,
-      servicenow: <span className="company-icon servicenow">S</span>,
-      databricks: <span className="company-icon databricks">D</span>,
-      snowflake: <span className="company-icon snowflake">S</span>,
-      palantir: <span className="company-icon palantir">P</span>,
-      lyft: <span className="company-icon lyft">L</span>,
-      doordash: <span className="company-icon doordash">D</span>,
-      instacart: <span className="company-icon instacart">I</span>,
-      robinhood: <span className="company-icon robinhood">R</span>,
-      coinbase: <span className="company-icon coinbase">C</span>,
-      bytedance: <span className="company-icon bytedance">B</span>,
-      tiktok: <span className="company-icon bytedance">T</span>,
+      google: { letter: 'G', className: 'google' },
+      amazon: { letter: 'a', className: 'amazon' },
+      microsoft: { letter: 'M', className: 'microsoft' },
+      meta: { letter: 'm', className: 'meta' },
+      facebook: { letter: 'm', className: 'meta' },
+      apple: { letter: 'A', className: 'apple' },
+      netflix: { letter: 'N', className: 'netflix' },
+      uber: { letter: 'U', className: 'uber' },
+      salesforce: { letter: 'S', className: 'salesforce' },
+      adobe: { letter: 'A', className: 'adobe' },
+      oracle: { letter: 'O', className: 'oracle' },
+      ibm: { letter: 'I', className: 'ibm' },
+      intel: { letter: 'i', className: 'intel' },
+      cisco: { letter: 'C', className: 'cisco' },
+      vmware: { letter: 'V', className: 'vmware' },
+      flipkart: { letter: 'F', className: 'flipkart' },
+      walmart: { letter: 'W', className: 'walmart' },
+      deloitte: { letter: 'D', className: 'deloitte' },
+      accenture: { letter: 'A', className: 'accenture' },
+      tcs: { letter: 'T', className: 'tcs' },
+      infosys: { letter: 'I', className: 'infosys' },
+      wipro: { letter: 'W', className: 'wipro' },
+      cognizant: { letter: 'C', className: 'cognizant' },
+      paypal: { letter: 'P', className: 'paypal' },
+      stripe: { letter: 'S', className: 'stripe' },
+      twitter: { letter: 'X', className: 'twitter' },
+      linkedin: { letter: 'in', className: 'linkedin' },
+      airbnb: { letter: 'A', className: 'airbnb' },
+      spotify: { letter: 'S', className: 'spotify' },
+      snap: { letter: 'S', className: 'snap' },
+      nvidia: { letter: 'N', className: 'nvidia' },
+      samsung: { letter: 'S', className: 'samsung' },
+      jpmorgan: { letter: 'JP', className: 'jpmorgan' },
+      goldman: { letter: 'GS', className: 'goldman' },
+      bloomberg: { letter: 'B', className: 'bloomberg' },
+      atlassian: { letter: 'A', className: 'atlassian' },
+      shopify: { letter: 'S', className: 'shopify' },
+      dropbox: { letter: 'D', className: 'dropbox' },
+      zoom: { letter: 'Z', className: 'zoom' },
+      slack: { letter: 'S', className: 'slack' },
+      twilio: { letter: 'T', className: 'twilio' },
+      servicenow: { letter: 'S', className: 'servicenow' },
+      databricks: { letter: 'D', className: 'databricks' },
+      snowflake: { letter: 'S', className: 'snowflake' },
+      palantir: { letter: 'P', className: 'palantir' },
+      lyft: { letter: 'L', className: 'lyft' },
+      doordash: { letter: 'D', className: 'doordash' },
+      instacart: { letter: 'I', className: 'instacart' },
+      robinhood: { letter: 'R', className: 'robinhood' },
+      coinbase: { letter: 'C', className: 'coinbase' },
+      bytedance: { letter: 'B', className: 'bytedance' },
+      tiktok: { letter: 'T', className: 'bytedance' },
     };
     
     // Check for partial matches
-    for (const [key, icon] of Object.entries(companyIcons)) {
+    for (const [key, config] of Object.entries(companyIcons)) {
       if (companyLower.includes(key) || key.includes(companyLower)) {
-        return icon;
+        return (
+          <span className={`company-icon ${config.className}`} title={company}>
+            {config.letter}
+          </span>
+        );
       }
     }
     
     // Default icon with first letter
-    return <span className="company-icon default">{company.charAt(0).toUpperCase()}</span>;
+    return (
+      <span className="company-icon default" title={company}>
+        {company.charAt(0).toUpperCase()}
+      </span>
+    );
+  };
+
+  const handleCompanyDropdownToggle = (e, questionId) => {
+    e.stopPropagation();
+    setCompanyDropdown(companyDropdown === questionId ? null : questionId);
   };
 
   const getPlatformIcon = (platform) => {
@@ -202,10 +216,29 @@ const QuestionList = ({
               {/* Company Column */}
               <div className="col-company">
                 {question.companyTags && question.companyTags.length > 0 ? (
-                  <div className="company-badges" title={question.companyTags.join(', ')}>
-                    {getCompanyIcon(question.companyTags[0])}
-                    {question.companyTags.length > 1 && (
-                      <span className="company-more">+{question.companyTags.length - 1}</span>
+                  <div className="company-badges-wrapper">
+                    <div className="company-badges">
+                      {getCompanyIcon(question.companyTags[0])}
+                      {question.companyTags.length > 1 && (
+                        <button 
+                          className="company-more"
+                          onClick={(e) => handleCompanyDropdownToggle(e, question._id)}
+                          title={`+${question.companyTags.length - 1} more companies`}
+                        >
+                          +{question.companyTags.length - 1}
+                        </button>
+                      )}
+                    </div>
+                    {companyDropdown === question._id && question.companyTags.length > 1 && (
+                      <div className="company-dropdown" onClick={(e) => e.stopPropagation()}>
+                        <div className="company-dropdown-header">Companies</div>
+                        {question.companyTags.map((company, idx) => (
+                          <div key={idx} className="company-dropdown-item">
+                            {getCompanyIcon(company)}
+                            <span className="company-name">{company}</span>
+                          </div>
+                        ))}
+                      </div>
                     )}
                   </div>
                 ) : (
