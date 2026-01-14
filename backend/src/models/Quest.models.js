@@ -99,7 +99,7 @@ QuestSchema.pre('save', function(next) {
 });
 
 // Pre findOneAndUpdate middleware to generate uniqueId
-QuestSchema.pre('findOneAndUpdate', function(next) {
+QuestSchema.pre('findOneAndUpdate', function() {
   const update = this.getUpdate();
   const filter = this.getFilter();
   
@@ -139,8 +139,6 @@ QuestSchema.pre('findOneAndUpdate', function(next) {
       console.warn('UniqueId generation warning:', error.message);
     }
   }
-  
-  next();
 });
 
 // Unique index on uniqueId (primary deduplication mechanism)
