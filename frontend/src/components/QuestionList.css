@@ -342,7 +342,7 @@
 .company-icon-custom::after {
   content: attr(title);
   position: absolute;
-  bottom: calc(100% + 6px);
+  top: calc(100% + 6px);
   left: 50%;
   transform: translateX(-50%);
   background: #1a1a2e;
@@ -355,7 +355,7 @@
   opacity: 0;
   visibility: hidden;
   pointer-events: none;
-  z-index: 100;
+  z-index: 1000;
   border: 1px solid rgba(255, 255, 255, 0.1);
   text-transform: none;
 }
@@ -387,7 +387,7 @@
 .company-logo-wrapper::after {
   content: attr(title);
   position: absolute;
-  bottom: calc(100% + 6px);
+  top: calc(100% + 6px);
   left: 50%;
   transform: translateX(-50%);
   background: #1a1a2e;
@@ -400,7 +400,7 @@
   opacity: 0;
   visibility: hidden;
   pointer-events: none;
-  z-index: 100;
+  z-index: 1000;
   border: 1px solid rgba(255, 255, 255, 0.1);
 }
 
@@ -413,7 +413,7 @@
 .company-icon::after {
   content: attr(title);
   position: absolute;
-  bottom: calc(100% + 6px);
+  top: calc(100% + 6px);
   left: 50%;
   transform: translateX(-50%);
   background: #1a1a2e;
@@ -426,7 +426,7 @@
   opacity: 0;
   visibility: hidden;
   pointer-events: none;
-  z-index: 100;
+  z-index: 1000;
   border: 1px solid rgba(255, 255, 255, 0.1);
   text-transform: none;
 }
