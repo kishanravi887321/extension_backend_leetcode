@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { Link, useNavigate, useLocation } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
-import { getProfile, getQuestStats, getHeatmapData } from '../api/auth';
+import { getProfile, getQuestStats } from '../api/auth';
 import './Profile.css';
 import './Dashboard.css';
 
@@ -11,7 +11,6 @@ const Profile = () => {
   const { user, logout, updateUser } = useAuth();
   const [profile, setProfile] = useState(null);
   const [stats, setStats] = useState(null);
-  const [heatmap, setHeatmap] = useState({});
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
   const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
@@ -22,10 +21,9 @@ const Profile = () => {
 
   const fetchProfileData = async () => {
     try {
-      const [profileRes, statsRes, heatmapRes] = await Promise.all([
+      const [profileRes, statsRes] = await Promise.all([
         getProfile(),
-        getQuestStats(),
-        getHeatmapData(new Date().getFullYear())
+        getQuestStats()
       ]);
 
       if (profileRes.success) {
@@ -34,9 +32,6 @@ const Profile = () => {
       }
       if (statsRes.success) {
         setStats(statsRes.stats);
-      }
-      if (heatmapRes.success) {
-        setHeatmap(heatmapRes.heatmap);
       }
     } catch (err) {
       setError('Failed to load profile');
@@ -88,29 +83,6 @@ const Profile = () => {
       ),
     };
     return icons[iconName];
-  };
-
-  // Generate last 28 days for activity heatmap
-  const getLast28Days = () => {
-    const days = [];
-    for (let i = 27; i >= 0; i--) {
-      const date = new Date();
-      date.setDate(date.getDate() - i);
-      const dateStr = date.toISOString().split('T')[0];
-      days.push({
-        date: dateStr,
-        count: heatmap[dateStr] || 0
-      });
-    }
-    return days;
-  };
-
-  const getHeatmapLevel = (count) => {
-    if (count === 0) return 0;
-    if (count <= 2) return 1;
-    if (count <= 4) return 2;
-    if (count <= 6) return 3;
-    return 4;
   };
 
   const overview = stats?.overview || { total: 0, solved: 0, unsolved: 0, forFuture: 0, bookmarked: 0 };
@@ -422,36 +394,6 @@ const Profile = () => {
                   </div>
                 </div>
               )}
-
-              {/* Activity Heatmap Card */}
-              <div className="profile-card">
-                <div className="card-header">
-                  <h3>Activity</h3>
-                  <span className="activity-period">Last 4 weeks</span>
-                </div>
-                <div className="card-body">
-                  <div className="activity-heatmap">
-                    {getLast28Days().map((day, i) => (
-                      <div
-                        key={i}
-                        className={`heatmap-cell level-${getHeatmapLevel(day.count)}`}
-                        title={`${day.date}: ${day.count} revision${day.count !== 1 ? 's' : ''}`}
-                      ></div>
-                    ))}
-                  </div>
-                  <div className="heatmap-legend">
-                    <span>Less</span>
-                    <div className="legend-cells">
-                      <div className="heatmap-cell level-0"></div>
-                      <div className="heatmap-cell level-1"></div>
-                      <div className="heatmap-cell level-2"></div>
-                      <div className="heatmap-cell level-3"></div>
-                      <div className="heatmap-cell level-4"></div>
-                    </div>
-                    <span>More</span>
-                  </div>
-                </div>
-              </div>
 
               {/* Top Topics */}
               {stats?.byTopic && stats.byTopic.length > 0 && (

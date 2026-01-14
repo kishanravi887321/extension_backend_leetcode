@@ -231,9 +231,12 @@ export const getQuests = async (req, res) => {
     
     // Special handling for companyCount sorting (sort by array length)
     if (sortBy === "companyCount") {
+      // For aggregation, we need ObjectId for user field
+      const aggregationQuery = { ...query, user: new mongoose.Types.ObjectId(req.user.id) };
+      
       // Use aggregation for sorting by array length
       const pipeline = [
-        { $match: query },
+        { $match: aggregationQuery },
         { $addFields: { companyTagsCount: { $size: { $ifNull: ["$companyTags", []] } } } },
         { $sort: { companyTagsCount: sortOrder === "asc" ? 1 : -1, createdAt: -1 } },
         { $skip: skip },
