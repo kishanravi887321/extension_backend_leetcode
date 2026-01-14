@@ -9,7 +9,7 @@
 /* List Header */
 .list-header {
   display: grid;
-  grid-template-columns: 60px 1fr 160px 100px 120px;
+  grid-template-columns: 60px 1fr 120px 80px 100px 120px;
   gap: 0.5rem;
   padding: 0.875rem 1rem;
   background: rgba(255, 255, 255, 0.03);
@@ -54,7 +54,7 @@
 
 .row-main {
   display: grid;
-  grid-template-columns: 60px 1fr 160px 100px 120px;
+  grid-template-columns: 60px 1fr 120px 80px 100px 120px;
   gap: 0.5rem;
   padding: 0.75rem 1rem;
   align-items: center;
@@ -164,6 +164,134 @@
 .platform-icon-text.ac { background: #222; color: white; }
 .platform-icon-text.ib { background: #556ee6; color: white; }
 .platform-icon-text.other { background: #666; color: white; }
+
+/* Company Column */
+.col-company {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.col-company .company-badges {
+  display: flex;
+  align-items: center;
+  gap: 0.35rem;
+}
+
+.col-company .company-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.25rem;
+  background: rgba(99, 102, 241, 0.15);
+  border-radius: 16px;
+  padding: 0.25rem 0.6rem;
+  font-size: 0.7rem;
+  color: #818cf8;
+  white-space: nowrap;
+  max-width: 120px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.col-company .company-badge.empty {
+  background: transparent;
+  color: #555;
+}
+
+.col-company .company-more {
+  font-size: 0.65rem;
+  color: #888;
+  background: rgba(255, 255, 255, 0.08);
+  padding: 0.15rem 0.4rem;
+  border-radius: 10px;
+}
+
+/* Company Icons */
+.company-icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 26px;
+  height: 26px;
+  border-radius: 6px;
+  font-size: 0.75rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  transition: transform 0.2s ease;
+}
+
+.company-icon:hover {
+  transform: scale(1.1);
+}
+
+/* Big Tech */
+.company-icon.google { background: linear-gradient(135deg, #4285F4, #34A853, #FBBC05, #EA4335); color: white; }
+.company-icon.amazon { background: #FF9900; color: #232F3E; }
+.company-icon.microsoft { background: linear-gradient(135deg, #F25022, #7FBA00, #00A4EF, #FFB900); color: white; }
+.company-icon.meta { background: linear-gradient(135deg, #0668E1, #0080FB); color: white; }
+.company-icon.apple { background: #000000; color: white; }
+.company-icon.netflix { background: #E50914; color: white; }
+
+/* Tech Giants */
+.company-icon.uber { background: #000000; color: white; }
+.company-icon.salesforce { background: #00A1E0; color: white; }
+.company-icon.adobe { background: #FF0000; color: white; }
+.company-icon.oracle { background: #F80000; color: white; }
+.company-icon.ibm { background: #0530AD; color: white; }
+.company-icon.intel { background: #0071C5; color: white; }
+.company-icon.cisco { background: #049FD9; color: white; }
+.company-icon.vmware { background: #607078; color: white; }
+.company-icon.nvidia { background: #76B900; color: white; }
+.company-icon.samsung { background: #1428A0; color: white; }
+
+/* Indian Tech */
+.company-icon.flipkart { background: #2874F0; color: #FFE500; }
+.company-icon.walmart { background: #0071CE; color: #FFC220; }
+.company-icon.tcs { background: #0076CE; color: white; }
+.company-icon.infosys { background: #007CC3; color: white; }
+.company-icon.wipro { background: #3C1053; color: white; }
+.company-icon.cognizant { background: #0033A1; color: white; }
+
+/* Consulting */
+.company-icon.deloitte { background: #86BC25; color: white; }
+.company-icon.accenture { background: #A100FF; color: white; }
+
+/* Fintech */
+.company-icon.paypal { background: #003087; color: white; }
+.company-icon.stripe { background: #635BFF; color: white; }
+.company-icon.jpmorgan { background: #117ACA; color: white; font-size: 0.6rem; }
+.company-icon.goldman { background: #7399C6; color: white; font-size: 0.6rem; }
+.company-icon.bloomberg { background: #2800D7; color: white; }
+.company-icon.robinhood { background: #00C805; color: white; }
+.company-icon.coinbase { background: #0052FF; color: white; }
+
+/* Social/Media */
+.company-icon.twitter { background: #000000; color: white; }
+.company-icon.linkedin { background: #0A66C2; color: white; font-size: 0.6rem; }
+.company-icon.snap { background: #FFFC00; color: black; }
+.company-icon.spotify { background: #1DB954; color: white; }
+.company-icon.bytedance { background: #000000; color: white; }
+
+/* Startups/Tech */
+.company-icon.airbnb { background: #FF5A5F; color: white; }
+.company-icon.atlassian { background: #0052CC; color: white; }
+.company-icon.shopify { background: #7AB55C; color: white; }
+.company-icon.dropbox { background: #0061FF; color: white; }
+.company-icon.zoom { background: #2D8CFF; color: white; }
+.company-icon.slack { background: linear-gradient(135deg, #E01E5A, #ECB22E, #2EB67D, #36C5F0); color: white; }
+.company-icon.twilio { background: #F22F46; color: white; }
+.company-icon.servicenow { background: #81B5A1; color: white; }
+.company-icon.databricks { background: #FF3621; color: white; }
+.company-icon.snowflake { background: #29B5E8; color: white; }
+.company-icon.palantir { background: #101113; color: white; }
+
+/* Delivery/Rideshare */
+.company-icon.lyft { background: #FF00BF; color: white; }
+.company-icon.doordash { background: #FF3008; color: white; }
+.company-icon.instacart { background: #43B02A; color: white; }
+
+/* Default */
+.company-icon.default { background: rgba(99, 102, 241, 0.2); color: #818cf8; }
 
 /* Platform Column */
 .col-platform {
@@ -389,11 +517,11 @@
 /* Responsive */
 @media (max-width: 900px) {
   .list-header {
-    grid-template-columns: 50px 1fr 60px 80px 80px;
+    grid-template-columns: 50px 1fr 100px 60px 80px 80px;
   }
   
   .row-main {
-    grid-template-columns: 50px 1fr 60px 80px 80px;
+    grid-template-columns: 50px 1fr 100px 60px 80px 80px;
   }
 }
 
@@ -402,7 +530,8 @@
     grid-template-columns: 50px 1fr 50px 80px;
   }
   
-  .list-header .col-difficulty {
+  .list-header .col-difficulty,
+  .list-header .col-company {
     display: none;
   }
   
@@ -410,7 +539,8 @@
     grid-template-columns: 50px 1fr 50px 80px;
   }
   
-  .row-main .col-difficulty {
+  .row-main .col-difficulty,
+  .row-main .col-company {
     display: none;
   }
 }
@@ -420,7 +550,8 @@
     grid-template-columns: 40px 1fr 60px;
   }
   
-  .list-header .col-platform {
+  .list-header .col-platform,
+  .list-header .col-company {
     display: none;
   }
   
@@ -428,7 +559,8 @@
     grid-template-columns: 40px 1fr 60px;
   }
   
-  .row-main .col-platform {
+  .row-main .col-platform,
+  .row-main .col-company {
     display: none;
   }
   

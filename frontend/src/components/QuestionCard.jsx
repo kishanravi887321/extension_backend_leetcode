@@ -23,7 +23,8 @@ const QuestionCard = ({
     bookmarked,
     notes,
     lastRevisedAt,
-    createdAt
+    createdAt,
+    companyTags
   } = question;
 
   const handleStatusUpdate = async (newStatus) => {
@@ -96,6 +97,55 @@ const QuestionCard = ({
     return status || 'unsolved';
   };
 
+  const getCompanyIcon = (company) => {
+    const companyLower = company.toLowerCase();
+    const companyConfig = {
+      google: { bg: 'linear-gradient(135deg, #4285F4, #34A853)', letter: 'G' },
+      amazon: { bg: '#FF9900', letter: 'a', color: '#232F3E' },
+      microsoft: { bg: 'linear-gradient(135deg, #F25022, #00A4EF)', letter: 'M' },
+      meta: { bg: '#0668E1', letter: 'm' },
+      facebook: { bg: '#0668E1', letter: 'm' },
+      apple: { bg: '#000000', letter: 'A' },
+      netflix: { bg: '#E50914', letter: 'N' },
+      uber: { bg: '#000000', letter: 'U' },
+      salesforce: { bg: '#00A1E0', letter: 'S' },
+      adobe: { bg: '#FF0000', letter: 'A' },
+      flipkart: { bg: '#2874F0', letter: 'F', color: '#FFE500' },
+      walmart: { bg: '#0071CE', letter: 'W', color: '#FFC220' },
+      deloitte: { bg: '#86BC25', letter: 'D' },
+      oracle: { bg: '#F80000', letter: 'O' },
+      nvidia: { bg: '#76B900', letter: 'N' },
+      tcs: { bg: '#0076CE', letter: 'T' },
+      infosys: { bg: '#007CC3', letter: 'I' },
+      stripe: { bg: '#635BFF', letter: 'S' },
+      paypal: { bg: '#003087', letter: 'P' },
+      twitter: { bg: '#000000', letter: 'X' },
+      linkedin: { bg: '#0A66C2', letter: 'in' },
+      airbnb: { bg: '#FF5A5F', letter: 'A' },
+      spotify: { bg: '#1DB954', letter: 'S' },
+      atlassian: { bg: '#0052CC', letter: 'A' },
+    };
+    
+    for (const [key, config] of Object.entries(companyConfig)) {
+      if (companyLower.includes(key) || key.includes(companyLower)) {
+        return (
+          <span 
+            className="company-icon-inline" 
+            style={{ background: config.bg, color: config.color || 'white' }}
+          >
+            {config.letter}
+          </span>
+        );
+      }
+    }
+    
+    return (
+      <span className="company-icon-inline default">
+        {company.charAt(0).toUpperCase()}
+      </span>
+    );
+  };
+
   return (
     <div className={`question-card ${getStatusClass(status)}`}>
       <div className="card-header">
@@ -131,6 +181,16 @@ const QuestionCard = ({
       </div>
 
       <div className="card-meta">
+        {companyTags && companyTags.length > 0 && (
+          <div className="company-badges-card" title={companyTags.join(', ')}>
+            {companyTags.slice(0, 2).map((company, idx) => (
+              <span key={idx}>{getCompanyIcon(company)}</span>
+            ))}
+            {companyTags.length > 2 && (
+              <span className="company-more-card">+{companyTags.length - 2}</span>
+            )}
+          </div>
+        )}
         <span className="platform-badge">
           {getPlatformIcon(platform)} {getPlatformName(platform)}
         </span>

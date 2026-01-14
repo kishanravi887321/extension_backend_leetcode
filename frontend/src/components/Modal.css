@@ -292,6 +292,17 @@
   color: #fff;
 }
 
+.selected-topic-tag.company-tag {
+  background: rgba(236, 72, 153, 0.2);
+  color: #f472b6;
+}
+
+.optional-label {
+  font-size: 0.75rem;
+  color: #888;
+  font-weight: 400;
+}
+
 /* Modal Footer */
 .modal-footer {
   display: flex;

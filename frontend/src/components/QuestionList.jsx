@@ -55,6 +55,74 @@ const QuestionList = ({
     return d.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
   };
 
+  const getCompanyIcon = (company) => {
+    const companyLower = company.toLowerCase();
+    const companyIcons = {
+      google: <span className="company-icon google">G</span>,
+      amazon: <span className="company-icon amazon">a</span>,
+      microsoft: <span className="company-icon microsoft">M</span>,
+      meta: <span className="company-icon meta">m</span>,
+      facebook: <span className="company-icon meta">m</span>,
+      apple: <span className="company-icon apple">A</span>,
+      netflix: <span className="company-icon netflix">N</span>,
+      uber: <span className="company-icon uber">U</span>,
+      salesforce: <span className="company-icon salesforce">S</span>,
+      adobe: <span className="company-icon adobe">A</span>,
+      oracle: <span className="company-icon oracle">O</span>,
+      ibm: <span className="company-icon ibm">I</span>,
+      intel: <span className="company-icon intel">i</span>,
+      cisco: <span className="company-icon cisco">C</span>,
+      vmware: <span className="company-icon vmware">V</span>,
+      flipkart: <span className="company-icon flipkart">F</span>,
+      walmart: <span className="company-icon walmart">W</span>,
+      deloitte: <span className="company-icon deloitte">D</span>,
+      accenture: <span className="company-icon accenture">A</span>,
+      tcs: <span className="company-icon tcs">T</span>,
+      infosys: <span className="company-icon infosys">I</span>,
+      wipro: <span className="company-icon wipro">W</span>,
+      cognizant: <span className="company-icon cognizant">C</span>,
+      paypal: <span className="company-icon paypal">P</span>,
+      stripe: <span className="company-icon stripe">S</span>,
+      twitter: <span className="company-icon twitter">X</span>,
+      linkedin: <span className="company-icon linkedin">in</span>,
+      airbnb: <span className="company-icon airbnb">A</span>,
+      spotify: <span className="company-icon spotify">S</span>,
+      snap: <span className="company-icon snap">S</span>,
+      nvidia: <span className="company-icon nvidia">N</span>,
+      samsung: <span className="company-icon samsung">S</span>,
+      jpmorgan: <span className="company-icon jpmorgan">JP</span>,
+      goldman: <span className="company-icon goldman">GS</span>,
+      bloomberg: <span className="company-icon bloomberg">B</span>,
+      atlassian: <span className="company-icon atlassian">A</span>,
+      shopify: <span className="company-icon shopify">S</span>,
+      dropbox: <span className="company-icon dropbox">D</span>,
+      zoom: <span className="company-icon zoom">Z</span>,
+      slack: <span className="company-icon slack">S</span>,
+      twilio: <span className="company-icon twilio">T</span>,
+      servicenow: <span className="company-icon servicenow">S</span>,
+      databricks: <span className="company-icon databricks">D</span>,
+      snowflake: <span className="company-icon snowflake">S</span>,
+      palantir: <span className="company-icon palantir">P</span>,
+      lyft: <span className="company-icon lyft">L</span>,
+      doordash: <span className="company-icon doordash">D</span>,
+      instacart: <span className="company-icon instacart">I</span>,
+      robinhood: <span className="company-icon robinhood">R</span>,
+      coinbase: <span className="company-icon coinbase">C</span>,
+      bytedance: <span className="company-icon bytedance">B</span>,
+      tiktok: <span className="company-icon bytedance">T</span>,
+    };
+    
+    // Check for partial matches
+    for (const [key, icon] of Object.entries(companyIcons)) {
+      if (companyLower.includes(key) || key.includes(companyLower)) {
+        return icon;
+      }
+    }
+    
+    // Default icon with first letter
+    return <span className="company-icon default">{company.charAt(0).toUpperCase()}</span>;
+  };
+
   const getPlatformIcon = (platform) => {
     const icons = {
       leetcode: (
@@ -79,6 +147,7 @@ const QuestionList = ({
       <div className="list-header">
         <div className="col-status">Status</div>
         <div className="col-title">Title</div>
+        <div className="col-company">Company</div>
         <div className="col-platform">Platform</div>
         <div className="col-difficulty">Difficulty</div>
         <div className="col-actions">Actions</div>
@@ -128,6 +197,20 @@ const QuestionList = ({
                   <span className="question-number">{question.questNumber}.</span>
                   <span className="question-name">{question.questName}</span>
                 </a>
+              </div>
+
+              {/* Company Column */}
+              <div className="col-company">
+                {question.companyTags && question.companyTags.length > 0 ? (
+                  <div className="company-badges" title={question.companyTags.join(', ')}>
+                    {getCompanyIcon(question.companyTags[0])}
+                    {question.companyTags.length > 1 && (
+                      <span className="company-more">+{question.companyTags.length - 1}</span>
+                    )}
+                  </div>
+                ) : (
+                  <span className="company-badge empty">-</span>
+                )}
               </div>
 
               {/* Platform Column - Click to expand and see topics */}

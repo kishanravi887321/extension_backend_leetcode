@@ -65,6 +65,10 @@ const QuestSchema = new mongoose.Schema({
   description: {
     type: String,
     default: "",
+  },
+  companyTags: {
+    type: [String],
+    default: [],
   }
 }, { timestamps: true });
 

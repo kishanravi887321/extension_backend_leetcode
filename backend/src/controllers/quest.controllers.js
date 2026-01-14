@@ -7,7 +7,7 @@ import { generateUniqueId, generateQuestionId, normalizeTitle } from "../utils/u
 // @access  Private
 export const upsertQuest = async (req, res) => {
   try {
-    const { questName, questNumber, questLink, platform, difficulty, topics, status, notes, description, bookmarked } = req.body;
+    const { questName, questNumber, questLink, platform, difficulty, topics, status, notes, description, bookmarked, companyTags } = req.body;
 
     // Validate required fields
     if (!questName  || !questLink || !platform) {
@@ -58,6 +58,7 @@ export const upsertQuest = async (req, res) => {
     if (notes !== undefined) updateData.notes = notes;
     if (description !== undefined) updateData.description = description;
     if (bookmarked !== undefined) updateData.bookmarked = bookmarked;
+    if (companyTags !== undefined) updateData.companyTags = companyTags;
 
     // Find by uniqueId and update, or create if not exists
     const quest = await Quest.findOneAndUpdate(
@@ -101,7 +102,7 @@ export const upsertQuest = async (req, res) => {
 // @access  Private
 export const createQuest = async (req, res) => {
   try {
-    const { questName, questNumber, questLink, platform, difficulty, topics, status, notes, description } = req.body;
+    const { questName, questNumber, questLink, platform, difficulty, topics, status, notes, description, companyTags } = req.body;
 
     if (!questName || !questNumber || !questLink || !platform) {
       return res.status(400).json({
@@ -120,7 +121,8 @@ export const createQuest = async (req, res) => {
       topics: topics || [],
       status: status || "unsolved",
       notes: notes || "",
-      description: description || ""
+      description: description || "",
+      companyTags: companyTags || []
     });
 
     res.status(201).json({
@@ -313,7 +315,7 @@ export const getQuestById = async (req, res) => {
 export const updateQuest = async (req, res) => {
   try {
     const { id } = req.params;
-    const { status, difficulty, notes, bookmarked, topics, lastRevisedAt } = req.body;
+    const { status, difficulty, notes, bookmarked, topics, lastRevisedAt, companyTags } = req.body;
 
     if (!mongoose.Types.ObjectId.isValid(id)) {
       return res.status(400).json({
@@ -338,6 +340,7 @@ export const updateQuest = async (req, res) => {
     if (bookmarked !== undefined) quest.bookmarked = bookmarked;
     if (topics !== undefined) quest.topics = topics;
     if (lastRevisedAt !== undefined) quest.lastRevisedAt = lastRevisedAt;
+    if (companyTags !== undefined) quest.companyTags = companyTags;
 
     await quest.save();
 

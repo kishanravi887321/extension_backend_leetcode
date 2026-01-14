@@ -7,9 +7,11 @@ const EditQuestionModal = ({ question, onClose, onUpdate, availableTopics }) => 
     status: question.status || 'unsolved',
     topics: question.topics || [],
     notes: question.notes || '',
-    bookmarked: question.bookmarked || false
+    bookmarked: question.bookmarked || false,
+    companyTags: question.companyTags || []
   });
   const [customTopic, setCustomTopic] = useState('');
+  const [customCompany, setCustomCompany] = useState('');
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
 
@@ -46,6 +48,24 @@ const EditQuestionModal = ({ question, onClose, onUpdate, availableTopics }) => 
       }));
       setCustomTopic('');
     }
+  };
+
+  const handleAddCompany = () => {
+    const company = customCompany.trim();
+    if (company && !formData.companyTags.includes(company)) {
+      setFormData(prev => ({
+        ...prev,
+        companyTags: [...prev.companyTags, company]
+      }));
+      setCustomCompany('');
+    }
+  };
+
+  const handleRemoveCompany = (company) => {
+    setFormData(prev => ({
+      ...prev,
+      companyTags: prev.companyTags.filter(c => c !== company)
+    }));
   };
 
   const handleSubmit = async (e) => {
@@ -173,6 +193,30 @@ const EditQuestionModal = ({ question, onClose, onUpdate, availableTopics }) => 
                   <span key={topic} className="selected-topic-tag">
                     {topic}
                     <button type="button" onClick={() => handleTopicToggle(topic)}>×</button>
+                  </span>
+                ))}
+              </div>
+            )}
+          </div>
+
+          <div className="form-group">
+            <label>Company Tags <span className="optional-label">(Optional)</span></label>
+            <div className="custom-topic-input">
+              <input
+                type="text"
+                placeholder="e.g., Google, Amazon, Meta..."
+                value={customCompany}
+                onChange={(e) => setCustomCompany(e.target.value)}
+                onKeyPress={(e) => e.key === 'Enter' && (e.preventDefault(), handleAddCompany())}
+              />
+              <button type="button" onClick={handleAddCompany}>Add</button>
+            </div>
+            {formData.companyTags.length > 0 && (
+              <div className="selected-topics-list">
+                {formData.companyTags.map(company => (
+                  <span key={company} className="selected-topic-tag company-tag">
+                    🏢 {company}
+                    <button type="button" onClick={() => handleRemoveCompany(company)}>×</button>
                   </span>
                 ))}
               </div>
