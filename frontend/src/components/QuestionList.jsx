@@ -50,7 +50,15 @@ const QuestionList = ({
 
   const handleStatusToggle = async (e, id, currentStatus) => {
     e.stopPropagation();
-    const newStatus = currentStatus === 'solved' ? 'unsolved' : 'solved';
+    // Cycle through: unsolved -> solved -> for-future -> unsolved
+    let newStatus;
+    if (currentStatus === 'unsolved') {
+      newStatus = 'solved';
+    } else if (currentStatus === 'solved') {
+      newStatus = 'for-future';
+    } else {
+      newStatus = 'unsolved';
+    }
     await onStatusChange(id, newStatus);
   };
 
@@ -105,7 +113,7 @@ const QuestionList = ({
       microsoft: <FaMicrosoft {...props} color="#00A4EF" />,
       meta: <SiMeta {...props} color="#0668E1" />,
       facebook: <SiFacebook {...props} color="#0668E1" />,
-      apple: <SiApple {...props} className="company-logo apple-logo" />, // Context color
+      apple: <SiApple {...props} className="company-logo apple-logo" />,
       netflix: <SiNetflix {...props} color="#E50914" />,
       
       // Tech Giants
@@ -118,22 +126,49 @@ const QuestionList = ({
       vmware: <SiVmware {...props} color="#607078" />,
       samsung: <SiSamsung {...props} color="#1428A0" />,
       salesforce: <SiSalesforce {...props} color="#00A1E0" />,
+      qualcomm: <SiQualcomm {...props} color="#3253DC" />,
+      dell: <SiDell {...props} color="#007DB8" />,
+      hp: <SiHp {...props} color="#0096D6" />,
+      sap: <SiSap {...props} color="#0FAAFF" />,
+      sony: <SiSony {...props} className="company-logo apple-logo" />,
       
       // Social / Media
       linkedin: <SiLinkedin {...props} color="#0A66C2" />,
       twitter: <FaTwitter {...props} className="company-logo twitter-logo" color="#1DA1F2" />,
       x: <SiX {...props} className="company-logo twitter-logo" />,
+      yahoo: <FaYahoo {...props} color="#6001D2" />,
       snap: <SiSnapchat {...props} className="company-logo snap-logo" style={{ color: '#FFFC00', stroke: 'black', strokeWidth: '0.5px' }} />, 
       snapchat: <SiSnapchat {...props} className="company-logo snap-logo" style={{ color: '#FFFC00', stroke: 'black', strokeWidth: '0.5px' }} />,
       spotify: <SiSpotify {...props} color="#1DB954" />,
       bytedance: <SiBytedance {...props} className="company-logo bytedance-logo" />,
       tiktok: <SiTiktok {...props} className="company-logo bytedance-logo" />,
+      pinterest: <SiPinterest {...props} color="#E60023" />,
+      reddit: <SiReddit {...props} color="#FF4500" />,
+      quora: <SiQuora {...props} color="#A82400" />,
       
-      // Fintech
+      // Fintech & Banking
       stripe: <SiStripe {...props} color="#635BFF" />,
       paypal: <SiPaypal {...props} color="#003087" />,
       coinbase: <SiCoinbase {...props} color="#0052FF" />,
       robinhood: <SiRobinhood {...props} color="#00C805" />,
+      visa: <SiVisa {...props} color="#1A1F71" />,
+      mastercard: <SiMastercard {...props} color="#EB001B" />,
+      chase: <SiChase {...props} color="#117ACA" />,
+      'jpmorgan': <SiChase {...props} color="#117ACA" />,
+      'jp morgan': <SiChase {...props} color="#117ACA" />,
+      goldman: <SiGoldmansachs {...props} color="#7399C6" />,
+      'goldman sachs': <SiGoldmansachs {...props} color="#7399C6" />,
+      deutsche: <SiDeutschebank {...props} color="#0018A8" />,
+      barclays: <SiBarclays {...props} color="#00AEEF" />,
+      hsbc: <SiHsbc {...props} color="#DB0011" />,
+      'bank of america': <SiBankofamerica {...props} color="#012169" />,
+      hdfc: <SiHdfcbank {...props} color="#004C8F" />,
+      icici: <SiIcicibank {...props} color="#F58220" />,
+      intuit: <SiIntuit {...props} color="#0077C5" />,
+      payoneer: <SiPayoneer {...props} color="#FF4800" />,
+      paytm: <SiPaytm {...props} color="#00BAF2" />,
+      phonepe: <SiPhonepe {...props} color="#5F259F" />,
+      razorpay: <SiRazorpay {...props} color="#0C2451" />,
       
       // Startups / Tech
       airbnb: <SiAirbnb {...props} color="#FF5A5F" />,
@@ -146,21 +181,57 @@ const QuestionList = ({
       databricks: <SiDatabricks {...props} color="#FF3621" />,
       snowflake: <SiSnowflake {...props} color="#29B5E8" />,
       palantir: <SiPalantir {...props} className="company-logo palantir-logo" />,
+      expedia: <SiExpedia {...props} color="#00355F" />,
+      github: <SiGithub {...props} className="company-logo apple-logo" />,
+      gitlab: <SiGitlab {...props} color="#FC6D26" />,
+      bitbucket: <SiBitbucket {...props} color="#0052CC" />,
+      jira: <SiJira {...props} color="#0052CC" />,
+      confluence: <SiConfluence {...props} color="#0052CC" />,
+      epic: <SiEpicgames {...props} className="company-logo apple-logo" />,
       
-      // Delivery
+      // Delivery & Ride-sharing
       lyft: <SiLyft {...props} color="#FF00BF" />,
       doordash: <SiDoordash {...props} color="#FF3008" />,
       instacart: <SiInstacart {...props} color="#43B02A" />,
+      grab: <SiGrab {...props} color="#00B14F" />,
+      swiggy: <SiSwiggy {...props} color="#FC8019" />,
+      zomato: <SiZomato {...props} color="#E23744" />,
       
-      // Indian Tech
+      // Indian Tech & Consulting
       flipkart: <SiFlipkart {...props} color="#2874F0" />,
       walmart: <SiWalmart {...props} color="#0071CE" />,
       infosys: <SiInfosys {...props} color="#007CC3" />,
       wipro: <SiWipro {...props} color="#3C1053" />,
       cognizant: <SiCognizant {...props} color="#0033A1" />,
-      
-      // Consulting
+      tcs: <SiTcs {...props} color="#0070AD" />,
+      hcl: <SiHcl {...props} color="#0072BC" />,
+      mahindra: <SiMahindra {...props} color="#E31837" />,
+      'tech mahindra': <SiMahindra {...props} color="#E31837" />,
       accenture: <SiAccenture {...props} color="#A100FF" />,
+      
+      // Custom styled icons for companies without official react-icons
+      ola: <span className="company-icon-custom ola" title={company}>O</span>,
+      pubmatic: <span className="company-icon-custom pubmatic" title={company}>P</span>,
+      deshaw: <span className="company-icon-custom deshaw" title={company}>D</span>,
+      'de shaw': <span className="company-icon-custom deshaw" title={company}>D</span>,
+      directi: <span className="company-icon-custom directi" title={company}>D</span>,
+      infoworks: <span className="company-icon-custom infoworks" title={company}>I</span>,
+      'media.net': <span className="company-icon-custom medianet" title={company}>M</span>,
+      medianet: <span className="company-icon-custom medianet" title={company}>M</span>,
+      'tower research': <span className="company-icon-custom tower" title={company}>T</span>,
+      tower: <span className="company-icon-custom tower" title={company}>T</span>,
+      'dream11': <span className="company-icon-custom dream11" title={company}>D</span>,
+      dream: <span className="company-icon-custom dream11" title={company}>D</span>,
+      cred: <span className="company-icon-custom cred" title={company}>C</span>,
+      meesho: <span className="company-icon-custom meesho" title={company}>M</span>,
+      dunzo: <span className="company-icon-custom dunzo" title={company}>D</span>,
+      zerodha: <span className="company-icon-custom zerodha" title={company}>Z</span>,
+      groww: <span className="company-icon-custom groww" title={company}>G</span>,
+      'morgan stanley': <span className="company-icon-custom morgan" title={company}>MS</span>,
+      morgan: <span className="company-icon-custom morgan" title={company}>MS</span>,
+      bloomberg: <span className="company-icon-custom bloomberg" title={company}>B</span>,
+      citadel: <span className="company-icon-custom citadel" title={company}>C</span>,
+      'two sigma': <span className="company-icon-custom twosigma" title={company}>2σ</span>,
     };
 
     // Check for exact match or includes
@@ -196,12 +267,35 @@ const QuestionList = ({
           <path d="M13.483 0a1.374 1.374 0 0 0-.961.438L7.116 6.226l-3.854 4.126a5.266 5.266 0 0 0-1.209 2.104 5.35 5.35 0 0 0-.125.513 5.527 5.527 0 0 0 .062 2.362 5.83 5.83 0 0 0 .349 1.017 5.938 5.938 0 0 0 1.271 1.818l4.277 4.193.039.038c2.248 2.165 5.852 2.133 8.063-.074l2.396-2.392c.54-.54.54-1.414.003-1.955a1.378 1.378 0 0 0-1.951-.003l-2.396 2.392a3.021 3.021 0 0 1-4.205.038l-.02-.019-4.276-4.193c-.652-.64-.972-1.469-.948-2.263a2.68 2.68 0 0 1 .066-.523 2.545 2.545 0 0 1 .619-1.164L9.13 8.114c1.058-1.134 3.204-1.27 4.43-.278l3.501 2.831c.593.48 1.461.387 1.94-.207a1.384 1.384 0 0 0-.207-1.943l-3.5-2.831c-.8-.647-1.766-1.045-2.774-1.202l2.015-2.158A1.384 1.384 0 0 0 13.483 0zm-2.866 12.815a1.38 1.38 0 0 0-1.38 1.382 1.38 1.38 0 0 0 1.38 1.382H20.79a1.38 1.38 0 0 0 1.38-1.382 1.38 1.38 0 0 0-1.38-1.382z" fill="currentColor"/>
         </svg>
       ),
-      codeforces: <span className="platform-icon-text cf">CF</span>,
-      gfg: <span className="platform-icon-text gfg">GFG</span>,
-      hackerrank: <span className="platform-icon-text hr">HR</span>,
-      codechef: <span className="platform-icon-text cc">CC</span>,
+      codeforces: <SiCodeforces className="platform-icon" color="#1F8ACB" title="Codeforces" />,
+      gfg: <SiGeeksforgeeks className="platform-icon" color="#2F8D46" title="GeeksforGeeks" />,
+      hackerrank: <SiHackerrank className="platform-icon" color="#00EA64" title="HackerRank" />,
+      codechef: <SiCodechef className="platform-icon" color="#5B4638" title="CodeChef" />,
       atcoder: <span className="platform-icon-text ac">AC</span>,
-      interviewbit: <span className="platform-icon-text ib">IB</span>,
+      interviewbit: (
+        <svg viewBox="0 0 24 24" className="platform-icon interviewbit">
+          {/* Row 1 - Top */}
+          <polygon points="12,2 14,5 10,5" fill="#40C4AA"/>
+          {/* Row 2 */}
+          <polygon points="10,5 12,8 8,8" fill="#F5A623"/>
+          <polygon points="14,5 16,8 12,8" fill="#40C4AA"/>
+          {/* Row 3 */}
+          <polygon points="8,8 10,11 6,11" fill="#40C4AA"/>
+          <polygon points="12,8 14,11 10,11" fill="#F5A623"/>
+          <polygon points="16,8 18,11 14,11" fill="#40C4AA"/>
+          {/* Row 4 */}
+          <polygon points="6,11 8,14 4,14" fill="#F5A623"/>
+          <polygon points="10,11 12,14 8,14" fill="#40C4AA"/>
+          <polygon points="14,11 16,14 12,14" fill="#40C4AA"/>
+          <polygon points="18,11 20,14 16,14" fill="#F5A623"/>
+          {/* Row 5 - Bottom */}
+          <polygon points="4,14 6,17 2,17" fill="#40C4AA"/>
+          <polygon points="8,14 10,17 6,17" fill="#F5A623"/>
+          <polygon points="12,14 14,17 10,17" fill="#40C4AA"/>
+          <polygon points="16,14 18,17 14,17" fill="#F5A623"/>
+          <polygon points="20,14 22,17 18,17" fill="#40C4AA"/>
+        </svg>
+      ),
       other: <span className="platform-icon-text other">?</span>
     };
     return icons[platform] || icons.other;

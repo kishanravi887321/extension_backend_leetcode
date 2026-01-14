@@ -277,15 +277,20 @@
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  width: 26px;
-  height: 26px;
-  border-radius: 6px;
-  font-size: 0.75rem;
+  width: 20px;
+  height: 20px;
+  border-radius: 4px;
+  font-size: 0.65rem;
   font-weight: 700;
   text-transform: uppercase;
   transition: transform 0.2s ease;
   position: relative;
   cursor: pointer;
+}
+
+.company-icon.default {
+  background: linear-gradient(135deg, #6366f1, #4f46e5);
+  color: white;
 }
 
 /* Company Logo Wrapper */
@@ -319,6 +324,38 @@
 .company-logo.bytedance-logo {
   color: #fff;
 }
+
+/* Custom styled icons for companies without official icons */
+.company-icon-custom {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 20px;
+  height: 20px;
+  border-radius: 4px;
+  font-size: 0.65rem;
+  font-weight: 700;
+  color: white;
+  text-transform: uppercase;
+}
+
+.company-icon-custom.ola { background: linear-gradient(135deg, #1C8F3C, #0D6B2E); }
+.company-icon-custom.pubmatic { background: linear-gradient(135deg, #FF6B35, #E85320); }
+.company-icon-custom.deshaw { background: linear-gradient(135deg, #1E3A5F, #0D1F33); }
+.company-icon-custom.directi { background: linear-gradient(135deg, #E53935, #C62828); }
+.company-icon-custom.infoworks { background: linear-gradient(135deg, #7C4DFF, #5E35B1); }
+.company-icon-custom.medianet { background: linear-gradient(135deg, #00BCD4, #0097A7); }
+.company-icon-custom.tower { background: linear-gradient(135deg, #455A64, #263238); }
+.company-icon-custom.dream11 { background: linear-gradient(135deg, #E53935, #B71C1C); }
+.company-icon-custom.cred { background: linear-gradient(135deg, #292929, #000000); }
+.company-icon-custom.meesho { background: linear-gradient(135deg, #F43397, #D81B60); }
+.company-icon-custom.dunzo { background: linear-gradient(135deg, #00C853, #009624); }
+.company-icon-custom.zerodha { background: linear-gradient(135deg, #387ED1, #1565C0); }
+.company-icon-custom.groww { background: linear-gradient(135deg, #5367FF, #3D4ED1); }
+.company-icon-custom.morgan { background: linear-gradient(135deg, #00A0DC, #0077A3); font-size: 0.5rem; }
+.company-icon-custom.bloomberg { background: linear-gradient(135deg, #FF6600, #CC5200); }
+.company-icon-custom.citadel { background: linear-gradient(135deg, #1A237E, #0D1442); }
+.company-icon-custom.twosigma { background: linear-gradient(135deg, #2196F3, #1565C0); font-size: 0.55rem; }
 
 /* Company Logo Tooltip */
 .company-logo-wrapper::after {
