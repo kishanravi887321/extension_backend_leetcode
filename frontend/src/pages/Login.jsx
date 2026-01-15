@@ -1,19 +1,15 @@
-import { useState, useEffect, Suspense } from 'react';
-import { useNavigate, Link } from 'react-router-dom';
+import { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { GoogleLogin } from '@react-oauth/google';
 import { googleLogin } from '../api/auth';
 import { useAuth } from '../context/AuthContext';
-import { motion } from 'framer-motion';
-import WaveBackground from '../components/WaveBackground';
-import './CyberLogin.css';
+import './Auth.css';
 
 const Login = () => {
   const navigate = useNavigate();
   const { login, isAuthenticated } = useAuth();
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
 
   useEffect(() => {
     if (isAuthenticated) {
@@ -28,6 +24,8 @@ const Login = () => {
     try {
       const response = await googleLogin(credentialResponse.credential);
       console.log('Login successful:', response);
+      // Cookies are set automatically by the server
+      // Only pass user data and extension token (for localStorage)
       await login(response.user, response.extensionToken);
       navigate('/dashboard');
     } catch (err) {
@@ -41,198 +39,161 @@ const Login = () => {
     setError('Google login failed. Please try again.');
   };
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    // Email/password login not implemented - using Google OAuth
-    setError('Please use Google Sign-In to continue');
-  };
-
-  // Animation variants
-  const containerVariants = {
-    hidden: { opacity: 0 },
-    visible: {
-      opacity: 1,
-      transition: { staggerChildren: 0.1, delayChildren: 0.3 }
-    }
-  };
-
-  const itemVariants = {
-    hidden: { opacity: 0, y: 30 },
-    visible: {
-      opacity: 1,
-      y: 0,
-      transition: { duration: 0.6, ease: [0.22, 1, 0.36, 1] }
-    }
-  };
-
-  const cardVariants = {
-    hidden: { opacity: 0, scale: 0.95, y: 40 },
-    visible: {
-      opacity: 1,
-      scale: 1,
-      y: 0,
-      transition: { duration: 0.8, ease: [0.22, 1, 0.36, 1], delay: 0.5 }
-    }
-  };
-
   return (
-    <div className="cyber-login-container">
-      {/* Three.js Wave Background */}
-      <Suspense fallback={<div style={{ background: '#000', width: '100%', height: '100vh' }} />}>
-        <WaveBackground />
-      </Suspense>
+    <div className="auth-container">
+      {/* Animated Background */}
+      <div className="bg-animation">
+        <div className="floating-shapes">
+          <div className="shape shape-1"></div>
+          <div className="shape shape-2"></div>
+          <div className="shape shape-3"></div>
+        </div>
+        <div className="grid-overlay"></div>
+      </div>
 
-      {/* Navigation */}
-      <nav className="cyber-nav">
-        <div className="cyber-logo">
-          <div className="logo-hexagon">
-            <svg viewBox="0 0 50 58">
-              <polygon 
-                className="hex-border" 
-                points="25,1 49,15 49,43 25,57 1,43 1,15" 
-              />
-              <polygon 
-                className="hex-fill" 
-                points="25,1 49,15 49,43 25,57 1,43 1,15" 
-              />
-            </svg>
-            <div className="logo-inner-circle"></div>
+      {/* Left Side - Branding */}
+      <div className="auth-branding">
+        <div className="branding-content">
+          <div className="brand-logo">
+            <div className="logo-icon">
+              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor">
+                <path strokeLinecap="round" strokeLinejoin="round" d="M9 12.75 11.25 15 15 9.75M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z" />
+              </svg>
+            </div>
+            <span className="logo-text">CPCoders</span>
+          </div>
+          
+          <h1 className="brand-headline">
+            Track Your<br />
+            <span className="gradient-text">Coding Journey</span>
+          </h1>
+          
+          <p className="brand-description">
+            Save, organize, and track your LeetCode & DSA problems. 
+            Mark solved questions, bookmark important ones, and never lose your progress.
+          </p>
+
+          <div className="feature-list">
+            <div className="feature-item">
+              <div className="feature-icon">
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M9 12.75 11.25 15 15 9.75M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z" />
+                </svg>
+              </div>
+              <span>Mark questions as solved</span>
+            </div>
+            <div className="feature-item">
+              <div className="feature-icon">
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M17.593 3.322c1.1.128 1.907 1.077 1.907 2.185V21L12 17.25 4.5 21V5.507c0-1.108.806-2.057 1.907-2.185a48.507 48.507 0 0 1 11.186 0Z" />
+                </svg>
+              </div>
+              <span>Bookmark for revision</span>
+            </div>
+            <div className="feature-item">
+              <div className="feature-icon">
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M3 13.125C3 12.504 3.504 12 4.125 12h2.25c.621 0 1.125.504 1.125 1.125v6.75C7.5 20.496 6.996 21 6.375 21h-2.25A1.125 1.125 0 0 1 3 19.875v-6.75ZM9.75 8.625c0-.621.504-1.125 1.125-1.125h2.25c.621 0 1.125.504 1.125 1.125v11.25c0 .621-.504 1.125-1.125 1.125h-2.25a1.125 1.125 0 0 1-1.125-1.125V8.625ZM16.5 4.125c0-.621.504-1.125 1.125-1.125h2.25C20.496 3 21 3.504 21 4.125v15.75c0 .621-.504 1.125-1.125 1.125h-2.25a1.125 1.125 0 0 1-1.125-1.125V4.125Z" />
+                </svg>
+              </div>
+              <span>Track your progress</span>
+            </div>
+            <div className="feature-item">
+              <div className="feature-icon">
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M12 6v6h4.5m4.5 0a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z" />
+                </svg>
+              </div>
+              <span>Revisit anytime</span>
+            </div>
+          </div>
+
+          {/* Stats Preview */}
+          <div className="stats-preview">
+            <div className="stat-item">
+              <span className="stat-number">500+</span>
+              <span className="stat-label">Problems</span>
+            </div>
+            <div className="stat-divider"></div>
+            <div className="stat-item">
+              <span className="stat-number">50+</span>
+              <span className="stat-label">Topics</span>
+            </div>
+            <div className="stat-divider"></div>
+            <div className="stat-item">
+              <span className="stat-number">Free</span>
+              <span className="stat-label">Forever</span>
+            </div>
           </div>
         </div>
+      </div>
 
-        <ul className="nav-links">
-          <li><a href="#services">Services</a></li>
-          <li><a href="#about">About</a></li>
-          <li><Link to="/dashboard">Dashboard</Link></li>
-          <li><a href="#contact">Contact</a></li>
-        </ul>
-
-        <Link to="/dashboard" className="nav-portal">Portal</Link>
-      </nav>
-
-      {/* Main Content */}
-      <motion.div 
-        className="cyber-content"
-        variants={containerVariants}
-        initial="hidden"
-        animate="visible"
-      >
-        {/* AI Badge */}
-        <motion.div className="ai-badge" variants={itemVariants}>
-          <span className="ai-badge-dot"></span>
-          <span>AI-Powered Automation</span>
-        </motion.div>
-
-        {/* Main Headline */}
-        <motion.div className="cyber-headline" variants={itemVariants}>
-          <h1>
-            Enterprise IT Solutions
-            <span className="neon-text">Reimagined</span>
-          </h1>
-        </motion.div>
-
-        {/* Tagline */}
-        <motion.p className="cyber-tagline" variants={itemVariants}>
-          Fully automated AI-powered platform transforming IT operations, 
-          security, and innovation at enterprise scale
-        </motion.p>
-
-        {/* CTA Buttons */}
-        <motion.div className="cyber-cta-buttons" variants={itemVariants}>
-          <Link to="/dashboard" className="cyber-btn cyber-btn-primary">
-            Explore Services
-          </Link>
-          <button 
-            className="cyber-btn cyber-btn-secondary"
-            onClick={() => document.querySelector('.cyber-login-card')?.scrollIntoView({ behavior: 'smooth' })}
-          >
-            Get Started
-          </button>
-        </motion.div>
-
-        {/* Login Card */}
-        <motion.div className="cyber-login-card" variants={cardVariants}>
-          <div className="card-glow"></div>
-          
-          <div className="cyber-card-header">
-            <h2>AI Portal Access</h2>
-            <p>Sign in to access your dashboard</p>
+      {/* Right Side - Login Form */}
+      <div className="auth-form-section">
+        <div className="auth-card">
+          <div className="card-header">
+            <h2>Get Started</h2>
+            <p>Sign in to save your progress</p>
           </div>
 
           {error && (
-            <motion.div 
-              className="cyber-error"
-              initial={{ opacity: 0, x: -20 }}
-              animate={{ opacity: 1, x: 0 }}
-            >
+            <div className="error-message">
               <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor">
                 <path strokeLinecap="round" strokeLinejoin="round" d="M12 9v3.75m9-.75a9 9 0 1 1-18 0 9 9 0 0 1 18 0Zm-9 3.75h.008v.008H12v-.008Z" />
               </svg>
               <span>{error}</span>
-            </motion.div>
+            </div>
           )}
 
-          <form className="cyber-form" onSubmit={handleSubmit}>
-            <div className="cyber-input-group">
-              <label htmlFor="email">Email Address</label>
-              <input
-                type="email"
-                id="email"
-                className="cyber-input"
-                placeholder="Enter your email"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-              />
-            </div>
-
-            <div className="cyber-input-group">
-              <label htmlFor="password">Password</label>
-              <input
-                type="password"
-                id="password"
-                className="cyber-input"
-                placeholder="Enter your password"
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-              />
-            </div>
-
-            <button type="submit" className="cyber-submit-btn" disabled={loading}>
-              {loading ? 'Signing In...' : 'Login'}
-            </button>
-          </form>
-
-          <div className="cyber-divider">
-            <span className="cyber-divider-line"></span>
-            <span>or continue with</span>
-            <span className="cyber-divider-line"></span>
-          </div>
-
-          <div className="cyber-google-wrapper">
+          <div className="google-login-wrapper">
             {loading ? (
-              <div className="cyber-loading">
-                <div className="cyber-spinner"></div>
-                <span>Authenticating...</span>
+              <div className="loading-state">
+                <div className="spinner"></div>
+                <span>Signing you in...</span>
               </div>
             ) : (
               <GoogleLogin
                 onSuccess={handleGoogleSuccess}
                 onError={handleGoogleError}
                 useOneTap
-                theme="filled_black"
+                theme="outline"
                 size="large"
-                text="continue_with"
+                text="signin_with"
                 shape="rectangular"
                 width="100%"
               />
             )}
           </div>
 
-          <div className="cyber-signup-link">
-            <p>Don't have an account? <Link to="/register">Sign Up</Link></p>
+          <div className="why-signin">
+            <p className="why-title">Why sign in?</p>
+            <ul className="why-list">
+              <li>
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" d="m4.5 12.75 6 6 9-13.5" />
+                </svg>
+                Sync progress across devices
+              </li>
+              <li>
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" d="m4.5 12.75 6 6 9-13.5" />
+                </svg>
+                Never lose your solved list
+              </li>
+              <li>
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" d="m4.5 12.75 6 6 9-13.5" />
+                </svg>
+                Access bookmarks anywhere
+              </li>
+            </ul>
           </div>
-        </motion.div>
-      </motion.div>
+
+          <p className="auth-terms">
+            By signing in, you agree to our <a href="#">Terms</a> and <a href="#">Privacy Policy</a>
+          </p>
+        </div>
+      </div>
     </div>
   );
 };

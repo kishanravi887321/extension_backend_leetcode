@@ -1,101 +1,125 @@
-import { useRef, useMemo, useEffect } from 'react';
+import { useRef, useMemo, useEffect, useState } from 'react';
 import { Canvas, useFrame, useThree } from '@react-three/fiber';
 import * as THREE from 'three';
 
-// Animated wave mesh with dots
-function WaveMesh({ mouse }) {
+// Wave Points Component
+function WavePoints({ mousePosition }) {
   const meshRef = useRef();
-  const pointsRef = useRef();
+  const { viewport } = useThree();
   
-  // Create geometry for wave
-  const { positions, colors } = useMemo(() => {
-    const width = 100;
-    const depth = 100;
-    const segmentsX = 80;
-    const segmentsZ = 80;
+  // Configuration
+  const gridSize = 100;
+  const spacing = 0.35;
+  const waveAmplitude = 0.8;
+  const waveFrequency = 0.4;
+  const waveSpeed = 0.6;
+  
+  // Create the points geometry
+  const { positions, colors, originalPositions } = useMemo(() => {
+    const positions = new Float32Array(gridSize * gridSize * 3);
+    const colors = new Float32Array(gridSize * gridSize * 3);
+    const originalPositions = new Float32Array(gridSize * gridSize * 3);
     
-    const positions = [];
-    const colors = [];
+    const halfGrid = (gridSize * spacing) / 2;
     
-    for (let i = 0; i <= segmentsX; i++) {
-      for (let j = 0; j <= segmentsZ; j++) {
-        const x = (i / segmentsX - 0.5) * width;
-        const z = (j / segmentsZ - 0.5) * depth;
-        positions.push(x, 0, z);
+    for (let i = 0; i < gridSize; i++) {
+      for (let j = 0; j < gridSize; j++) {
+        const index = (i * gridSize + j) * 3;
         
-        // Gradient color from dark to neon green
-        const intensity = Math.random() * 0.3 + 0.7;
-        colors.push(0.1 * intensity, 0.95 * intensity, 0.5 * intensity);
+        const x = (i * spacing) - halfGrid;
+        const z = (j * spacing) - halfGrid;
+        const y = 0;
+        
+        positions[index] = x;
+        positions[index + 1] = y;
+        positions[index + 2] = z;
+        
+        originalPositions[index] = x;
+        originalPositions[index + 1] = y;
+        originalPositions[index + 2] = z;
+        
+        // Base color (cyan to purple gradient)
+        const normalizedX = (x + halfGrid) / (halfGrid * 2);
+        const normalizedZ = (z + halfGrid) / (halfGrid * 2);
+        
+        colors[index] = 0.1 + normalizedX * 0.2; // R
+        colors[index + 1] = 0.6 + normalizedZ * 0.3; // G (cyan)
+        colors[index + 2] = 0.8 + normalizedX * 0.2; // B
       }
     }
     
-    return {
-      positions: new Float32Array(positions),
-      colors: new Float32Array(colors)
-    };
-  }, []);
+    return { positions, colors, originalPositions };
+  }, [gridSize, spacing]);
   
   // Animation
   useFrame((state) => {
-    if (!pointsRef.current) return;
+    if (!meshRef.current) return;
     
-    const time = state.clock.elapsedTime;
-    const positionAttr = pointsRef.current.geometry.attributes.position;
-    const array = positionAttr.array;
+    const time = state.clock.elapsedTime * waveSpeed;
+    const positionAttribute = meshRef.current.geometry.attributes.position;
+    const colorAttribute = meshRef.current.geometry.attributes.color;
     
-    const segmentsX = 81;
-    const segmentsZ = 81;
+    const halfGrid = (gridSize * spacing) / 2;
     
-    for (let i = 0; i < segmentsX; i++) {
-      for (let j = 0; j < segmentsZ; j++) {
-        const index = (i * segmentsZ + j) * 3;
-        const x = array[index];
-        const z = array[index + 2];
+    for (let i = 0; i < gridSize; i++) {
+      for (let j = 0; j < gridSize; j++) {
+        const index = (i * gridSize + j) * 3;
         
-        // Multiple wave functions for organic movement
-        const wave1 = Math.sin(x * 0.1 + time * 0.8) * 2;
-        const wave2 = Math.sin(z * 0.1 + time * 0.6) * 2;
-        const wave3 = Math.sin((x + z) * 0.05 + time * 0.5) * 1.5;
-        const wave4 = Math.cos(x * 0.08 - time * 0.4) * Math.sin(z * 0.08 + time * 0.3) * 2;
+        const x = originalPositions[index];
+        const z = originalPositions[index + 2];
+        
+        // Multi-layer wave effect
+        const wave1 = Math.sin(x * waveFrequency + time) * waveAmplitude;
+        const wave2 = Math.sin(z * waveFrequency * 0.8 + time * 0.7) * waveAmplitude * 0.6;
+        const wave3 = Math.sin((x + z) * waveFrequency * 0.5 + time * 1.2) * waveAmplitude * 0.4;
         
         // Mouse influence
-        const mouseInfluence = mouse.current ? 
-          Math.sin(x * 0.05 + mouse.current.x * 2) * Math.cos(z * 0.05 + mouse.current.y * 2) * 1.5 : 0;
+        const mouseInfluence = 2.5;
+        const mouseX = mousePosition.current.x * viewport.width * 0.5;
+        const mouseY = mousePosition.current.y * viewport.height * 0.5;
+        const distToMouse = Math.sqrt(Math.pow(x - mouseX, 2) + Math.pow(z - mouseY, 2));
+        const mouseWave = Math.exp(-distToMouse * 0.15) * Math.sin(distToMouse - time * 3) * mouseInfluence;
         
-        array[index + 1] = wave1 + wave2 + wave3 + wave4 + mouseInfluence;
+        const y = wave1 + wave2 + wave3 + mouseWave;
+        positionAttribute.array[index + 1] = y;
+        
+        // Dynamic colors based on height
+        const normalizedY = (y + waveAmplitude * 2) / (waveAmplitude * 4);
+        const normalizedX = (x + halfGrid) / (halfGrid * 2);
+        const normalizedZ = (z + halfGrid) / (halfGrid * 2);
+        
+        // Cyan to teal gradient with height-based brightness
+        colorAttribute.array[index] = 0.05 + normalizedY * 0.15; // R
+        colorAttribute.array[index + 1] = 0.5 + normalizedY * 0.4 + normalizedZ * 0.1; // G
+        colorAttribute.array[index + 2] = 0.7 + normalizedY * 0.3 + normalizedX * 0.1; // B
       }
     }
     
-    positionAttr.needsUpdate = true;
-    
-    // Slow rotation based on mouse
-    if (pointsRef.current && mouse.current) {
-      pointsRef.current.rotation.y = mouse.current.x * 0.1;
-      pointsRef.current.rotation.x = mouse.current.y * 0.05 - 0.5;
-    }
+    positionAttribute.needsUpdate = true;
+    colorAttribute.needsUpdate = true;
   });
   
   return (
-    <points ref={pointsRef}>
+    <points ref={meshRef}>
       <bufferGeometry>
         <bufferAttribute
           attach="attributes-position"
-          count={positions.length / 3}
+          count={gridSize * gridSize}
           array={positions}
           itemSize={3}
         />
         <bufferAttribute
           attach="attributes-color"
-          count={colors.length / 3}
+          count={gridSize * gridSize}
           array={colors}
           itemSize={3}
         />
       </bufferGeometry>
       <pointsMaterial
-        size={0.15}
+        size={0.045}
         vertexColors
         transparent
-        opacity={0.8}
+        opacity={0.9}
         sizeAttenuation
         blending={THREE.AdditiveBlending}
       />
@@ -103,44 +127,54 @@ function WaveMesh({ mouse }) {
   );
 }
 
-// Camera controller for parallax effect
-function CameraController({ mouse }) {
+// Camera Controller for parallax effect
+function CameraController({ mousePosition }) {
   const { camera } = useThree();
   
   useFrame(() => {
-    if (mouse.current) {
-      camera.position.x += (mouse.current.x * 5 - camera.position.x) * 0.02;
-      camera.position.y += (mouse.current.y * 3 + 15 - camera.position.y) * 0.02;
-      camera.lookAt(0, 0, 0);
-    }
+    // Smooth camera movement based on mouse
+    const targetX = mousePosition.current.x * 2;
+    const targetY = mousePosition.current.y * 1 + 12;
+    const targetZ = 18;
+    
+    camera.position.x += (targetX - camera.position.x) * 0.02;
+    camera.position.y += (targetY - camera.position.y) * 0.02;
+    camera.position.z += (targetZ - camera.position.z) * 0.02;
+    
+    camera.lookAt(0, 0, 0);
   });
   
   return null;
 }
 
-// Fog particles
+// Fog Particles
 function FogParticles() {
   const particlesRef = useRef();
+  const count = 200;
   
-  const particles = useMemo(() => {
-    const count = 200;
+  const positions = useMemo(() => {
     const positions = new Float32Array(count * 3);
-    const sizes = new Float32Array(count);
-    
     for (let i = 0; i < count; i++) {
-      positions[i * 3] = (Math.random() - 0.5) * 100;
-      positions[i * 3 + 1] = Math.random() * 30 - 5;
-      positions[i * 3 + 2] = (Math.random() - 0.5) * 100;
-      sizes[i] = Math.random() * 0.5 + 0.1;
+      positions[i * 3] = (Math.random() - 0.5) * 50;
+      positions[i * 3 + 1] = (Math.random() - 0.5) * 20;
+      positions[i * 3 + 2] = (Math.random() - 0.5) * 50;
     }
-    
-    return { positions, sizes };
-  }, []);
+    return positions;
+  }, [count]);
   
   useFrame((state) => {
     if (!particlesRef.current) return;
     
     const time = state.clock.elapsedTime;
+    const positionAttribute = particlesRef.current.geometry.attributes.position;
+    
+    for (let i = 0; i < count; i++) {
+      const i3 = i * 3;
+      positionAttribute.array[i3 + 1] += Math.sin(time + i) * 0.002;
+      positionAttribute.array[i3] += Math.cos(time * 0.5 + i) * 0.001;
+    }
+    
+    positionAttribute.needsUpdate = true;
     particlesRef.current.rotation.y = time * 0.02;
   });
   
@@ -149,16 +183,16 @@ function FogParticles() {
       <bufferGeometry>
         <bufferAttribute
           attach="attributes-position"
-          count={particles.positions.length / 3}
-          array={particles.positions}
+          count={count}
+          array={positions}
           itemSize={3}
         />
       </bufferGeometry>
       <pointsMaterial
-        size={0.3}
-        color="#00ff88"
+        size={0.08}
+        color="#4fd1c5"
         transparent
-        opacity={0.3}
+        opacity={0.4}
         sizeAttenuation
         blending={THREE.AdditiveBlending}
       />
@@ -168,19 +202,21 @@ function FogParticles() {
 
 // Main Wave Background Component
 export default function WaveBackground() {
-  const mouse = useRef({ x: 0, y: 0 });
+  const mousePosition = useRef({ x: 0, y: 0 });
   const containerRef = useRef();
   
   useEffect(() => {
-    const handleMouseMove = (e) => {
-      mouse.current = {
-        x: (e.clientX / window.innerWidth) * 2 - 1,
-        y: -(e.clientY / window.innerHeight) * 2 + 1
-      };
+    const handleMouseMove = (event) => {
+      // Normalize mouse position to -1 to 1
+      mousePosition.current.x = (event.clientX / window.innerWidth) * 2 - 1;
+      mousePosition.current.y = -(event.clientY / window.innerHeight) * 2 + 1;
     };
     
     window.addEventListener('mousemove', handleMouseMove);
-    return () => window.removeEventListener('mousemove', handleMouseMove);
+    
+    return () => {
+      window.removeEventListener('mousemove', handleMouseMove);
+    };
   }, []);
   
   return (
@@ -192,25 +228,53 @@ export default function WaveBackground() {
         left: 0,
         width: '100%',
         height: '100%',
+        background: 'linear-gradient(180deg, #000000 0%, #0a0a0a 50%, #000000 100%)',
         zIndex: 0,
-        background: 'linear-gradient(180deg, #000000 0%, #0a0a0a 50%, #000000 100%)'
       }}
     >
       <Canvas
-        camera={{ position: [0, 15, 30], fov: 60 }}
-        gl={{ 
-          antialias: true,
-          alpha: true,
-          powerPreference: "high-performance"
-        }}
+        camera={{ position: [0, 12, 18], fov: 60 }}
         dpr={[1, 2]}
+        style={{ background: 'transparent' }}
       >
-        <fog attach="fog" args={['#000000', 20, 80]} />
-        <ambientLight intensity={0.2} />
-        <CameraController mouse={mouse} />
-        <WaveMesh mouse={mouse} />
+        <ambientLight intensity={0.3} />
+        <pointLight position={[10, 10, 10]} intensity={0.5} color="#4fd1c5" />
+        <pointLight position={[-10, 5, -10]} intensity={0.3} color="#7c3aed" />
+        
+        <WavePoints mousePosition={mousePosition} />
         <FogParticles />
+        <CameraController mousePosition={mousePosition} />
+        
+        {/* Add a subtle fog effect */}
+        <fog attach="fog" args={['#000000', 15, 50]} />
       </Canvas>
+      
+      {/* Gradient overlays for depth */}
+      <div
+        style={{
+          position: 'absolute',
+          top: 0,
+          left: 0,
+          width: '100%',
+          height: '100%',
+          background: 'radial-gradient(ellipse at center, transparent 0%, rgba(0,0,0,0.4) 70%, rgba(0,0,0,0.8) 100%)',
+          pointerEvents: 'none',
+        }}
+      />
+      
+      {/* Top glow */}
+      <div
+        style={{
+          position: 'absolute',
+          top: 0,
+          left: '50%',
+          transform: 'translateX(-50%)',
+          width: '80%',
+          height: '300px',
+          background: 'radial-gradient(ellipse at top, rgba(79, 209, 197, 0.1) 0%, transparent 70%)',
+          pointerEvents: 'none',
+        }}
+      />
     </div>
   );
 }
