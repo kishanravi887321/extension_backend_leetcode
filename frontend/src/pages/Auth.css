@@ -687,3 +687,364 @@
   cursor: not-allowed;
   transform: none;
 }
+
+/* ===== WAVE BACKGROUND LOGIN STYLES ===== */
+.wave-auth-container {
+  width: 100%;
+  min-height: 100vh;
+  position: relative;
+  overflow: hidden;
+  background: #000000;
+}
+
+.wave-auth-content {
+  position: relative;
+  z-index: 10;
+  display: flex;
+  min-height: 100vh;
+  align-items: center;
+  justify-content: space-between;
+  padding: 40px 60px;
+  max-width: 1400px;
+  margin: 0 auto;
+  gap: 60px;
+}
+
+/* ===== WAVE BRANDING ===== */
+.wave-auth-branding {
+  flex: 1;
+  max-width: 550px;
+}
+
+.wave-brand-logo {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  margin-bottom: 40px;
+}
+
+.wave-logo-icon {
+  width: 52px;
+  height: 52px;
+  background: linear-gradient(135deg, rgba(79, 209, 197, 0.2) 0%, rgba(79, 209, 197, 0.1) 100%);
+  border: 1px solid rgba(79, 209, 197, 0.3);
+  border-radius: 14px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  backdrop-filter: blur(10px);
+}
+
+.wave-logo-icon svg {
+  width: 26px;
+  height: 26px;
+  color: #4fd1c5;
+}
+
+.wave-logo-text {
+  font-size: 28px;
+  font-weight: 700;
+  color: #ffffff;
+  letter-spacing: -0.5px;
+}
+
+.wave-brand-headline {
+  font-size: 54px;
+  font-weight: 800;
+  color: #ffffff;
+  line-height: 1.1;
+  margin-bottom: 24px;
+  letter-spacing: -1.5px;
+}
+
+.wave-gradient-text {
+  background: linear-gradient(135deg, #4fd1c5 0%, #38b2ac 50%, #319795 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.wave-brand-description {
+  font-size: 18px;
+  color: rgba(255, 255, 255, 0.6);
+  line-height: 1.7;
+  margin-bottom: 40px;
+}
+
+.wave-feature-list {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.wave-feature-item {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  color: rgba(255, 255, 255, 0.8);
+  font-size: 16px;
+  font-weight: 500;
+  padding: 12px 16px;
+  border-radius: 12px;
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  transition: all 0.3s ease;
+  cursor: default;
+}
+
+.wave-feature-item:hover {
+  background: rgba(79, 209, 197, 0.1);
+  border-color: rgba(79, 209, 197, 0.2);
+}
+
+.wave-feature-icon {
+  font-size: 18px;
+  color: #4fd1c5;
+}
+
+/* ===== WAVE AUTH CARD ===== */
+.wave-auth-card-wrapper {
+  width: 420px;
+  flex-shrink: 0;
+}
+
+.wave-auth-card {
+  position: relative;
+  background: rgba(255, 255, 255, 0.05);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  padding: 48px 40px;
+  border-radius: 24px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  overflow: hidden;
+}
+
+.wave-card-glow {
+  position: absolute;
+  top: -50%;
+  left: -50%;
+  width: 200%;
+  height: 200%;
+  background: radial-gradient(
+    circle at center,
+    rgba(79, 209, 197, 0.08) 0%,
+    transparent 50%
+  );
+  animation: rotateGlow 15s linear infinite;
+  pointer-events: none;
+}
+
+@keyframes rotateGlow {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.wave-card-header {
+  text-align: center;
+  margin-bottom: 32px;
+  position: relative;
+  z-index: 1;
+}
+
+.wave-card-header h2 {
+  font-size: 28px;
+  font-weight: 700;
+  color: #ffffff;
+  margin-bottom: 8px;
+}
+
+.wave-card-header p {
+  color: rgba(255, 255, 255, 0.5);
+  font-size: 15px;
+}
+
+/* ===== WAVE ERROR MESSAGE ===== */
+.wave-error-message {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  background: rgba(239, 68, 68, 0.15);
+  color: #f87171;
+  padding: 14px 18px;
+  border-radius: 12px;
+  margin-bottom: 24px;
+  font-size: 14px;
+  font-weight: 500;
+  border: 1px solid rgba(239, 68, 68, 0.2);
+  position: relative;
+  z-index: 1;
+}
+
+.wave-error-message svg {
+  width: 20px;
+  height: 20px;
+  flex-shrink: 0;
+}
+
+/* ===== WAVE GOOGLE LOGIN ===== */
+.wave-google-login-wrapper {
+  margin: 24px 0;
+  position: relative;
+  z-index: 1;
+}
+
+.wave-google-login-wrapper > div {
+  width: 100% !important;
+}
+
+.wave-google-login-wrapper iframe {
+  width: 100% !important;
+}
+
+.wave-loading-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 16px;
+  padding: 24px;
+  background: rgba(255, 255, 255, 0.05);
+  border-radius: 12px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.wave-spinner {
+  width: 40px;
+  height: 40px;
+  border: 3px solid rgba(255, 255, 255, 0.1);
+  border-top-color: #4fd1c5;
+  border-radius: 50%;
+  animation: spin 0.8s linear infinite;
+}
+
+.wave-loading-state span {
+  color: rgba(255, 255, 255, 0.6);
+  font-size: 14px;
+  font-weight: 500;
+}
+
+/* ===== WAVE DIVIDER ===== */
+.wave-divider {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 24px 0;
+  position: relative;
+  z-index: 1;
+}
+
+.wave-divider::before,
+.wave-divider::after {
+  content: '';
+  flex: 1;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.15), transparent);
+}
+
+.wave-divider span {
+  padding: 0 16px;
+  color: rgba(255, 255, 255, 0.4);
+  font-size: 12px;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+/* ===== WAVE BENEFITS ===== */
+.wave-benefits {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin-bottom: 24px;
+  position: relative;
+  z-index: 1;
+}
+
+.wave-benefit-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  color: rgba(255, 255, 255, 0.6);
+  font-size: 14px;
+}
+
+.wave-benefit-item svg {
+  width: 18px;
+  height: 18px;
+  color: #4fd1c5;
+  flex-shrink: 0;
+}
+
+/* ===== WAVE AUTH TERMS ===== */
+.wave-auth-terms {
+  text-align: center;
+  color: rgba(255, 255, 255, 0.4);
+  font-size: 12px;
+  line-height: 1.6;
+  position: relative;
+  z-index: 1;
+}
+
+.wave-auth-terms a {
+  color: #4fd1c5;
+  text-decoration: none;
+  font-weight: 500;
+  transition: color 0.2s;
+}
+
+.wave-auth-terms a:hover {
+  color: #38b2ac;
+  text-decoration: underline;
+}
+
+/* ===== WAVE RESPONSIVE ===== */
+@media (max-width: 1024px) {
+  .wave-auth-content {
+    flex-direction: column;
+    padding: 40px 24px;
+    justify-content: center;
+    gap: 40px;
+  }
+
+  .wave-auth-branding {
+    text-align: center;
+    max-width: 500px;
+  }
+
+  .wave-brand-logo {
+    justify-content: center;
+  }
+
+  .wave-brand-headline {
+    font-size: 40px;
+  }
+
+  .wave-feature-list {
+    display: none;
+  }
+
+  .wave-auth-card-wrapper {
+    width: 100%;
+    max-width: 420px;
+  }
+}
+
+@media (max-width: 480px) {
+  .wave-auth-content {
+    padding: 24px 16px;
+  }
+
+  .wave-brand-headline {
+    font-size: 32px;
+  }
+
+  .wave-auth-card {
+    padding: 32px 24px;
+  }
+
+  .wave-card-header h2 {
+    font-size: 24px;
+  }
+}
