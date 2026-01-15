@@ -1,5 +1,6 @@
 import { createContext, useContext, useState, useEffect } from 'react';
-import api from '../api/auth';
+import api, { logoutUser } from '../api/auth';
+import encryptedStorage, { STORAGE_KEYS } from '../utils/encryptedStorage';
 
 const AuthContext = createContext(null);
 
@@ -22,54 +23,70 @@ export const AuthProvider = ({ children }) => {
 
   const checkAuth = async () => {
     try {
-      const token = localStorage.getItem('accessToken');
-      if (!token) {
-        setLoading(false);
-        return;
+      // First try to load cached user data from encrypted storage
+      const cachedUser = await encryptedStorage.getItem(STORAGE_KEYS.USER_DATA);
+      if (cachedUser) {
+        setUser(cachedUser);
+        setIsAuthenticated(true);
       }
 
-      const response = await api.get('/profile/me', {
-        headers: { Authorization: `Bearer ${token}` }
-      });
+      // Verify with server (cookies are sent automatically)
+      const response = await api.get('/profile/me');
 
       if (response.data.success) {
         setUser(response.data.user);
         setIsAuthenticated(true);
+        // Update encrypted storage with fresh data
+        await encryptedStorage.setItem(STORAGE_KEYS.USER_DATA, response.data.user);
       }
     } catch (error) {
       console.error('Auth check failed:', error);
-      localStorage.removeItem('accessToken');
-      localStorage.removeItem('refreshToken');
-      localStorage.removeItem('extensionToken');
-      localStorage.removeItem('user');
+      // Clear encrypted storage on auth failure
+      await encryptedStorage.removeItem(STORAGE_KEYS.USER_DATA);
+      // Keep extensionToken in localStorage for browser extension
+      // localStorage.removeItem('extensionToken'); // Uncomment if you want to clear extension token too
+      setUser(null);
+      setIsAuthenticated(false);
     } finally {
       setLoading(false);
     }
   };
 
-  const login = (userData, accessToken, refreshToken, extensionToken) => {
-    localStorage.setItem('accessToken', accessToken);
-    localStorage.setItem('refreshToken', refreshToken);
+  const login = async (userData, extensionToken) => {
+    // Store user data in encrypted IndexedDB
+    await encryptedStorage.setItem(STORAGE_KEYS.USER_DATA, userData);
+    
+    // Store extension token in localStorage (for browser extension access)
     if (extensionToken) {
       localStorage.setItem('extensionToken', extensionToken);
     }
-    localStorage.setItem('user', JSON.stringify(userData));
+    
     setUser(userData);
     setIsAuthenticated(true);
   };
 
-  const logout = () => {
-    localStorage.removeItem('accessToken');
-    localStorage.removeItem('refreshToken');
+  const logout = async () => {
+    try {
+      // Call server to clear cookies
+      await logoutUser();
+    } catch (error) {
+      console.error('Logout API error:', error);
+    }
+    
+    // Clear encrypted storage
+    await encryptedStorage.removeItem(STORAGE_KEYS.USER_DATA);
+    
+    // Clear extension token from localStorage
     localStorage.removeItem('extensionToken');
-    localStorage.removeItem('user');
+    
     setUser(null);
     setIsAuthenticated(false);
   };
 
-  const updateUser = (userData) => {
+  const updateUser = async (userData) => {
     setUser(userData);
-    localStorage.setItem('user', JSON.stringify(userData));
+    // Update encrypted storage
+    await encryptedStorage.setItem(STORAGE_KEYS.USER_DATA, userData);
   };
 
   const value = {

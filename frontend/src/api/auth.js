@@ -8,6 +8,7 @@ const api = axios.create({
   headers: {
     'Content-Type': 'application/json',
   },
+  withCredentials: true, // Enable sending cookies with requests
 });
 
 // Flag to prevent multiple refresh attempts
@@ -25,13 +26,10 @@ const processQueue = (error, token = null) => {
   failedQueue = [];
 };
 
-// Add request interceptor to include auth token
+// Request interceptor - no longer need to add token manually since it's in cookies
 api.interceptors.request.use(
   (config) => {
-    const token = localStorage.getItem('accessToken');
-    if (token) {
-      config.headers.Authorization = `Bearer ${token}`;
-    }
+    // Cookies are automatically sent with withCredentials: true
     return config;
   },
   (error) => Promise.reject(error)
@@ -49,8 +47,7 @@ api.interceptors.response.use(
         // Wait for the refresh to complete
         return new Promise((resolve, reject) => {
           failedQueue.push({ resolve, reject });
-        }).then(token => {
-          originalRequest.headers.Authorization = `Bearer ${token}`;
+        }).then(() => {
           return api(originalRequest);
         }).catch(err => Promise.reject(err));
       }
@@ -58,40 +55,21 @@ api.interceptors.response.use(
       originalRequest._retry = true;
       isRefreshing = true;
 
-      const refreshToken = localStorage.getItem('refreshToken');
-      
-      if (!refreshToken) {
-        // No refresh token, redirect to login
-        localStorage.removeItem('accessToken');
-        localStorage.removeItem('refreshToken');
-        localStorage.removeItem('user');
-        window.location.href = '/login';
-        return Promise.reject(error);
-      }
-
       try {
-        const response = await axios.post(`${API_BASE_URL}/users/refresh-token`, {
-          refreshToken
-        });
+        // Refresh token is sent automatically via cookie
+        const response = await axios.post(
+          `${API_BASE_URL}/users/refresh-token`,
+          {},
+          { withCredentials: true }
+        );
 
         if (response.data.success) {
-          const { accessToken, refreshToken: newRefreshToken } = response.data;
-          
-          localStorage.setItem('accessToken', accessToken);
-          localStorage.setItem('refreshToken', newRefreshToken);
-          
-          api.defaults.headers.Authorization = `Bearer ${accessToken}`;
-          originalRequest.headers.Authorization = `Bearer ${accessToken}`;
-          
-          processQueue(null, accessToken);
-          
+          processQueue(null);
           return api(originalRequest);
         }
       } catch (refreshError) {
         processQueue(refreshError, null);
-        localStorage.removeItem('accessToken');
-        localStorage.removeItem('refreshToken');
-        localStorage.removeItem('user');
+        // Redirect to login on refresh failure
         window.location.href = '/login';
         return Promise.reject(refreshError);
       } finally {
@@ -161,6 +139,12 @@ export const getHeatmapData = async (year) => {
 
 export const getAllTopics = async () => {
   const response = await api.get('/quests/topics');
+  return response.data;
+};
+
+// Logout API - clears cookies on server
+export const logoutUser = async () => {
+  const response = await api.post('/users/logout');
   return response.data;
 };
 

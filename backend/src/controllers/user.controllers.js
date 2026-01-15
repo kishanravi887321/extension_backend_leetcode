@@ -4,6 +4,29 @@ import { OAuth2Client } from "google-auth-library";
 
 const client = new OAuth2Client(process.env.GOOGLE_CLIENT_ID);
 
+// Cookie configuration for production
+const getCookieOptions = (maxAge) => ({
+  httpOnly: true,
+  secure: process.env.NODE_ENV === 'production',
+  sameSite: process.env.NODE_ENV === 'production' ? 'none' : 'lax',
+  maxAge: maxAge,
+  path: '/'
+});
+
+// Set auth cookies helper
+const setAuthCookies = (res, accessToken, refreshToken) => {
+  // Access token expires in 15 minutes
+  res.cookie('accessToken', accessToken, getCookieOptions(15 * 60 * 1000));
+  // Refresh token expires in 7 days
+  res.cookie('refreshToken', refreshToken, getCookieOptions(7 * 24 * 60 * 60 * 1000));
+};
+
+// Clear auth cookies helper
+const clearAuthCookies = (res) => {
+  res.clearCookie('accessToken', { path: '/' });
+  res.clearCookie('refreshToken', { path: '/' });
+};
+
 export const googleLogin = async (req, res) => {
   try {
     const { credential } = req.body;
@@ -47,6 +70,9 @@ export const googleLogin = async (req, res) => {
     // console.log("Generated Refresh Token:", refreshToken);
     const extensionToken = Auth.generateExtensionToken(user);
 
+    // Set HTTP-only cookies for web authentication
+    setAuthCookies(res, accessToken, refreshToken);
+
     res.status(200).json({
       success: true,
       message: "Login successful",
@@ -58,8 +84,7 @@ export const googleLogin = async (req, res) => {
         username: user.username,
         bio: user.bio,
       },
-      accessToken,
-      refreshToken,
+      // Only send extensionToken in response body (for browser extension/localStorage)
       extensionToken
     });
   } catch (error) {
@@ -90,14 +115,15 @@ export const loginUser = async (req, res) => {
 // Refresh Token endpoint
 export const refreshToken = async (req, res) => {
   try {
-    const { refreshToken } = req.body;
+    // Get refresh token from cookie or body (for backward compatibility)
+    const refreshTokenValue = req.cookies?.refreshToken || req.body?.refreshToken;
     
-    if (!refreshToken) {
+    if (!refreshTokenValue) {
       return res.status(401).json({ success: false, message: "Refresh token required" });
     }
 
     // Verify the refresh token
-    const decoded = Auth.verifyRefreshToken(refreshToken);
+    const decoded = Auth.verifyRefreshToken(refreshTokenValue);
     
     // Find user
     const user = await User.findById(decoded.id);
@@ -109,13 +135,30 @@ export const refreshToken = async (req, res) => {
     const newAccessToken = Auth.generateAccessToken(user);
     const newRefreshToken = Auth.generateRefreshToken(user);
 
+    // Set new cookies
+    setAuthCookies(res, newAccessToken, newRefreshToken);
+
     res.status(200).json({
       success: true,
-      accessToken: newAccessToken,
-      refreshToken: newRefreshToken
+      message: "Token refreshed successfully"
     });
   } catch (error) {
     console.error("Refresh token error:", error);
+    clearAuthCookies(res);
     res.status(401).json({ success: false, message: "Invalid or expired refresh token" });
+  }
+};
+
+// Logout endpoint - clears cookies
+export const logout = async (req, res) => {
+  try {
+    clearAuthCookies(res);
+    res.status(200).json({
+      success: true,
+      message: "Logged out successfully"
+    });
+  } catch (error) {
+    console.error("Logout error:", error);
+    res.status(500).json({ success: false, message: "Error during logout" });
   }
 };

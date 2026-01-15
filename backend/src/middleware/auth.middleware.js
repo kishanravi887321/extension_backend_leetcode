@@ -2,13 +2,19 @@ import Auth from "../utils/authTokens.js";
 
 export const authenticateToken = (req, res, next) => {
   try {
-    const authHeader = req.headers.authorization;
+    // First try to get token from cookie, then fallback to Authorization header
+    let token = req.cookies?.accessToken;
     
-    if (!authHeader || !authHeader.startsWith('Bearer ')) {
-      return res.status(401).json({ message: "Access token required" });
+    if (!token) {
+      const authHeader = req.headers.authorization;
+      if (authHeader && authHeader.startsWith('Bearer ')) {
+        token = authHeader.split(' ')[1];
+      }
     }
     
-    const token = authHeader.split(' ')[1];
+    if (!token) {
+      return res.status(401).json({ message: "Access token required" });
+    }
     
     const decoded = Auth.verifyAccessToken(token);
     req.user = decoded;
@@ -38,10 +44,17 @@ export const authenticateExtensionToken = (req, res, next) => {
 
 export const optionalAuth = (req, res, next) => {
   try {
-    const authHeader = req.headers.authorization;
+    // First try to get token from cookie, then fallback to Authorization header
+    let token = req.cookies?.accessToken;
     
-    if (authHeader && authHeader.startsWith('Bearer ')) {
-      const token = authHeader.split(' ')[1];
+    if (!token) {
+      const authHeader = req.headers.authorization;
+      if (authHeader && authHeader.startsWith('Bearer ')) {
+        token = authHeader.split(' ')[1];
+      }
+    }
+    
+    if (token) {
       const decoded = Auth.verifyAccessToken(token);
       req.user = decoded;
     }

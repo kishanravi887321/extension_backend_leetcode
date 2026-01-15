@@ -1,10 +1,14 @@
 import express from "express";
 import cors from "cors";
+import cookieParser from "cookie-parser";
 import {router as userRoutes} from "./routes/user.routes.js";
 import {router as profileRoutes} from "./routes/profile.routes.js";
 import {router as questRoutes} from "./routes/quest.routes.js";
 
 const app = express();
+
+// Cookie parser middleware
+app.use(cookieParser());
 
 const projectOrigins = [
   'http://localhost:5173', 

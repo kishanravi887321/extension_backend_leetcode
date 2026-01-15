@@ -24,7 +24,9 @@ const Login = () => {
     try {
       const response = await googleLogin(credentialResponse.credential);
       console.log('Login successful:', response);
-      login(response.user, response.accessToken, response.refreshToken, response.extensionToken);
+      // Cookies are set automatically by the server
+      // Only pass user data and extension token (for localStorage)
+      await login(response.user, response.extensionToken);
       navigate('/dashboard');
     } catch (err) {
       setError(err.response?.data?.message || 'Login failed. Please try again.');
