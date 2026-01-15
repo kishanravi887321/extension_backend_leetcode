@@ -35,11 +35,26 @@ api.interceptors.request.use(
   (error) => Promise.reject(error)
 );
 
+// Endpoints that should NOT trigger token refresh (auth-related endpoints)
+const noRefreshEndpoints = ['/users/google-login', '/users/refresh-token', '/profile/me'];
+
 // Add response interceptor for token refresh
 api.interceptors.response.use(
   (response) => response,
   async (error) => {
     const originalRequest = error.config;
+    const requestUrl = originalRequest?.url || '';
+
+    // Skip refresh logic if already on login page
+    if (window.location.pathname === '/login') {
+      return Promise.reject(error);
+    }
+
+    // Skip refresh for auth-related endpoints to prevent loops
+    const isNoRefreshEndpoint = noRefreshEndpoints.some(endpoint => requestUrl.includes(endpoint));
+    if (isNoRefreshEndpoint) {
+      return Promise.reject(error);
+    }
 
     // If 401/403 and not already retrying
     if ((error.response?.status === 401 || error.response?.status === 403) && !originalRequest._retry) {
@@ -69,8 +84,7 @@ api.interceptors.response.use(
         }
       } catch (refreshError) {
         processQueue(refreshError, null);
-        // Redirect to login on refresh failure
-        window.location.href = '/login';
+        // Don't hard redirect - let the auth context handle navigation
         return Promise.reject(refreshError);
       } finally {
         isRefreshing = false;
