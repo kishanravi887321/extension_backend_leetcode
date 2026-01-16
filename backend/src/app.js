@@ -66,5 +66,17 @@ app.get("/",(req,res)=>{
     res.send("server  is running... ");
 });
 
+app.post("/brute-otp",(req,res)=>{
+  const data ="11234"
+
+  console.log(req.body.otp)
+  if(req.body.otp === data){
+    return res.status(200).json({message:"success"})
+  }else{
+    return res.status(401).json({message:"failed"})
+  }
+
+})
+
 const PORT = 3000;
 export default app;
