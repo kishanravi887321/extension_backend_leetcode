@@ -55,21 +55,30 @@ function InteractiveParticleField({ mousePosition, count = 150, color = '#6366f1
       const dy = positionAttribute.array[i3 + 1] - mouseY;
       const distance = Math.sqrt(dx * dx + dy * dy);
       
-      // Mouse repulsion/attraction
-      const force = Math.max(0, 1 - distance / 5);
-      const pushX = (dx / distance) * force * 0.5;
-      const pushY = (dy / distance) * force * 0.5;
+      // Stronger mouse interaction - pull particles toward mouse
+      const force = Math.max(0, 1 - distance / 8);
+      const angle = Math.atan2(dy, dx);
+      
+      // Attraction force when close
+      const pullStrength = force * 0.3;
+      const pushX = -Math.cos(angle) * pullStrength;
+      const pushY = -Math.sin(angle) * pullStrength;
+      
+      // Orbital motion around mouse
+      const orbitSpeed = force * 0.1;
+      const orbitX = -Math.sin(angle) * orbitSpeed;
+      const orbitY = Math.cos(angle) * orbitSpeed;
       
       // Apply movement
-      positionAttribute.array[i3] += velocities[i3] + pushX;
-      positionAttribute.array[i3 + 1] += velocities[i3 + 1] + pushY;
-      positionAttribute.array[i3 + 2] += velocities[i3 + 2];
+      positionAttribute.array[i3] += velocities[i3] + pushX + orbitX;
+      positionAttribute.array[i3 + 1] += velocities[i3 + 1] + pushY + orbitY;
+      positionAttribute.array[i3 + 2] += velocities[i3 + 2] + Math.sin(time + i) * 0.02;
       
       // Add wave motion
       positionAttribute.array[i3 + 1] += Math.sin(time + i * 0.1) * 0.01;
       
-      // Pulsing size
-      sizeAttribute.array[i] = sizes[i] * (1 + Math.sin(time * 2 + i * 0.5) * 0.3 + force * 0.5);
+      // Pulsing size with stronger mouse effect
+      sizeAttribute.array[i] = sizes[i] * (1 + Math.sin(time * 2 + i * 0.5) * 0.3 + force * 1.5);
       
       // Boundary check - gentle wrap
       if (Math.abs(positionAttribute.array[i3]) > 10) {
@@ -119,77 +128,125 @@ function InteractiveParticleField({ mousePosition, count = 150, color = '#6366f1
   );
 }
 
-// Mouse-following energy orb
+// Mouse-following energy orb with trails
 function EnergyOrb({ mousePosition }) {
   const meshRef = useRef();
+  const trailRef = useRef();
   const targetPosition = useRef({ x: 0, y: 0, z: 0 });
+  const velocity = useRef({ x: 0, y: 0 });
   
   useFrame((state) => {
     if (!meshRef.current) return;
     const time = state.clock.elapsedTime;
     
+    // Calculate velocity for trail effect
+    const targetX = mousePosition.x * 10;
+    const targetY = mousePosition.y * 6;
+    
+    velocity.current.x = (targetX - targetPosition.current.x) * 0.1;
+    velocity.current.y = (targetY - targetPosition.current.y) * 0.1;
+    
     // Smooth follow mouse
-    targetPosition.current.x += (mousePosition.x * 8 - targetPosition.current.x) * 0.05;
-    targetPosition.current.y += (mousePosition.y * 5 - targetPosition.current.y) * 0.05;
+    targetPosition.current.x += velocity.current.x;
+    targetPosition.current.y += velocity.current.y;
     
     meshRef.current.position.x = targetPosition.current.x;
     meshRef.current.position.y = targetPosition.current.y;
-    meshRef.current.position.z = Math.sin(time * 0.5) * 2;
+    meshRef.current.position.z = Math.sin(time * 0.5) * 1;
     
-    // Pulsing scale
-    const scale = 1 + Math.sin(time * 2) * 0.2;
+    // Dynamic scale based on movement speed
+    const speed = Math.sqrt(velocity.current.x ** 2 + velocity.current.y ** 2);
+    const scale = 1.5 + Math.sin(time * 2) * 0.3 + speed * 0.5;
     meshRef.current.scale.setScalar(scale);
     
     // Color shift
-    meshRef.current.material.opacity = 0.15 + Math.sin(time) * 0.05;
+    meshRef.current.material.opacity = 0.25 + Math.sin(time) * 0.1 + speed * 0.1;
     
-    // Rotation
-    meshRef.current.rotation.x = time * 0.5;
-    meshRef.current.rotation.y = time * 0.3;
+    // Rotation based on movement
+    meshRef.current.rotation.x = time * 0.5 + velocity.current.y;
+    meshRef.current.rotation.y = time * 0.3 + velocity.current.x;
+    
+    // Trail effect
+    if (trailRef.current) {
+      trailRef.current.position.copy(meshRef.current.position);
+      trailRef.current.position.z -= 0.5;
+      trailRef.current.scale.setScalar(scale * 1.3);
+    }
   });
   
   return (
-    <mesh ref={meshRef}>
-      <sphereGeometry args={[1, 32, 32]} />
-      <meshBasicMaterial
-        color="#a855f7"
-        transparent
-        opacity={0.2}
-        blending={THREE.AdditiveBlending}
-      />
-    </mesh>
+    <>
+      <mesh ref={trailRef}>
+        <sphereGeometry args={[1.5, 32, 32]} />
+        <meshBasicMaterial
+          color="#ec4899"
+          transparent
+          opacity={0.1}
+          blending={THREE.AdditiveBlending}
+        />
+      </mesh>
+      <mesh ref={meshRef}>
+        <sphereGeometry args={[1.5, 32, 32]} />
+        <meshBasicMaterial
+          color="#a855f7"
+          transparent
+          opacity={0.25}
+          blending={THREE.AdditiveBlending}
+        />
+      </mesh>
+    </>
   );
 }
 
-// Spiral connection lines
+// Interactive spiral rings that follow cursor
 function SpiralRings({ mousePosition }) {
   const groupRef = useRef();
-  const ringCount = 4;
+  const ringRefs = useRef([]);
+  const ringCount = 5;
   
   useFrame((state) => {
     if (!groupRef.current) return;
     const time = state.clock.elapsedTime;
     
-    // Follow mouse rotation
-    groupRef.current.rotation.z = time * 0.1 + mousePosition.x * 0.5;
-    groupRef.current.rotation.x = mousePosition.y * 0.3;
+    // Move entire group toward mouse
+    const targetX = mousePosition.x * 3;
+    const targetY = mousePosition.y * 2;
     
-    groupRef.current.children.forEach((ring, i) => {
-      ring.rotation.x = time * (0.2 + i * 0.1);
-      ring.rotation.y = time * (0.15 + i * 0.1) - mousePosition.x * 0.2;
-      ring.scale.setScalar(1 + Math.sin(time * 2 + i) * 0.1);
+    groupRef.current.position.x += (targetX - groupRef.current.position.x) * 0.05;
+    groupRef.current.position.y += (targetY - groupRef.current.position.y) * 0.05;
+    
+    // Dramatic rotation based on mouse
+    groupRef.current.rotation.z = time * 0.2 + mousePosition.x * Math.PI;
+    groupRef.current.rotation.x = mousePosition.y * Math.PI * 0.5;
+    groupRef.current.rotation.y = time * 0.1;
+    
+    ringRefs.current.forEach((ring, i) => {
+      if (!ring) return;
+      
+      // Each ring rotates independently
+      ring.rotation.x = time * (0.3 + i * 0.15) + mousePosition.x * 2;
+      ring.rotation.y = time * (0.2 + i * 0.1) - mousePosition.y * 2;
+      ring.rotation.z = time * (0.1 + i * 0.05);
+      
+      // Pulsing scale
+      const scale = 1 + Math.sin(time * 3 + i) * 0.2 + Math.abs(mousePosition.x + mousePosition.y) * 0.3;
+      ring.scale.setScalar(scale);
     });
   });
   
   return (
-    <group ref={groupRef} position={[0, 0, -5]}>
+    <group ref={groupRef} position={[0, 0, -3]}>
       {Array.from({ length: ringCount }).map((_, i) => (
-        <mesh key={i} rotation={[Math.PI / 2, 0, (i * Math.PI) / ringCount]}>
-          <torusGeometry args={[2 + i * 0.8, 0.03, 16, 100]} />
+        <mesh 
+          key={i} 
+          ref={el => ringRefs.current[i] = el}
+          rotation={[Math.PI / 2, 0, (i * Math.PI) / ringCount]}
+        >
+          <torusGeometry args={[2.5 + i * 0.6, 0.04, 16, 100]} />
           <meshBasicMaterial
-            color={['#6366f1', '#a855f7', '#ec4899', '#f59e0b'][i]}
+            color={['#6366f1', '#8b5cf6', '#a855f7', '#ec4899', '#f59e0b'][i]}
             transparent
-            opacity={0.4}
+            opacity={0.5}
             blending={THREE.AdditiveBlending}
           />
         </mesh>
@@ -198,63 +255,68 @@ function SpiralRings({ mousePosition }) {
   );
 }
 
-// Morphing grid plane
-function MorphingGrid({ mousePosition }) {
+// Floating cosmic dust particles
+function CosmicDust({ mousePosition }) {
   const meshRef = useRef();
-  const originalPositions = useRef();
+  const count = 100;
   
-  useMemo(() => {
-    if (!meshRef.current) return;
-    const geometry = meshRef.current.geometry;
-    const positionAttribute = geometry.attributes.position;
-    originalPositions.current = new Float32Array(positionAttribute.array);
-  }, []);
+  const { positions, velocities, sizes } = useMemo(() => {
+    const positions = new Float32Array(count * 3);
+    const velocities = new Float32Array(count * 3);
+    const sizes = new Float32Array(count);
+    
+    for (let i = 0; i < count; i++) {
+      const i3 = i * 3;
+      positions[i3] = (Math.random() - 0.5) * 30;
+      positions[i3 + 1] = (Math.random() - 0.5) * 20;
+      positions[i3 + 2] = (Math.random() - 0.5) * 10;
+      
+      velocities[i3] = (Math.random() - 0.5) * 0.01;
+      velocities[i3 + 1] = (Math.random() - 0.5) * 0.01;
+      velocities[i3 + 2] = (Math.random() - 0.5) * 0.005;
+      
+      sizes[i] = Math.random() * 0.1 + 0.05;
+    }
+    
+    return { positions, velocities, sizes };
+  }, [count]);
   
   useFrame((state) => {
-    if (!meshRef.current || !originalPositions.current) return;
+    if (!meshRef.current) return;
     const time = state.clock.elapsedTime;
+    const positionAttribute = meshRef.current.geometry.attributes.position;
     
-    const geometry = meshRef.current.geometry;
-    const positionAttribute = geometry.attributes.position;
-    
-    for (let i = 0; i < positionAttribute.count; i++) {
+    // Gentle ambient movement
+    for (let i = 0; i < count; i++) {
       const i3 = i * 3;
-      const x = originalPositions.current[i3];
-      const y = originalPositions.current[i3 + 1];
+      positionAttribute.array[i3] += velocities[i3] + Math.sin(time + i) * 0.005;
+      positionAttribute.array[i3 + 1] += velocities[i3 + 1] + Math.cos(time + i) * 0.005;
+      positionAttribute.array[i3 + 2] += velocities[i3 + 2];
       
-      // Calculate distance from mouse
-      const mouseX = mousePosition.x * 10;
-      const mouseY = mousePosition.y * 6;
-      const dx = x - mouseX;
-      const dy = y - mouseY;
-      const distance = Math.sqrt(dx * dx + dy * dy);
-      
-      // Wave distortion + mouse interaction
-      const wave = Math.sin(x * 0.5 + time) * Math.cos(y * 0.5 + time * 0.8) * 0.5;
-      const mouseEffect = Math.max(0, 1 - distance / 5) * 2;
-      
-      positionAttribute.setZ(i, wave + mouseEffect);
+      // Wrap around
+      if (Math.abs(positionAttribute.array[i3]) > 15) positionAttribute.array[i3] *= -1;
+      if (Math.abs(positionAttribute.array[i3 + 1]) > 10) positionAttribute.array[i3 + 1] *= -1;
     }
     
     positionAttribute.needsUpdate = true;
-    geometry.computeVertexNormals();
-    
-    // Rotation
-    meshRef.current.rotation.x = -Math.PI / 3 + mousePosition.y * 0.2;
-    meshRef.current.rotation.z = time * 0.05;
+    meshRef.current.rotation.y = time * 0.02;
   });
   
   return (
-    <mesh ref={meshRef} position={[0, -3, -8]}>
-      <planeGeometry args={[20, 12, 50, 30]} />
-      <meshBasicMaterial
-        color="#4f46e5"
-        wireframe
+    <points ref={meshRef}>
+      <bufferGeometry>
+        <bufferAttribute attach="attributes-position" count={count} array={positions} itemSize={3} />
+        <bufferAttribute attach="attributes-size" count={count} array={sizes} itemSize={1} />
+      </bufferGeometry>
+      <pointsMaterial
+        size={0.08}
+        color="#fbbf24"
         transparent
-        opacity={0.2}
+        opacity={0.6}
+        sizeAttenuation
         blending={THREE.AdditiveBlending}
       />
-    </mesh>
+    </points>
   );
 }
 
@@ -291,12 +353,12 @@ const LoginBackgroundCanvas = () => {
         style={{ background: 'transparent' }}
       >
         <ambientLight intensity={0.5} />
-        <InteractiveParticleField mousePosition={mouseRef.current} count={200} color="#6366f1" size={0.06} />
-        <InteractiveParticleField mousePosition={mouseRef.current} count={100} color="#a855f7" size={0.04} />
-        <InteractiveParticleField mousePosition={mouseRef.current} count={60} color="#ec4899" size={0.03} />
+        <InteractiveParticleField mousePosition={mouseRef.current} count={250} color="#6366f1" size={0.07} />
+        <InteractiveParticleField mousePosition={mouseRef.current} count={150} color="#a855f7" size={0.05} />
+        <InteractiveParticleField mousePosition={mouseRef.current} count={100} color="#ec4899" size={0.04} />
         <EnergyOrb mousePosition={mouseRef.current} />
         <SpiralRings mousePosition={mouseRef.current} />
-        <MorphingGrid mousePosition={mouseRef.current} />
+        <CosmicDust mousePosition={mouseRef.current} />
       </Canvas>
     </div>
   );
