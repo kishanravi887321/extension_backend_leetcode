@@ -14,6 +14,7 @@ import {
 import QuestionList from '../components/QuestionList';
 import AddQuestionModal from '../components/AddQuestionModal';
 import EditQuestionModal from '../components/EditQuestionModal';
+import NotesPreviewCanvas from '../components/NotesPreviewCanvas';
 import './Dashboard.css'; // For sidebar styles
 import './Questions.css';
 
@@ -795,6 +796,7 @@ const Questions = () => {
 
               {/* Floating Notes Preview */}
               <div className={`notes-preview-overlay ${hoveredQuestion ? 'active' : ''}`}>
+                <NotesPreviewCanvas />
                 <div className="notes-panel-header">
                     <h3>
                       <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor">
