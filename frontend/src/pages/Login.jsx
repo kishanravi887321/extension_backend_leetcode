@@ -4,7 +4,7 @@ import { GoogleLogin } from '@react-oauth/google';
 import { motion } from 'framer-motion';
 import { googleLogin } from '../api/auth';
 import { useAuth } from '../context/AuthContext';
-import WaveBackground from '../components/WaveBackground';
+import LoginBackgroundCanvas from '../components/LoginBackgroundCanvas';
 import './Auth.css';
 
 const Login = () => {
@@ -83,8 +83,8 @@ const Login = () => {
 
   return (
     <div className="wave-auth-container">
-      {/* 3D Wave Background */}
-      <WaveBackground />
+      {/* Interactive 3D Background */}
+      <LoginBackgroundCanvas />
 
       {/* Main Content */}
       <div className="wave-auth-content">
