@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback, useMemo } from 'react';
+import { useState, useEffect, useCallback, useMemo, lazy, Suspense } from 'react';
 import { Link, useNavigate, useLocation, useSearchParams } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import { 
@@ -14,9 +14,11 @@ import {
 import QuestionList from '../components/QuestionList';
 import AddQuestionModal from '../components/AddQuestionModal';
 import EditQuestionModal from '../components/EditQuestionModal';
-import NotesPreviewCanvas from '../components/NotesPreviewCanvas';
 import './Dashboard.css'; // For sidebar styles
 import './Questions.css';
+
+// Lazy load Three.js canvas to reduce bundle size
+const NotesPreviewCanvas = lazy(() => import('../components/NotesPreviewCanvas'));
 
 // Debounce hook
 const useDebounce = (value, delay) => {
@@ -393,7 +395,9 @@ const Questions = () => {
     <div className="questions-layout">
       {/* Animated Background */}
       <div className="questions-page-background">
-        <NotesPreviewCanvas />
+        <Suspense fallback={null}>
+          <NotesPreviewCanvas />
+        </Suspense>
       </div>
       
       {/* Sidebar */}

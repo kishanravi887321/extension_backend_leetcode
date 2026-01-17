@@ -1,11 +1,13 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, lazy, Suspense } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { GoogleLogin } from '@react-oauth/google';
 import { motion } from 'framer-motion';
 import { googleLogin } from '../api/auth';
 import { useAuth } from '../context/AuthContext';
-import LoginBackgroundCanvas from '../components/LoginBackgroundCanvas';
 import './Auth.css';
+
+// Lazy load Three.js canvas to reduce bundle size
+const LoginBackgroundCanvas = lazy(() => import('../components/LoginBackgroundCanvas'));
 
 const Login = () => {
   const navigate = useNavigate();
@@ -84,7 +86,9 @@ const Login = () => {
   return (
     <div className="wave-auth-container">
       {/* Interactive 3D Background */}
-      <LoginBackgroundCanvas />
+      <Suspense fallback={<div style={{ position: 'fixed', inset: 0, background: '#0a0a0f' }} />}>
+        <LoginBackgroundCanvas />
+      </Suspense>
 
       {/* Main Content */}
       <div className="wave-auth-content">
