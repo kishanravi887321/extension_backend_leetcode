@@ -39,6 +39,7 @@ function InteractiveParticleField({ mousePosition, count = 150, color = '#6366f1
   useFrame((state) => {
     if (!meshRef.current) return;
     
+    const time = state.clock.elapsedTime;
     const positionAttribute = meshRef.current.geometry.attributes.position;
     const sizeAttribute = meshRef.current.geometry.attributes.size;
     
