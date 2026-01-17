@@ -39,7 +39,6 @@ function InteractiveParticleField({ mousePosition, count = 150, color = '#6366f1
   useFrame((state) => {
     if (!meshRef.current) return;
     
-    const time = state.clock.elapsedTime;
     const positionAttribute = meshRef.current.geometry.attributes.position;
     const sizeAttribute = meshRef.current.geometry.attributes.size;
     
@@ -53,32 +52,28 @@ function InteractiveParticleField({ mousePosition, count = 150, color = '#6366f1
       // Calculate distance from mouse
       const dx = positionAttribute.array[i3] - mouseX;
       const dy = positionAttribute.array[i3 + 1] - mouseY;
-      const distance = Math.sqrt(dx * dx + dy * dy);
+      const distSq = dx * dx + dy * dy;
       
-      // Stronger mouse interaction - pull particles toward mouse
-      const force = Math.max(0, 1 - distance / 8);
-      const angle = Math.atan2(dy, dx);
+      // Only apply mouse effect if close (performance optimization)
+      if (distSq < 64) {  // distance < 8
+        const distance = Math.sqrt(distSq);
+        const force = (1 - distance / 8) * 0.2;
+        const angle = Math.atan2(dy, dx);
+        
+        // Simplified attraction
+        positionAttribute.array[i3] += velocities[i3] - Math.cos(angle) * force;
+        positionAttribute.array[i3 + 1] += velocities[i3 + 1] - Math.sin(angle) * force;
+        
+        // Size effect
+        sizeAttribute.array[i] = sizes[i] * (1 + force * 1.5);
+      } else {
+        // Normal movement when far from mouse
+        positionAttribute.array[i3] += velocities[i3];
+        positionAttribute.array[i3 + 1] += velocities[i3 + 1];
+        sizeAttribute.array[i] = sizes[i];
+      }
       
-      // Attraction force when close
-      const pullStrength = force * 0.3;
-      const pushX = -Math.cos(angle) * pullStrength;
-      const pushY = -Math.sin(angle) * pullStrength;
-      
-      // Orbital motion around mouse
-      const orbitSpeed = force * 0.1;
-      const orbitX = -Math.sin(angle) * orbitSpeed;
-      const orbitY = Math.cos(angle) * orbitSpeed;
-      
-      // Apply movement
-      positionAttribute.array[i3] += velocities[i3] + pushX + orbitX;
-      positionAttribute.array[i3 + 1] += velocities[i3 + 1] + pushY + orbitY;
-      positionAttribute.array[i3 + 2] += velocities[i3 + 2] + Math.sin(time + i) * 0.02;
-      
-      // Add wave motion
-      positionAttribute.array[i3 + 1] += Math.sin(time + i * 0.1) * 0.01;
-      
-      // Pulsing size with stronger mouse effect
-      sizeAttribute.array[i] = sizes[i] * (1 + Math.sin(time * 2 + i * 0.5) * 0.3 + force * 1.5);
+      positionAttribute.array[i3 + 2] += velocities[i3 + 2];
       
       // Boundary check - gentle wrap
       if (Math.abs(positionAttribute.array[i3]) > 10) {
@@ -258,7 +253,7 @@ function SpiralRings({ mousePosition }) {
 // Floating cosmic dust particles
 function CosmicDust({ mousePosition }) {
   const meshRef = useRef();
-  const count = 100;
+  const count = 40;
   
   const { positions, velocities, sizes } = useMemo(() => {
     const positions = new Float32Array(count * 3);
@@ -275,7 +270,7 @@ function CosmicDust({ mousePosition }) {
       velocities[i3 + 1] = (Math.random() - 0.5) * 0.01;
       velocities[i3 + 2] = (Math.random() - 0.5) * 0.005;
       
-      sizes[i] = Math.random() * 0.1 + 0.05;
+      sizes[i] = Math.random() * 0.08 + 0.04;
     }
     
     return { positions, velocities, sizes };
@@ -283,14 +278,13 @@ function CosmicDust({ mousePosition }) {
   
   useFrame((state) => {
     if (!meshRef.current) return;
-    const time = state.clock.elapsedTime;
     const positionAttribute = meshRef.current.geometry.attributes.position;
     
-    // Gentle ambient movement
+    // Simplified ambient movement - no time-based calculations
     for (let i = 0; i < count; i++) {
       const i3 = i * 3;
-      positionAttribute.array[i3] += velocities[i3] + Math.sin(time + i) * 0.005;
-      positionAttribute.array[i3 + 1] += velocities[i3 + 1] + Math.cos(time + i) * 0.005;
+      positionAttribute.array[i3] += velocities[i3];
+      positionAttribute.array[i3 + 1] += velocities[i3 + 1];
       positionAttribute.array[i3 + 2] += velocities[i3 + 2];
       
       // Wrap around
@@ -299,7 +293,6 @@ function CosmicDust({ mousePosition }) {
     }
     
     positionAttribute.needsUpdate = true;
-    meshRef.current.rotation.y = time * 0.02;
   });
   
   return (
@@ -309,10 +302,10 @@ function CosmicDust({ mousePosition }) {
         <bufferAttribute attach="attributes-size" count={count} array={sizes} itemSize={1} />
       </bufferGeometry>
       <pointsMaterial
-        size={0.08}
+        size={0.06}
         color="#fbbf24"
         transparent
-        opacity={0.6}
+        opacity={0.5}
         sizeAttenuation
         blending={THREE.AdditiveBlending}
       />
@@ -353,9 +346,9 @@ const LoginBackgroundCanvas = () => {
         style={{ background: 'transparent' }}
       >
         <ambientLight intensity={0.5} />
-        <InteractiveParticleField mousePosition={mouseRef.current} count={250} color="#6366f1" size={0.07} />
-        <InteractiveParticleField mousePosition={mouseRef.current} count={150} color="#a855f7" size={0.05} />
-        <InteractiveParticleField mousePosition={mouseRef.current} count={100} color="#ec4899" size={0.04} />
+        <InteractiveParticleField mousePosition={mouseRef.current} count={120} color="#6366f1" size={0.07} />
+        <InteractiveParticleField mousePosition={mouseRef.current} count={60} color="#a855f7" size={0.05} />
+        <InteractiveParticleField mousePosition={mouseRef.current} count={40} color="#ec4899" size={0.04} />
         <EnergyOrb mousePosition={mouseRef.current} />
         <SpiralRings mousePosition={mouseRef.current} />
         <CosmicDust mousePosition={mouseRef.current} />
