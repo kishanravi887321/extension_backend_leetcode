@@ -77,6 +77,9 @@ const Questions = () => {
   const [showAddModal, setShowAddModal] = useState(false);
   const [showEditModal, setShowEditModal] = useState(false);
   const [editingQuestion, setEditingQuestion] = useState(null);
+  
+  // Hovered Question for Notes Preview
+  const [hoveredQuestion, setHoveredQuestion] = useState(null);
 
   // Page from URL
   const currentPage = parseInt(searchParams.get('page')) || 1;
@@ -755,6 +758,7 @@ const Questions = () => {
                 onDelete={handleDelete}
                 onEdit={handleEditClick}
                 onTopicClick={handleTopicClick}
+                onRowHover={setHoveredQuestion}
               />
 
               {/* Pagination */}
@@ -788,6 +792,33 @@ const Questions = () => {
                   </button>
                 </div>
               )}
+
+              {/* Floating Notes Preview */}
+              <div className={`notes-preview-overlay ${hoveredQuestion ? 'active' : ''}`}>
+                <div className="notes-panel-header">
+                    <h3>
+                      <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor">
+                        <path strokeLinecap="round" strokeLinejoin="round" d="M19.5 14.25v-2.625a3.375 3.375 0 0 0-3.375-3.375h-1.5A1.125 1.125 0 0 1 13.5 7.125v-1.5a3.375 3.375 0 0 0-3.375-3.375H8.25m0 12.75h7.5m-7.5 3H12M10.5 2.25H5.625c-.621 0-1.125.504-1.125 1.125v17.25c0 .621.504 1.125 1.125 1.125h12.75c.621 0 1.125-.504 1.125-1.125V11.25a9 9 0 0 0-9-9Z" />
+                      </svg>
+                      Notes Preview
+                    </h3>
+                </div>
+                <div className="notes-panel-content">
+                  {hoveredQuestion ? (
+                    hoveredQuestion.notes ? (
+                      <div className="note-content">
+                        <h4>{hoveredQuestion.questName}</h4>
+                        <div className="note-text">{hoveredQuestion.notes}</div>
+                      </div>
+                    ) : (
+                      <div className="no-notes">
+                        <h4>{hoveredQuestion.questName}</h4>
+                        <p>No notes added yet.</p>
+                      </div>
+                    )
+                  ) : null}
+                </div>
+              </div>
             </>
           )}
         </div>

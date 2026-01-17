@@ -25,7 +25,8 @@ const QuestionList = ({
   onBookmarkToggle, 
   onDelete,
   onEdit,
-  onTopicClick
+  onTopicClick,
+  onRowHover
 }) => {
   const [expandedRow, setExpandedRow] = useState(null);
   const [companyDropdown, setCompanyDropdown] = useState(null);
@@ -320,6 +321,8 @@ const QuestionList = ({
             key={question._id} 
             className={`list-row ${index % 2 === 0 ? 'even' : 'odd'} ${expandedRow === question._id ? 'expanded' : ''}`}
             onClick={() => setExpandedRow(expandedRow === question._id ? null : question._id)}
+            onMouseEnter={() => onRowHover && onRowHover(question)}
+            onMouseLeave={() => onRowHover && onRowHover(null)}
           >
             <div className="row-main">
               {/* Status Column */}
