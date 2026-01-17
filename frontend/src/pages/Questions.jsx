@@ -78,8 +78,6 @@ const Questions = () => {
   const [showAddModal, setShowAddModal] = useState(false);
   const [showEditModal, setShowEditModal] = useState(false);
   const [editingQuestion, setEditingQuestion] = useState(null);
-  
-  // Hovered Question for Notes Preview
   const [hoveredQuestion, setHoveredQuestion] = useState(null);
 
   // Page from URL
@@ -393,6 +391,11 @@ const Questions = () => {
 
   return (
     <div className="questions-layout">
+      {/* Animated Background */}
+      <div className="questions-page-background">
+        <NotesPreviewCanvas />
+      </div>
+      
       {/* Sidebar */}
       <aside className={`sidebar ${sidebarCollapsed ? 'collapsed' : ''}`}>
         <div className="sidebar-header">
