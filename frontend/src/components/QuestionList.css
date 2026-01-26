@@ -1,9 +1,9 @@
 /* Question List - LeetCode Style */
 .question-list {
-  background: rgba(255, 255, 255, 0.02);
-  border: 1px solid rgba(255, 255, 255, 0.08);
-  border-radius: 12px;
-  overflow: hidden;
+  background: transparent;
+  border: none;
+  border-radius: 0;
+  overflow: visible;
 }
 
 /* List Header */
@@ -11,20 +11,22 @@
   display: grid;
   grid-template-columns: 60px 1fr 200px 80px 100px 120px;
   gap: 0.5rem;
-  padding: 0.875rem 1rem;
-  background: rgba(255, 255, 255, 0.03);
-  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+  padding: 0.875rem 0;
+  background: transparent;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
   font-size: 0.75rem;
   font-weight: 600;
   color: #888;
   text-transform: uppercase;
   letter-spacing: 0.5px;
+  margin-bottom: 0.5rem;
 }
 
 /* List Body */
 .list-body {
-  max-height: calc(100vh - 280px);
+  max-height: calc(100vh - 200px);
   overflow-y: auto;
+  padding-bottom: 96px;
 }
 
 /* List Row */
@@ -55,7 +57,7 @@
   display: grid;
   grid-template-columns: 60px 1fr 200px 80px 100px 120px;
   gap: 0.5rem;
-  padding: 0.75rem 1rem;
+  padding: 0.75rem 0;
   align-items: center;
 }
 
