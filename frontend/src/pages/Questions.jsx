@@ -47,14 +47,12 @@ const Questions = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
-  // Pagination state
-  const [pagination, setPagination] = useState({
-    currentPage: 1,
-    totalPages: 1,
-    totalCount: 0,
-    hasNextPage: false,
-    hasPrevPage: false
-  });
+  // Infinite scroll state
+  const [page, setPage] = useState(1);
+  const [hasMore, setHasMore] = useState(true);
+  const [totalCount, setTotalCount] = useState(0);
+  const [isLoadingMore, setIsLoadingMore] = useState(false);
+  const listRef = useRef(null);
 
   // Filter states
   const [activeTab, setActiveTab] = useState(searchParams.get('status') || 'all');
@@ -81,9 +79,6 @@ const Questions = () => {
   const [showEditModal, setShowEditModal] = useState(false);
   const [editingQuestion, setEditingQuestion] = useState(null);
   const [hoveredQuestion, setHoveredQuestion] = useState(null);
-
-  // Page from URL
-  const currentPage = parseInt(searchParams.get('page')) || 1;
 
   // Menu items
   const menuItems = [
@@ -125,14 +120,18 @@ const Questions = () => {
     { value: 'questName', label: 'Name' }
   ];
 
-  // Fetch questions
-  const fetchQuestions = useCallback(async () => {
-    setLoading(true);
+  // Fetch questions with infinite scroll support
+  const fetchQuestions = useCallback(async (pageNum = 1, append = false) => {
+    if (append) {
+      setIsLoadingMore(true);
+    } else {
+      setLoading(true);
+    }
     setError(null);
 
     try {
       const params = {
-        page: currentPage,
+        page: pageNum,
         limit: 20,
         sortBy,
         sortOrder
@@ -151,16 +150,22 @@ const Questions = () => {
       const response = await getQuests(params);
 
       if (response.success) {
-        setQuestions(response.quests);
-        setPagination(response.pagination);
+        if (append) {
+          setQuestions(prev => [...prev, ...response.quests]);
+        } else {
+          setQuestions(response.quests);
+        }
+        setHasMore(response.pagination.hasNextPage);
+        setTotalCount(response.pagination.totalCount);
       }
     } catch (err) {
       console.error('Error fetching questions:', err);
       setError('Failed to load questions. Please try again.');
     } finally {
       setLoading(false);
+      setIsLoadingMore(false);
     }
-  }, [currentPage, activeTab, difficulty, platform, selectedTopics, bookmarkedOnly, sortBy, sortOrder, debouncedSearch, searchBy]);
+  }, [activeTab, difficulty, platform, selectedTopics, bookmarkedOnly, sortBy, sortOrder, debouncedSearch, searchBy]);
 
   // Fetch topics and stats
   const fetchTopicsAndStats = useCallback(async () => {
@@ -182,16 +187,37 @@ const Questions = () => {
     fetchTopicsAndStats();
   }, [fetchTopicsAndStats]);
 
-  // Fetch questions when filters change
+  // Reset and fetch when filters change
   useEffect(() => {
-    fetchQuestions();
-  }, [fetchQuestions]);
+    setPage(1);
+    setQuestions([]);
+    fetchQuestions(1, false);
+  }, [activeTab, difficulty, platform, selectedTopics, bookmarkedOnly, sortBy, sortOrder, debouncedSearch, searchBy]);
+
+  // Infinite scroll detection
+  useEffect(() => {
+    const listElement = listRef.current;
+    if (!listElement) return;
+
+    const handleScroll = () => {
+      const { scrollTop, scrollHeight, clientHeight } = listElement;
+      
+      // Load more when scrolled to 80% of the list
+      if (scrollHeight - scrollTop <= clientHeight * 1.5 && hasMore && !isLoadingMore && !loading) {
+        const nextPage = page + 1;
+        setPage(nextPage);
+        fetchQuestions(nextPage, true);
+      }
+    };
+
+    listElement.addEventListener('scroll', handleScroll);
+    return () => listElement.removeEventListener('scroll', handleScroll);
+  }, [page, hasMore, isLoadingMore, loading, fetchQuestions]);
 
   // Update URL params when filters change
   useEffect(() => {
     const params = new URLSearchParams();
     
-    if (currentPage > 1) params.set('page', currentPage);
     if (activeTab !== 'all') params.set('status', activeTab);
     if (difficulty !== 'all') params.set('difficulty', difficulty);
     if (platform !== 'all') params.set('platform', platform);
@@ -204,16 +230,9 @@ const Questions = () => {
     }
 
     setSearchParams(params, { replace: true });
-  }, [currentPage, activeTab, difficulty, platform, bookmarkedOnly, sortBy, sortOrder, debouncedSearch, searchBy, setSearchParams]);
+  }, [activeTab, difficulty, platform, bookmarkedOnly, sortBy, sortOrder, debouncedSearch, searchBy, setSearchParams]);
 
   // Handlers
-  const handlePageChange = (page) => {
-    const params = new URLSearchParams(searchParams);
-    params.set('page', page);
-    setSearchParams(params);
-    window.scrollTo({ top: 0, behavior: 'smooth' });
-  };
-
   const handleStatusChange = async (id, newStatus) => {
     try {
       // Optimistic update
@@ -283,10 +302,6 @@ const Questions = () => {
   const handleTopicClick = (topic) => {
     // Set only this topic as selected (replaces current selection)
     setSelectedTopics([topic]);
-    // Reset to page 1 when changing filters
-    const params = new URLSearchParams(searchParams);
-    params.set('page', '1');
-    setSearchParams(params);
   };
 
   const handleAddQuestion = async (questionData) => {
@@ -324,10 +339,6 @@ const Questions = () => {
         ? prev.filter(t => t !== topic)
         : [...prev, topic]
     );
-    // Reset to page 1 when changing filters
-    const params = new URLSearchParams(searchParams);
-    params.set('page', '1');
-    setSearchParams(params);
   };
 
   const clearFilters = () => {
@@ -561,7 +572,6 @@ const Questions = () => {
               onClick={() => {
                 setActiveTab('all');
                 setBookmarkedOnly(false);
-                handlePageChange(1);
               }}
             >
               <div className="stat-value">{stats.overview.total}</div>
@@ -572,7 +582,6 @@ const Questions = () => {
               onClick={() => {
                 setActiveTab('solved');
                 setBookmarkedOnly(false);
-                handlePageChange(1);
               }}
             >
               <div className="stat-value">{stats.overview.solved}</div>
@@ -583,7 +592,6 @@ const Questions = () => {
               onClick={() => {
                 setActiveTab('unsolved');
                 setBookmarkedOnly(false);
-                handlePageChange(1);
               }}
             >
               <div className="stat-value">{stats.overview.unsolved}</div>
@@ -594,7 +602,6 @@ const Questions = () => {
               onClick={() => {
                 setActiveTab('for-future');
                 setBookmarkedOnly(false);
-                handlePageChange(1);
               }}
             >
               <div className="stat-value">{stats.overview.forFuture}</div>
@@ -604,7 +611,6 @@ const Questions = () => {
               className={`stat-card bookmarked ${bookmarkedOnly ? 'active' : ''}`}
               onClick={() => {
                 setBookmarkedOnly(!bookmarkedOnly);
-                handlePageChange(1);
               }}
             >
               <div className="stat-value">{stats.overview.bookmarked}</div>
@@ -621,10 +627,7 @@ const Questions = () => {
               <button
                 key={status}
                 className={`status-tab ${activeTab === status ? 'active' : ''}`}
-                onClick={() => {
-                  setActiveTab(status);
-                  handlePageChange(1);
-                }}
+                onClick={() => setActiveTab(status)}
               >
                 {status === 'all' ? 'All' : 
                  status === 'for-future' ? 'For Revision' :
@@ -642,10 +645,7 @@ const Questions = () => {
                   <button
                     key={diff.value}
                     className={`difficulty-chip ${diff.value} ${difficulty === diff.value ? 'active' : ''}`}
-                    onClick={() => {
-                      setDifficulty(diff.value);
-                      handlePageChange(1);
-                    }}
+                    onClick={() => setDifficulty(diff.value)}
                   >
                     {diff.label}
                   </button>
@@ -657,10 +657,7 @@ const Questions = () => {
               <label>Platform</label>
               <select 
                 value={platform}
-                onChange={(e) => {
-                  setPlatform(e.target.value);
-                  handlePageChange(1);
-                }}
+                onChange={(e) => setPlatform(e.target.value)}
               >
                 {platforms.map(p => (
                   <option key={p.value} value={p.value}>{p.label}</option>
@@ -693,10 +690,7 @@ const Questions = () => {
 
             <button 
               className={`bookmark-filter ${bookmarkedOnly ? 'active' : ''}`}
-              onClick={() => {
-                setBookmarkedOnly(!bookmarkedOnly);
-                handlePageChange(1);
-              }}
+              onClick={() => setBookmarkedOnly(!bookmarkedOnly)}
             >
               <svg xmlns="http://www.w3.org/2000/svg" fill={bookmarkedOnly ? "currentColor" : "none"} viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor">
                 <path strokeLinecap="round" strokeLinejoin="round" d="M17.593 3.322c1.1.128 1.907 1.077 1.907 2.185V21L12 17.25 4.5 21V5.507c0-1.108.806-2.057 1.907-2.185a48.507 48.507 0 0 1 11.186 0Z" />
@@ -735,7 +729,7 @@ const Questions = () => {
           ) : error ? (
             <div className="error-container">
               <p>{error}</p>
-              <button onClick={fetchQuestions}>Retry</button>
+              <button onClick={() => fetchQuestions(1, false)}>Retry</button>
             </div>
           ) : questions.length === 0 ? (
             <div className="empty-state">
@@ -759,6 +753,12 @@ const Questions = () => {
             </div>
           ) : (
             <>
+              <div className="infinite-scroll-info">
+                <span className="total-count">
+                  Showing {questions.length} of {totalCount} questions
+                </span>
+              </div>
+              
               <QuestionList
                 questions={questions}
                 onStatusChange={handleStatusChange}
@@ -767,37 +767,21 @@ const Questions = () => {
                 onEdit={handleEditClick}
                 onTopicClick={handleTopicClick}
                 onRowHover={setHoveredQuestion}
+                listRef={listRef}
               />
 
-              {/* Pagination */}
-              {pagination.totalPages > 1 && (
-                <div className="pagination">
-                  <button 
-                    className="pagination-btn"
-                    disabled={!pagination.hasPrevPage}
-                    onClick={() => handlePageChange(currentPage - 1)}
-                  >
-                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor">
-                      <path strokeLinecap="round" strokeLinejoin="round" d="M15.75 19.5 8.25 12l7.5-7.5" />
-                    </svg>
-                    Previous
-                  </button>
+              {/* Loading More Indicator */}
+              {isLoadingMore && (
+                <div className="loading-more">
+                  <div className="loading-spinner small"></div>
+                  <span>Loading more questions...</span>
+                </div>
+              )}
 
-                  <div className="pagination-info">
-                    <span>Page {pagination.currentPage} of {pagination.totalPages}</span>
-                    <span className="total-count">({pagination.totalCount} questions)</span>
-                  </div>
-
-                  <button 
-                    className="pagination-btn"
-                    disabled={!pagination.hasNextPage}
-                    onClick={() => handlePageChange(currentPage + 1)}
-                  >
-                    Next
-                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor">
-                      <path strokeLinecap="round" strokeLinejoin="round" d="m8.25 4.5 7.5 7.5-7.5 7.5" />
-                    </svg>
-                  </button>
+              {/* End of List Indicator */}
+              {!hasMore && questions.length > 0 && (
+                <div className="end-of-list">
+                  <span>You've reached the end of the list</span>
                 </div>
               )}
 

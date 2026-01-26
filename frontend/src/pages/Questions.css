@@ -537,55 +537,60 @@
   text-decoration: none;
 }
 
-/* Pagination */
-.pagination {
+/* Infinite Scroll Indicators */
+.infinite-scroll-info {
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 1rem;
-  margin-top: 2rem;
-  padding: 1rem 0;
+  padding: 0.75rem 0;
+  margin-bottom: 0.5rem;
 }
 
-.pagination-btn {
+.infinite-scroll-info .total-count {
+  color: #888;
+  font-size: 0.875rem;
+  font-weight: 500;
+}
+
+.loading-more {
   display: flex;
   align-items: center;
-  gap: 0.5rem;
-  background: rgba(255, 255, 255, 0.05);
-  border: 1px solid rgba(255, 255, 255, 0.15);
-  border-radius: 8px;
-  padding: 0.5rem 1rem;
-  color: #fff;
-  font-size: 0.9rem;
-  cursor: pointer;
-}
-
-.pagination-btn:hover:not(:disabled) {
-  background: rgba(99, 102, 241, 0.2);
-  border-color: #6366f1;
-}
-
-.pagination-btn:disabled {
-  opacity: 0.4;
-  cursor: not-allowed;
-}
-
-.pagination-btn svg {
-  width: 16px;
-  height: 16px;
-}
-
-.pagination-info {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
+  justify-content: center;
+  gap: 0.75rem;
+  padding: 1.5rem;
   color: #888;
   font-size: 0.9rem;
 }
 
-.pagination-info .total-count {
-  font-size: 0.8rem;
+.loading-more .loading-spinner.small {
+  width: 20px;
+  height: 20px;
+  border-width: 2px;
+}
+
+.end-of-list {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 2rem;
   color: #666;
+  font-size: 0.875rem;
+  margin-top: 1rem;
+  border-top: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.end-of-list span {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.end-of-list span::before,
+.end-of-list span::after {
+  content: '';
+  width: 40px;
+  height: 1px;
+  background: rgba(255, 255, 255, 0.1);
 }
 
 /* Sidebar Topics */

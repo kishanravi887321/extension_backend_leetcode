@@ -26,7 +26,8 @@ const QuestionList = ({
   onDelete,
   onEdit,
   onTopicClick,
-  onRowHover
+  onRowHover,
+  listRef
 }) => {
   const [expandedRow, setExpandedRow] = useState(null);
   const [companyDropdown, setCompanyDropdown] = useState(null);
@@ -315,7 +316,7 @@ const QuestionList = ({
       </div>
 
       {/* Question Rows */}
-      <div className="list-body">
+      <div className="list-body" ref={listRef}>
         {questions.map((question, index) => (
           <div 
             key={question._id} 
