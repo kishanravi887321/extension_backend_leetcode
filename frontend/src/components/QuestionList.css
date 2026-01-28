@@ -628,6 +628,23 @@
   height: 16px;
 }
 
+.action-btn.notes {
+  color: #666;
+}
+
+.action-btn.notes:hover {
+  color: #8b5cf6;
+}
+
+.action-btn.notes.has-notes {
+  color: #a855f7;
+}
+
+.action-btn.notes.has-notes:hover {
+  color: #c084fc;
+  background: rgba(168, 85, 247, 0.15);
+}
+
 .action-btn.bookmark:hover {
   color: #f59e0b;
 }
