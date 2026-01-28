@@ -1,3 +1,18 @@
+/* Plain Text Viewer */
+.plain-text-viewer {
+  font-size: 0.95rem;
+  line-height: 1.8;
+  color: #e5e7eb;
+  white-space: pre-wrap;
+  word-wrap: break-word;
+  background: linear-gradient(135deg, rgba(0, 0, 0, 0.3), rgba(20, 20, 40, 0.4));
+  padding: 1.25rem;
+  border-radius: 12px;
+  border: 1px solid rgba(99, 102, 241, 0.2);
+  box-shadow: inset 0 2px 8px rgba(0, 0, 0, 0.3);
+  margin: 0.5rem 0;
+}
+
 /* Code Viewer Component */
 .code-viewer-wrapper {
   position: relative;

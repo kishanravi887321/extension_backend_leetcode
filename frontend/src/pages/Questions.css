@@ -746,7 +746,8 @@
   position: fixed;
   top: 100px;
   right: 30px;
-  width: 360px;
+  width: 460px;
+  max-width: 90vw;
   max-height: calc(100vh - 140px);
   background: linear-gradient(145deg, rgba(10, 15, 30, 0.95), rgba(20, 25, 45, 0.95));
   border: 2px solid transparent;
@@ -948,11 +949,12 @@
 .notes-panel-content {
   flex: 1;
   overflow-y: auto;
-  overflow-x: hidden;
+  overflow-x: auto;
   padding: 1.25rem;
   position: relative;
   z-index: 1;
   max-height: calc(100vh - 200px);
+  min-height: 200px;
 }
 
 /* Scrollbar styling for Notes Panel - Simple and clean */

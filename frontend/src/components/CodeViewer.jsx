@@ -16,10 +16,40 @@ const CodeViewer = ({ code, language = 'cpp' }) => {
   const codeRef = useRef(null);
 
   useEffect(() => {
-    if (codeRef.current) {
+    if (codeRef.current && isActualCode(code)) {
       Prism.highlightElement(codeRef.current);
     }
   }, [code, language]);
+
+  // Check if content is actual code or just text
+  const isActualCode = (text) => {
+    if (!text) return false;
+    
+    // Code indicators
+    const codePatterns = [
+      /[{}\[\]();]/g,  // Brackets and parentheses
+      /\bif\s*\(/,     // if statements
+      /\bfor\s*\(/,    // for loops
+      /\bwhile\s*\(/,  // while loops
+      /\bfunction\s+\w+/,  // functions
+      /\bdef\s+\w+/,   // Python functions
+      /\bclass\s+\w+/, // classes
+      /\breturn\b/,    // return statements
+      /[=<>!]+=/,      // operators
+      /\bvoid\b|\bint\b|\bstring\b|\bbool\b/, // type keywords
+      /#include|import\s+|using\s+/, // imports
+      /\w+\s*\([^)]*\)\s*{/, // function declarations
+    ];
+    
+    // Count code pattern matches
+    let codeScore = 0;
+    codePatterns.forEach(pattern => {
+      if (pattern.test(text)) codeScore++;
+    });
+    
+    // If text has multiple code patterns, it's likely code
+    return codeScore >= 3;
+  };
 
   // Auto-detect language from code if not specified
   const detectLanguage = (code) => {
@@ -34,6 +64,16 @@ const CodeViewer = ({ code, language = 'cpp' }) => {
   };
 
   const detectedLang = detectLanguage(code);
+  const isCode = isActualCode(code);
+
+  // If it's not code, render as plain text
+  if (!isCode) {
+    return (
+      <div className="plain-text-viewer">
+        {code}
+      </div>
+    );
+  }
 
   return (
     <div className="code-viewer-wrapper">
