@@ -79,6 +79,8 @@ const Questions = () => {
   const [showEditModal, setShowEditModal] = useState(false);
   const [editingQuestion, setEditingQuestion] = useState(null);
   const [hoveredQuestion, setHoveredQuestion] = useState(null);
+  const [selectedQuestion, setSelectedQuestion] = useState(null);
+  const [isNotesLocked, setIsNotesLocked] = useState(false);
 
   // Menu items
   const menuItems = [
@@ -766,7 +768,15 @@ const Questions = () => {
                 onDelete={handleDelete}
                 onEdit={handleEditClick}
                 onTopicClick={handleTopicClick}
-                onRowHover={setHoveredQuestion}
+                onRowHover={(question) => {
+                  if (!isNotesLocked) {
+                    setHoveredQuestion(question);
+                  }
+                }}
+                onRowClick={(question) => {
+                  setSelectedQuestion(question);
+                  setIsNotesLocked(true);
+                }}
                 listRef={listRef}
               />
 
@@ -786,8 +796,16 @@ const Questions = () => {
               )}
 
               {/* Floating Notes Preview */}
-              {hoveredQuestion && (
-                <div className="notes-preview-overlay active">
+              {(isNotesLocked ? selectedQuestion : hoveredQuestion) && (
+                <div 
+                  className="notes-preview-overlay active"
+                  onMouseEnter={() => setIsNotesLocked(true)}
+                  onMouseLeave={() => {
+                    setIsNotesLocked(false);
+                    setSelectedQuestion(null);
+                    setHoveredQuestion(null);
+                  }}
+                >
                   <NotesPreviewCanvas />
                   <div className="notes-panel-header">
                       <h3>
@@ -795,17 +813,31 @@ const Questions = () => {
                           <path strokeLinecap="round" strokeLinejoin="round" d="M19.5 14.25v-2.625a3.375 3.375 0 0 0-3.375-3.375h-1.5A1.125 1.125 0 0 1 13.5 7.125v-1.5a3.375 3.375 0 0 0-3.375-3.375H8.25m0 12.75h7.5m-7.5 3H12M10.5 2.25H5.625c-.621 0-1.125.504-1.125 1.125v17.25c0 .621.504 1.125 1.125 1.125h12.75c.621 0 1.125-.504 1.125-1.125V11.25a9 9 0 0 0-9-9Z" />
                         </svg>
                         Notes Preview
+                        {isNotesLocked && (
+                          <span className="locked-indicator" title="Click outside to unlock">🔒</span>
+                        )}
                       </h3>
+                      <button 
+                        className="close-notes-btn"
+                        onClick={() => {
+                          setIsNotesLocked(false);
+                          setSelectedQuestion(null);
+                          setHoveredQuestion(null);
+                        }}
+                        title="Close notes"
+                      >
+                        ✕
+                      </button>
                   </div>
                   <div className="notes-panel-content">
-                    {hoveredQuestion.notes ? (
+                    {(isNotesLocked ? selectedQuestion : hoveredQuestion).notes ? (
                       <div className="note-content">
-                        <h4>{hoveredQuestion.questName}</h4>
-                        <div className="note-text">{hoveredQuestion.notes}</div>
+                        <h4>{(isNotesLocked ? selectedQuestion : hoveredQuestion).questName}</h4>
+                        <div className="note-text">{(isNotesLocked ? selectedQuestion : hoveredQuestion).notes}</div>
                       </div>
                     ) : (
                       <div className="no-notes">
-                        <h4>{hoveredQuestion.questName}</h4>
+                        <h4>{(isNotesLocked ? selectedQuestion : hoveredQuestion).questName}</h4>
                         <p>No notes added yet.</p>
                       </div>
                     )}
