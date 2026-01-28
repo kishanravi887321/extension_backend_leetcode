@@ -988,42 +988,19 @@
   letter-spacing: 0.3px;
 }
 
-.note-text {
-  font-size: 0.9rem;
-  line-height: 1.7;
-  color: #e8e8e8;
-  white-space: pre-wrap;
-  background: 
-    linear-gradient(135deg, rgba(0, 0, 0, 0.5), rgba(20, 20, 40, 0.6));
-  padding: 1.25rem;
-  border-radius: 12px;
-  border: 1px solid rgba(99, 102, 241, 0.3);
-  box-shadow: 
-    inset 0 2px 12px rgba(0, 0, 0, 0.4),
-    0 4px 20px rgba(99, 102, 241, 0.1);
-  backdrop-filter: blur(10px);
-  position: relative;
-  overflow: hidden;
+.note-content {
+  animation: fadeIn 0.3s ease-in-out;
 }
 
-.note-text::before {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  height: 1px;
-  background: linear-gradient(90deg, transparent, rgba(99, 102, 241, 0.5), transparent);
-}
-
-.note-text::after {
-  content: '';
-  position: absolute;
-  top: 0;
-  right: 0;
-  bottom: 0;
-  width: 1px;
-  background: linear-gradient(180deg, transparent, rgba(99, 102, 241, 0.3), transparent);
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
 .no-notes p {
