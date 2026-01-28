@@ -1,0 +1,186 @@
+/* Code Viewer Component */
+.code-viewer-wrapper {
+  position: relative;
+  border-radius: 12px;
+  overflow: hidden;
+  background: linear-gradient(135deg, #1e1e2e 0%, #2a2a3e 100%);
+  border: 1px solid rgba(139, 92, 246, 0.3);
+  box-shadow: 
+    0 4px 20px rgba(0, 0, 0, 0.5),
+    inset 0 1px 0 rgba(255, 255, 255, 0.05);
+  margin: 1rem 0;
+}
+
+.code-viewer-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0.75rem 1rem;
+  background: linear-gradient(90deg, rgba(139, 92, 246, 0.15), rgba(168, 85, 247, 0.1));
+  border-bottom: 1px solid rgba(139, 92, 246, 0.2);
+}
+
+.code-lang-badge {
+  font-size: 0.7rem;
+  font-weight: 700;
+  color: #a78bfa;
+  background: rgba(139, 92, 246, 0.2);
+  padding: 0.25rem 0.75rem;
+  border-radius: 6px;
+  letter-spacing: 0.5px;
+  text-shadow: 0 0 10px rgba(167, 139, 250, 0.5);
+}
+
+.copy-code-btn {
+  background: rgba(255, 255, 255, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 6px;
+  padding: 0.35rem 0.6rem;
+  cursor: pointer;
+  color: #c7d2fe;
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  font-size: 0.75rem;
+  transition: all 0.2s ease;
+}
+
+.copy-code-btn:hover {
+  background: rgba(139, 92, 246, 0.3);
+  border-color: rgba(139, 92, 246, 0.5);
+  color: #fff;
+  transform: translateY(-1px);
+}
+
+.copy-code-btn svg {
+  width: 14px;
+  height: 14px;
+}
+
+.code-viewer-pre {
+  margin: 0;
+  padding: 1.25rem;
+  overflow-x: auto;
+  background: transparent;
+  font-size: 0.875rem;
+  line-height: 1.6;
+  font-family: 'Fira Code', 'Cascadia Code', 'Consolas', 'Monaco', 'Courier New', monospace;
+}
+
+.code-viewer-pre code {
+  display: block;
+  background: transparent !important;
+  padding: 0 !important;
+  font-family: inherit;
+  text-shadow: 0 0 2px rgba(0, 0, 0, 0.5);
+}
+
+/* Custom Syntax Highlighting - Enhanced Colors */
+.code-viewer-pre .token.comment,
+.code-viewer-pre .token.prolog,
+.code-viewer-pre .token.doctype,
+.code-viewer-pre .token.cdata {
+  color: #6b7280;
+  font-style: italic;
+}
+
+.code-viewer-pre .token.punctuation {
+  color: #94a3b8;
+}
+
+.code-viewer-pre .token.property,
+.code-viewer-pre .token.tag,
+.code-viewer-pre .token.boolean,
+.code-viewer-pre .token.number,
+.code-viewer-pre .token.constant,
+.code-viewer-pre .token.symbol,
+.code-viewer-pre .token.deleted {
+  color: #f59e0b;
+}
+
+.code-viewer-pre .token.selector,
+.code-viewer-pre .token.attr-name,
+.code-viewer-pre .token.string,
+.code-viewer-pre .token.char,
+.code-viewer-pre .token.builtin,
+.code-viewer-pre .token.inserted {
+  color: #10b981;
+}
+
+.code-viewer-pre .token.operator,
+.code-viewer-pre .token.entity,
+.code-viewer-pre .token.url,
+.code-viewer-pre .language-css .token.string,
+.code-viewer-pre .style .token.string {
+  color: #06b6d4;
+}
+
+.code-viewer-pre .token.atrule,
+.code-viewer-pre .token.attr-value,
+.code-viewer-pre .token.keyword {
+  color: #8b5cf6;
+  font-weight: 600;
+}
+
+.code-viewer-pre .token.function,
+.code-viewer-pre .token.class-name {
+  color: #ec4899;
+  font-weight: 500;
+}
+
+.code-viewer-pre .token.regex,
+.code-viewer-pre .token.important,
+.code-viewer-pre .token.variable {
+  color: #f472b6;
+}
+
+.code-viewer-pre .token.important,
+.code-viewer-pre .token.bold {
+  font-weight: bold;
+}
+
+.code-viewer-pre .token.italic {
+  font-style: italic;
+}
+
+.code-viewer-pre .token.entity {
+  cursor: help;
+}
+
+/* Line numbers (optional) */
+.code-viewer-pre code {
+  counter-reset: line;
+}
+
+/* Scrollbar for code viewer */
+.code-viewer-pre::-webkit-scrollbar {
+  height: 8px;
+}
+
+.code-viewer-pre::-webkit-scrollbar-track {
+  background: rgba(0, 0, 0, 0.3);
+  border-radius: 4px;
+}
+
+.code-viewer-pre::-webkit-scrollbar-thumb {
+  background: rgba(139, 92, 246, 0.4);
+  border-radius: 4px;
+}
+
+.code-viewer-pre::-webkit-scrollbar-thumb:hover {
+  background: rgba(139, 92, 246, 0.6);
+}
+
+/* Glow effect on hover */
+.code-viewer-wrapper:hover {
+  box-shadow: 
+    0 4px 20px rgba(0, 0, 0, 0.5),
+    0 0 30px rgba(139, 92, 246, 0.3),
+    inset 0 1px 0 rgba(255, 255, 255, 0.05);
+  border-color: rgba(139, 92, 246, 0.5);
+}
+
+/* Selection styling */
+.code-viewer-pre ::selection {
+  background: rgba(139, 92, 246, 0.3);
+}

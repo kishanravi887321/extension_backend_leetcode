@@ -14,6 +14,7 @@ import {
 import QuestionList from '../components/QuestionList';
 import AddQuestionModal from '../components/AddQuestionModal';
 import EditQuestionModal from '../components/EditQuestionModal';
+import CodeViewer from '../components/CodeViewer';
 import './Dashboard.css'; // For sidebar styles
 import './Questions.css';
 
@@ -833,7 +834,7 @@ const Questions = () => {
                     {(isNotesLocked ? selectedQuestion : hoveredQuestion).notes ? (
                       <div className="note-content">
                         <h4>{(isNotesLocked ? selectedQuestion : hoveredQuestion).questName}</h4>
-                        <div className="note-text">{(isNotesLocked ? selectedQuestion : hoveredQuestion).notes}</div>
+                        <CodeViewer code={(isNotesLocked ? selectedQuestion : hoveredQuestion).notes} />
                       </div>
                     ) : (
                       <div className="no-notes">
