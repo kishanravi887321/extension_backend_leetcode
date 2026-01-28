@@ -26,7 +26,8 @@ const QuestionList = ({
   onDelete,
   onEdit,
   onTopicClick,
-  onRowHover,
+  onRowClick,
+  selectedQuestionId,
   listRef
 }) => {
   const [expandedRow, setExpandedRow] = useState(null);
@@ -320,10 +321,8 @@ const QuestionList = ({
         {questions.map((question, index) => (
           <div 
             key={question._id} 
-            className={`list-row ${index % 2 === 0 ? 'even' : 'odd'} ${expandedRow === question._id ? 'expanded' : ''}`}
+            className={`list-row ${index % 2 === 0 ? 'even' : 'odd'} ${expandedRow === question._id ? 'expanded' : ''} ${selectedQuestionId === question._id ? 'selected' : ''}`}
             onClick={() => setExpandedRow(expandedRow === question._id ? null : question._id)}
-            onMouseEnter={() => onRowHover && onRowHover(question)}
-            onMouseLeave={() => onRowHover && onRowHover(null)}
           >
             <div className="row-main">
               {/* Status Column */}

@@ -78,7 +78,8 @@ const Questions = () => {
   const [showAddModal, setShowAddModal] = useState(false);
   const [showEditModal, setShowEditModal] = useState(false);
   const [editingQuestion, setEditingQuestion] = useState(null);
-  const [hoveredQuestion, setHoveredQuestion] = useState(null);
+  const [selectedQuestion, setSelectedQuestion] = useState(null);
+  const notesPanelRef = useRef(null);
 
   // Menu items
   const menuItems = [
@@ -186,6 +187,23 @@ const Questions = () => {
   useEffect(() => {
     fetchTopicsAndStats();
   }, [fetchTopicsAndStats]);
+
+  // Click outside to close notes panel
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (notesPanelRef.current && !notesPanelRef.current.contains(event.target)) {
+        setSelectedQuestion(null);
+      }
+    };
+
+    if (selectedQuestion) {
+      document.addEventListener('mousedown', handleClickOutside);
+    }
+
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, [selectedQuestion]);
 
   // Reset and fetch when filters change
   useEffect(() => {
@@ -766,7 +784,8 @@ const Questions = () => {
                 onDelete={handleDelete}
                 onEdit={handleEditClick}
                 onTopicClick={handleTopicClick}
-                onRowHover={setHoveredQuestion}
+                onRowClick={setSelectedQuestion}
+                selectedQuestionId={selectedQuestion?._id}
                 listRef={listRef}
               />
 
@@ -786,9 +805,8 @@ const Questions = () => {
               )}
 
               {/* Floating Notes Preview */}
-              {hoveredQuestion && (
-                <div className="notes-preview-overlay active">
-                  <NotesPreviewCanvas />
+              {selectedQuestion && (
+                <div className="notes-preview-overlay active" ref={notesPanelRef}>
                   <div className="notes-panel-header">
                       <h3>
                         <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor">
@@ -796,16 +814,25 @@ const Questions = () => {
                         </svg>
                         Notes Preview
                       </h3>
+                      <button 
+                        className="notes-close-btn"
+                        onClick={() => setSelectedQuestion(null)}
+                        title="Close"
+                      >
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor">
+                          <path strokeLinecap="round" strokeLinejoin="round" d="M6 18 18 6M6 6l12 12" />
+                        </svg>
+                      </button>
                   </div>
                   <div className="notes-panel-content">
-                    {hoveredQuestion.notes ? (
+                    {selectedQuestion.notes ? (
                       <div className="note-content">
-                        <h4>{hoveredQuestion.questName}</h4>
-                        <div className="note-text">{hoveredQuestion.notes}</div>
+                        <h4>{selectedQuestion.questName}</h4>
+                        <div className="note-text">{selectedQuestion.notes}</div>
                       </div>
                     ) : (
                       <div className="no-notes">
-                        <h4>{hoveredQuestion.questName}</h4>
+                        <h4>{selectedQuestion.questName}</h4>
                         <p>No notes added yet.</p>
                       </div>
                     )}
