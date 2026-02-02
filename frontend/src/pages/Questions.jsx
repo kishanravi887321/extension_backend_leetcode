@@ -83,6 +83,12 @@ const Questions = () => {
   const [selectedQuestion, setSelectedQuestion] = useState(null);
   const [isNotesLocked, setIsNotesLocked] = useState(false);
 
+  // Resizable panel state
+  const [panelWidth, setPanelWidth] = useState(460);
+  const [panelHeight, setPanelHeight] = useState(null);
+  const [isResizing, setIsResizing] = useState(false);
+  const resizeRef = useRef({ startX: 0, startY: 0, startWidth: 0, startHeight: 0, direction: null });
+
   // Menu items
   const menuItems = [
     { path: '/dashboard', icon: 'home', label: 'Dashboard' },
@@ -360,6 +366,63 @@ const Questions = () => {
     logout();
     navigate('/login');
   };
+
+  // Resize handlers
+  const handleResizeStart = (e, direction) => {
+    e.preventDefault();
+    e.stopPropagation();
+    setIsResizing(true);
+    resizeRef.current = {
+      startX: e.clientX,
+      startY: e.clientY,
+      startWidth: panelWidth,
+      startHeight: panelHeight || e.target.closest('.notes-preview-overlay').offsetHeight,
+      direction
+    };
+  };
+
+  const handleResizeMove = useCallback((e) => {
+    if (!isResizing) return;
+
+    const { startX, startY, startWidth, startHeight, direction } = resizeRef.current;
+
+    if (direction === 'left') {
+      const deltaX = startX - e.clientX;
+      const newWidth = Math.max(300, Math.min(window.innerWidth - 100, startWidth + deltaX));
+      setPanelWidth(newWidth);
+    } else if (direction === 'bottom') {
+      const deltaY = e.clientY - startY;
+      const newHeight = Math.max(300, Math.min(window.innerHeight - 140, startHeight + deltaY));
+      setPanelHeight(newHeight);
+    } else if (direction === 'corner') {
+      const deltaX = startX - e.clientX;
+      const deltaY = e.clientY - startY;
+      const newWidth = Math.max(300, Math.min(window.innerWidth - 100, startWidth + deltaX));
+      const newHeight = Math.max(300, Math.min(window.innerHeight - 140, startHeight + deltaY));
+      setPanelWidth(newWidth);
+      setPanelHeight(newHeight);
+    }
+  }, [isResizing]);
+
+  const handleResizeEnd = useCallback(() => {
+    setIsResizing(false);
+  }, []);
+
+  useEffect(() => {
+    if (isResizing) {
+      document.addEventListener('mousemove', handleResizeMove);
+      document.addEventListener('mouseup', handleResizeEnd);
+      document.body.style.cursor = resizeRef.current.direction === 'left' ? 'ew-resize' : 
+                                    resizeRef.current.direction === 'bottom' ? 'ns-resize' : 'nwse-resize';
+      document.body.style.userSelect = 'none';
+      return () => {
+        document.removeEventListener('mousemove', handleResizeMove);
+        document.removeEventListener('mouseup', handleResizeEnd);
+        document.body.style.cursor = '';
+        document.body.style.userSelect = '';
+      };
+    }
+  }, [isResizing, handleResizeMove, handleResizeEnd]);
 
   // Icons
   const getIcon = (iconName) => {
@@ -800,6 +863,11 @@ const Questions = () => {
               {(isNotesLocked ? selectedQuestion : hoveredQuestion) && (
                 <div 
                   className="notes-preview-overlay active"
+                  style={{
+                    width: `${panelWidth}px`,
+                    height: panelHeight ? `${panelHeight}px` : 'auto',
+                    maxHeight: panelHeight ? `${panelHeight}px` : 'calc(100vh - 140px)'
+                  }}
                   onMouseEnter={() => setIsNotesLocked(true)}
                   onMouseLeave={() => {
                     setIsNotesLocked(false);
@@ -807,6 +875,22 @@ const Questions = () => {
                     setHoveredQuestion(null);
                   }}
                 >
+                  {/* Resize handles */}
+                  <div 
+                    className="resize-handle resize-handle-left"
+                    onMouseDown={(e) => handleResizeStart(e, 'left')}
+                    title="Drag to resize width"
+                  />
+                  <div 
+                    className="resize-handle resize-handle-bottom"
+                    onMouseDown={(e) => handleResizeStart(e, 'bottom')}
+                    title="Drag to resize height"
+                  />
+                  <div 
+                    className="resize-handle resize-handle-corner"
+                    onMouseDown={(e) => handleResizeStart(e, 'corner')}
+                    title="Drag to resize both"
+                  />
                   <NotesPreviewCanvas />
                   <div className="notes-panel-header">
                       <h3>
