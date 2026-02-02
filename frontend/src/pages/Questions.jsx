@@ -870,9 +870,11 @@ const Questions = () => {
                   }}
                   onMouseEnter={() => setIsNotesLocked(true)}
                   onMouseLeave={() => {
-                    setIsNotesLocked(false);
-                    setSelectedQuestion(null);
-                    setHoveredQuestion(null);
+                    if (!isResizing) {
+                      setIsNotesLocked(false);
+                      setSelectedQuestion(null);
+                      setHoveredQuestion(null);
+                    }
                   }}
                 >
                   {/* Resize handles */}
