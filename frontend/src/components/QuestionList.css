@@ -57,7 +57,7 @@
   display: grid;
   grid-template-columns: 50px 1fr 180px 70px 90px 100px;
   gap: 0.4rem;
-  padding: 0.5rem 0;
+  padding: 0.6rem 0;
   align-items: center;
 }
 
@@ -850,10 +850,22 @@
 
 .notes-label,
 .topics-label {
-  color: #666;
-  font-size: 0.8rem;
+  color: #888;
+  font-size: 0.75rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
   display: block;
   margin-bottom: 0.35rem;
+}
+
+.topics-label::after {
+  content: ' (click to filter)';
+  font-size: 0.65rem;
+  color: #6366f1;
+  text-transform: none;
+  letter-spacing: 0;
+  font-weight: 400;
 }
 
 .notes-text {
@@ -870,8 +882,8 @@
 .topics-full {
   display: flex;
   flex-wrap: wrap;
-  gap: 0.35rem;
-  margin-top: 0.35rem;
+  gap: 0.4rem;
+  margin-top: 0.4rem;
 }
 
 .expanded-actions {
