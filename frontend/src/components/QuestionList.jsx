@@ -355,16 +355,40 @@ const QuestionList = ({
 
               {/* Title Column */}
               <div className="col-title">
-                <a 
-                  href={question.questLink} 
-                  target="_blank" 
-                  rel="noopener noreferrer"
-                  className="question-link"
-                  onClick={(e) => e.stopPropagation()}
-                >
-                  <span className="question-number">{question.questNumber}.</span>
-                  <span className="question-name">{question.questName}</span>
-                </a>
+                <div className="title-wrapper">
+                  <a 
+                    href={question.questLink} 
+                    target="_blank" 
+                    rel="noopener noreferrer"
+                    className="question-link"
+                    onClick={(e) => e.stopPropagation()}
+                  >
+                    <span className="question-number">{question.questNumber}.</span>
+                    <span className="question-name">{question.questName}</span>
+                  </a>
+                  {question.topics && question.topics.length > 0 && (
+                    <div className="inline-topics">
+                      {question.topics.slice(0, 3).map((topic, i) => (
+                        <span 
+                          key={i} 
+                          className="inline-topic-chip"
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            onTopicClick && onTopicClick(topic);
+                          }}
+                          title={`Filter by ${topic}`}
+                        >
+                          {topic}
+                        </span>
+                      ))}
+                      {question.topics.length > 3 && (
+                        <span className="inline-topic-more" title={question.topics.slice(3).join(', ')}>
+                          +{question.topics.length - 3}
+                        </span>
+                      )}
+                    </div>
+                  )}
+                </div>
               </div>
 
               {/* Company Column */}
