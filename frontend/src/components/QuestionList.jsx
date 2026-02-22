@@ -26,8 +26,7 @@ const QuestionList = ({
   onDelete,
   onEdit,
   onTopicClick,
-  onRowHover,
-  onRowClick,
+  onNotesClick,
   listRef
 }) => {
   const [expandedRow, setExpandedRow] = useState(null);
@@ -324,10 +323,7 @@ const QuestionList = ({
             className={`list-row ${index % 2 === 0 ? 'even' : 'odd'} ${expandedRow === question._id ? 'expanded' : ''}`}
             onClick={() => {
               setExpandedRow(expandedRow === question._id ? null : question._id);
-              onRowClick && onRowClick(question);
             }}
-            onMouseEnter={() => onRowHover && onRowHover(question)}
-            onMouseLeave={() => onRowHover && onRowHover(null)}
           >
             <div className="row-main">
               {/* Status Column */}
@@ -446,7 +442,7 @@ const QuestionList = ({
                   className={`action-btn notes ${question.notes ? 'has-notes' : ''}`}
                   onClick={(e) => {
                     e.stopPropagation();
-                    onRowClick && onRowClick(question);
+                    onNotesClick && onNotesClick(question);
                   }}
                   title={question.notes ? 'View notes' : 'No notes'}
                 >

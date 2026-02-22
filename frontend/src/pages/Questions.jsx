@@ -79,9 +79,7 @@ const Questions = () => {
   const [showAddModal, setShowAddModal] = useState(false);
   const [showEditModal, setShowEditModal] = useState(false);
   const [editingQuestion, setEditingQuestion] = useState(null);
-  const [hoveredQuestion, setHoveredQuestion] = useState(null);
   const [selectedQuestion, setSelectedQuestion] = useState(null);
-  const [isNotesLocked, setIsNotesLocked] = useState(false);
 
   // Resizable panel state
   const [panelWidth, setPanelWidth] = useState(460);
@@ -832,14 +830,12 @@ const Questions = () => {
                 onDelete={handleDelete}
                 onEdit={handleEditClick}
                 onTopicClick={handleTopicClick}
-                onRowHover={(question) => {
-                  if (!isNotesLocked) {
-                    setHoveredQuestion(question);
+                onNotesClick={(question) => {
+                  if (selectedQuestion && selectedQuestion._id === question._id) {
+                    setSelectedQuestion(null);
+                  } else {
+                    setSelectedQuestion(question);
                   }
-                }}
-                onRowClick={(question) => {
-                  setSelectedQuestion(question);
-                  setIsNotesLocked(true);
                 }}
                 listRef={listRef}
               />
@@ -860,21 +856,13 @@ const Questions = () => {
               )}
 
               {/* Floating Notes Preview */}
-              {(isNotesLocked ? selectedQuestion : hoveredQuestion) && (
+              {selectedQuestion && (
                 <div 
                   className="notes-preview-overlay active"
                   style={{
                     width: `${panelWidth}px`,
                     height: panelHeight ? `${panelHeight}px` : 'auto',
                     maxHeight: panelHeight ? `${panelHeight}px` : 'calc(100vh - 140px)'
-                  }}
-                  onMouseEnter={() => setIsNotesLocked(true)}
-                  onMouseLeave={() => {
-                    if (!isResizing) {
-                      setIsNotesLocked(false);
-                      setSelectedQuestion(null);
-                      setHoveredQuestion(null);
-                    }
                   }}
                 >
                   {/* Resize handles */}
@@ -900,16 +888,11 @@ const Questions = () => {
                           <path strokeLinecap="round" strokeLinejoin="round" d="M19.5 14.25v-2.625a3.375 3.375 0 0 0-3.375-3.375h-1.5A1.125 1.125 0 0 1 13.5 7.125v-1.5a3.375 3.375 0 0 0-3.375-3.375H8.25m0 12.75h7.5m-7.5 3H12M10.5 2.25H5.625c-.621 0-1.125.504-1.125 1.125v17.25c0 .621.504 1.125 1.125 1.125h12.75c.621 0 1.125-.504 1.125-1.125V11.25a9 9 0 0 0-9-9Z" />
                         </svg>
                         Notes Preview
-                        {isNotesLocked && (
-                          <span className="locked-indicator" title="Click outside to unlock">🔒</span>
-                        )}
                       </h3>
                       <button 
                         className="close-notes-btn"
                         onClick={() => {
-                          setIsNotesLocked(false);
                           setSelectedQuestion(null);
-                          setHoveredQuestion(null);
                         }}
                         title="Close notes"
                       >
@@ -917,14 +900,14 @@ const Questions = () => {
                       </button>
                   </div>
                   <div className="notes-panel-content">
-                    {(isNotesLocked ? selectedQuestion : hoveredQuestion).notes ? (
+                    {selectedQuestion.notes ? (
                       <div className="note-content">
-                        <h4>{(isNotesLocked ? selectedQuestion : hoveredQuestion).questName}</h4>
-                        <CodeViewer code={(isNotesLocked ? selectedQuestion : hoveredQuestion).notes} />
+                        <h4>{selectedQuestion.questName}</h4>
+                        <CodeViewer code={selectedQuestion.notes} />
                       </div>
                     ) : (
                       <div className="no-notes">
-                        <h4>{(isNotesLocked ? selectedQuestion : hoveredQuestion).questName}</h4>
+                        <h4>{selectedQuestion.questName}</h4>
                         <p>No notes added yet.</p>
                       </div>
                     )}
