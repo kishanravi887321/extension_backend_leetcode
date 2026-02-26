@@ -12,8 +12,8 @@ const HowToUseModal = ({ isOpen, onClose }) => {
       icon: '🧩',
       color: '#3b82f6',
       substeps: [
-        { icon: '📁', text: 'Clone or Download', detail: 'https://github.com/kishanravi887321/codex.git' },
-        { icon: '🌐', text: 'Open Chrome Extensions', detail: 'Go to chrome://extensions/' },
+        { icon: '📁', text: 'Clone or Download', detail: 'https://github.com/kishanravi887321/codex.git', link: 'https://github.com/kishanravi887321/codex.git' },
+        { icon: '🌐', text: 'Open Chrome Extensions', detail: 'Go to chrome://extensions/', link: 'chrome://extensions/' },
         { icon: '⚙️', text: 'Enable Developer Mode', detail: 'Toggle in top-right corner' },
         { icon: '📦', text: 'Load Unpacked', detail: 'Select the codex folder' },
         { icon: '📌', text: 'Pin Extension', detail: 'Click puzzle icon & pin "Codex"' },
@@ -25,7 +25,7 @@ const HowToUseModal = ({ isOpen, onClose }) => {
       icon: '🔗',
       color: '#10b981',
       substeps: [
-        { icon: '🌐', text: 'Visit CPCoders', detail: 'Go to cp.saksin.online' },
+        { icon: '🌐', text: 'Visit CPCoders', detail: 'Go to cp.saksin.online', link: 'https://cp.saksin.online' },
         { icon: '🔐', text: 'Login', detail: 'Sign in with Google' },
         { icon: '🔄', text: 'Refresh Page', detail: 'Auto-sync authentication' },
         { icon: '✅', text: 'Connected!', detail: 'Green checkmark on eye icon' },
@@ -37,10 +37,10 @@ const HowToUseModal = ({ isOpen, onClose }) => {
       icon: '🚀',
       color: '#8b5cf6',
       substeps: [
-        { icon: '📝', text: 'Open a Problem', detail: 'LeetCode, GFG, or InterviewBit' },
+        { icon: '📝', text: 'Open a Problem', detail: 'LeetCode, GFG, or InterviewBit', link: 'https://leetcode.com/problemset/all/' },
         { icon: '👁️', text: 'Find Eye Icon', detail: 'Bottom-right floating button' },
         { icon: '👆', text: 'Click to Capture', detail: 'Problem syncs instantly' },
-        { icon: '📊', text: 'View Dashboard', detail: 'Check cp.saksin.online/problems' },
+        { icon: '📊', text: 'View Dashboard', detail: 'Check cp.saksin.online/problems', link: 'https://cp.saksin.online/problems' },
       ],
     },
   ];
