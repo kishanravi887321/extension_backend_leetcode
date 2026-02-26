@@ -4,6 +4,7 @@ import { GoogleLogin } from '@react-oauth/google';
 import { motion } from 'framer-motion';
 import { googleLogin } from '../api/auth';
 import { useAuth } from '../context/AuthContext';
+import HowToUseModal from '../components/HowToUseModal';
 import './Auth.css';
 
 // Lazy load Three.js canvas to reduce bundle size
@@ -14,6 +15,7 @@ const Login = () => {
   const { login, isAuthenticated } = useAuth();
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
+  const [showHowToUse, setShowHowToUse] = useState(false);
 
   useEffect(() => {
     if (isAuthenticated) {
@@ -135,6 +137,21 @@ const Login = () => {
               </motion.div>
             ))}
           </motion.div>
+
+          {/* How to Use Button */}
+          <motion.button
+            className="wave-how-to-use-btn"
+            variants={itemVariants}
+            whileHover={{ scale: 1.02, y: -2 }}
+            whileTap={{ scale: 0.98 }}
+            onClick={() => setShowHowToUse(true)}
+          >
+            <span className="wave-htu-icon">📖</span>
+            <span className="wave-htu-text">How to Use Extension</span>
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className="wave-htu-arrow">
+              <path fillRule="evenodd" d="M12.97 3.97a.75.75 0 011.06 0l7.5 7.5a.75.75 0 010 1.06l-7.5 7.5a.75.75 0 11-1.06-1.06l6.22-6.22H3a.75.75 0 010-1.5h16.19l-6.22-6.22a.75.75 0 010-1.06z" clipRule="evenodd" />
+            </svg>
+          </motion.button>
         </motion.div>
 
         {/* Right Side - Glassmorphism Login Card */}
@@ -218,6 +235,12 @@ const Login = () => {
           </motion.div>
         </motion.div>
       </div>
+
+      {/* How to Use Modal */}
+      <HowToUseModal 
+        isOpen={showHowToUse} 
+        onClose={() => setShowHowToUse(false)} 
+      />
     </div>
   );
 };
