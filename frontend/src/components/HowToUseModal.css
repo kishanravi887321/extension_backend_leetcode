@@ -189,17 +189,28 @@
   align-items: center;
   gap: 16px;
   padding: 16px;
-  background: rgba(255, 255, 255, 0.03);
-  border: 1px solid rgba(255, 255, 255, 0.08);
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.1);
   border-radius: 12px;
   transition: all 0.3s ease;
   position: relative;
+  text-decoration: none;
+  color: inherit;
 }
 
 .htu-substep:hover {
-  background: rgba(255, 255, 255, 0.06);
+  background: rgba(255, 255, 255, 0.08);
   border-color: var(--step-color);
   transform: translateX(4px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.htu-substep.clickable {
+  cursor: pointer;
+}
+
+.htu-substep.clickable:hover {
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.08) 0%, color-mix(in srgb, var(--step-color) 10%, transparent) 100%);
 }
 
 .htu-substep-icon {
@@ -213,38 +224,55 @@
   justify-content: center;
   font-size: 20px;
   flex-shrink: 0;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
 }
 
 .htu-substep-content {
   display: flex;
   flex-direction: column;
-  gap: 2px;
+  gap: 4px;
   flex: 1;
 }
 
 .htu-substep-title {
-  font-size: 15px;
+  font-size: 16px;
   font-weight: 600;
   color: #ffffff;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.htu-external-link-icon {
+  width: 14px;
+  height: 14px;
+  color: rgba(255, 255, 255, 0.4);
+  transition: color 0.2s;
+}
+
+.htu-substep.clickable:hover .htu-external-link-icon {
+  color: var(--step-color);
 }
 
 .htu-substep-detail {
-  font-size: 13px;
-  color: rgba(255, 255, 255, 0.5);
+  font-size: 14px;
+  color: rgba(255, 255, 255, 0.6);
   word-break: break-all;
+  line-height: 1.4;
 }
 
 .htu-substep-number {
-  width: 24px;
-  height: 24px;
+  width: 28px;
+  height: 28px;
   background: rgba(255, 255, 255, 0.1);
   border-radius: 50%;
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 12px;
+  font-size: 13px;
   font-weight: 700;
-  color: rgba(255, 255, 255, 0.5);
+  color: rgba(255, 255, 255, 0.8);
+  box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.2);
 }
 
 /* ===== TIP BOX ===== */
