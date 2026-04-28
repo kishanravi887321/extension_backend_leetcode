@@ -168,8 +168,14 @@
 .logo-text {
   font-size: 28px;
   font-weight: 800;
-  color: white;
+  color: #ffffff;
   letter-spacing: -0.5px;
+  /* Ensure readable contrast on animated / gradient backgrounds */
+  background-color: rgba(2, 6, 23, 0.72);
+  display: inline-block;
+  padding: 4px 10px;
+  border-radius: 6px;
+  line-height: 1;
 }
 
 .brand-headline {
@@ -746,6 +752,12 @@
   font-weight: 700;
   color: #ffffff;
   letter-spacing: -0.5px;
+  /* ensure contrast over animated/gradient backgrounds */
+  background-color: rgba(2, 6, 23, 0.72);
+  display: inline-block;
+  padding: 4px 10px;
+  border-radius: 6px;
+  line-height: 1;
 }
 
 .wave-brand-headline {
