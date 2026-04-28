@@ -466,6 +466,7 @@
   color: #3b82f6;
   text-decoration: none;
   font-weight: 500;
+  font-size: 14px;
   transition: color 0.2s;
 }
 
@@ -1005,6 +1006,7 @@
   color: #4fd1c5;
   text-decoration: none;
   font-weight: 500;
+  font-size: 14px;
   transition: color 0.2s;
 }
 
@@ -1069,8 +1071,9 @@
   align-items: center;
   gap: 12px;
   padding: 16px 24px;
-  background: linear-gradient(135deg, rgba(79, 209, 197, 0.15) 0%, rgba(79, 209, 197, 0.08) 100%);
-  border: 1px solid rgba(79, 209, 197, 0.3);
+  background-color: rgba(124, 58, 237, 0.22);
+  background-image: linear-gradient(135deg, rgba(124, 58, 237, 0.22) 0%, rgba(79, 209, 197, 0.12) 100%);
+  border: 2px solid rgba(251, 191, 36, 0.8);
   border-radius: 16px;
   cursor: pointer;
   transition: all 0.3s ease;
@@ -1080,8 +1083,9 @@
 }
 
 .wave-how-to-use-btn:hover {
-  background: linear-gradient(135deg, rgba(79, 209, 197, 0.25) 0%, rgba(79, 209, 197, 0.15) 100%);
-  border-color: rgba(79, 209, 197, 0.5);
+  background-color: rgba(124, 58, 237, 0.34);
+  background-image: linear-gradient(135deg, rgba(124, 58, 237, 0.34) 0%, rgba(79, 209, 197, 0.2) 100%);
+  border-color: rgba(251, 191, 36, 1);
   box-shadow: 0 8px 32px rgba(79, 209, 197, 0.2);
 }
 
