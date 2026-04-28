@@ -190,7 +190,8 @@
 .gradient-text {
   background: linear-gradient(135deg, #3b82f6 0%, #8b5cf6 50%, #ec4899 100%);
   -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
+  /* Use solid white fill to ensure >= 7:1 contrast against dark background */
+  -webkit-text-fill-color: #ffffff;
   background-clip: text;
   animation: gradientShift 5s ease-in-out infinite;
   background-size: 200% 200%;
@@ -772,7 +773,8 @@
 .wave-gradient-text {
   background: linear-gradient(135deg, #4fd1c5 0%, #38b2ac 50%, #319795 100%);
   -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
+  /* Use solid white fill to ensure >= 7:1 contrast against dark background */
+  -webkit-text-fill-color: #ffffff;
   background-clip: text;
 }
 
