@@ -106,6 +106,11 @@ export const guestLogin = async (payload) => {
   return response.data;
 };
 
+export const enableTwoFactor = async () => {
+  const response = await api.post('/users/2fa');
+  return response.data;
+};
+
 // Profile APIs
 export const getProfile = async () => {
   const response = await api.get('/profile/me');

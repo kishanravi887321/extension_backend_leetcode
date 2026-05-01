@@ -20,6 +20,7 @@ export const getProfile = async (req, res) => {
         picture: user.picture,
         coverImage: user.coverImage || '',
         bio: user.bio || '',
+        twoFactorEnabled: user.twoFactorEnabled,
         createdAt: user.createdAt,
       }
     });
@@ -73,6 +74,7 @@ export const updateProfile = async (req, res) => {
         picture: user.picture,
         coverImage: user.coverImage || '',
         bio: user.bio || '',
+        twoFactorEnabled: user.twoFactorEnabled,
       }
     });
   } catch (error) {

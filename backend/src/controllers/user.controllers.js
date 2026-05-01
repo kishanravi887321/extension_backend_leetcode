@@ -85,6 +85,7 @@ export const googleLogin = async (req, res) => {
         picture: user.picture,
         username: user.username,
         bio: user.bio,
+        twoFactorEnabled: user.twoFactorEnabled,
       },
       // Only send extensionToken in response body (for browser extension/localStorage)
       extensionToken
@@ -247,6 +248,7 @@ export const accessBy2faForGuest = async (req, res) => {
         picture: user.picture,
         username: user.username,
         bio: user.bio,
+        twoFactorEnabled: user.twoFactorEnabled,
       },
       extensionToken,
     });
