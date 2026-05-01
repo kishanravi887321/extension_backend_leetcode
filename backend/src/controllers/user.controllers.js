@@ -179,22 +179,17 @@ export const twoFactorAuth = async (req, res) => {
       return res.status(400).json({ message: "User not found" });
     }
 
-    const secret = speakeasy.generateSecret({ length: 20 });
+    const secret = speakeasy.generateSecret({
+      name: `LeetCode Extension:${user.email}`,
+    });
     user.twoFactorSecret = secret.base32;
+    console.log("Generated 2FA secret (base32):", secret.base32);
     user.twoFactorEnabled = true;
     await user.save();
 
     console.log("Generated 2FA secret:", secret);
 
-    const otpauthUrl = speakeasy.otpauthURL({
-      secret: secret.base32,
-      label: `LeetCode Extension (${user.email})`,
-      issuer: "LeetCode Extension",
-    });
-
-    // console.log("Generated otpauth URL:", otpauthUrl);
-
-    const qrCodeDataURL = await Qrrcode.toDataURL(otpauthUrl);
+    const qrCodeDataURL = await Qrrcode.toDataURL(secret.otpauth_url);
     // console.log("Generated QR Code Data URL:", qrCodeDataURL);
 
     return res.status(200).json({
