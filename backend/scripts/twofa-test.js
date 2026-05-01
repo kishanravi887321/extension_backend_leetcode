@@ -1,100 +1,124 @@
-/**
- * 2FA helper script
- *
- * Usage:
- *   node scripts/twofa-test.js generate --label "email@example.com" --issuer "LeetCode Extension" --show-qr
- *   node scripts/twofa-test.js verify --secret BASE32SECRET --token 123456 --window 1
- */
-
 import speakeasy from "speakeasy";
 import qrcode from "qrcode";
 
-const args = process.argv.slice(2);
-const command = args[0];
-
-const getArg = (name, fallback = undefined) => {
-  const index = args.indexOf(`--${name}`);
-  if (index === -1) return fallback;
-  const value = args[index + 1];
-  return value !== undefined && !value.startsWith("--") ? value : fallback;
+const usage = () => {
+  console.log("\nTwo-factor utility\n");
+  console.log("Generate a secret and QR:");
+  console.log("  node scripts/twofa-test.js generate --label \"user@example.com\" --issuer \"CPCodes\" --show-qr");
+  console.log("\nVerify a token:");
+  console.log("  node scripts/twofa-test.js verify --secret BASE32SECRET --token 123456 --window 1");
+  console.log("\nOptions:");
+  console.log("  --label       Label in authenticator app");
+  console.log("  --issuer      Issuer name in authenticator app");
+  console.log("  --length      Secret length (default: 20)");
+  console.log("  --show-qr     Print QR in terminal output");
+  console.log("  --secret      Base32 secret for verification");
+  console.log("  --token       One-time password from authenticator");
+  console.log("  --window      Allowed time window steps (default: 1)");
+  console.log("  --encoding    Token encoding (default: base32)\n");
 };
 
-const hasFlag = (name) => args.includes(`--${name}`);
-
-const printHelp = () => {
-  console.log("2FA helper script\n");
-  console.log("Commands:");
-  console.log("  generate --label <label> --issuer <issuer> [--show-qr]");
-  console.log("  verify --secret <base32> --token <otp> [--window <n>]");
-  console.log("\nExamples:");
-  console.log("  node scripts/twofa-test.js generate --label \"user@example.com\" --issuer \"LeetCode Extension\" --show-qr");
-  console.log("  node scripts/twofa-test.js verify --secret JBSWY3DPEHPK3PXP --token 123456 --window 1");
+const parseArgs = (argv) => {
+  const parsed = { _: [] };
+  for (let i = 0; i < argv.length; i += 1) {
+    const arg = argv[i];
+    if (arg.startsWith("--")) {
+      const key = arg.slice(2);
+      if (key === "show-qr" || key === "help") {
+        parsed[key] = true;
+      } else {
+        const next = argv[i + 1];
+        if (!next || next.startsWith("--")) {
+          parsed[key] = true;
+        } else {
+          parsed[key] = next;
+          i += 1;
+        }
+      }
+    } else {
+      parsed._.push(arg);
+    }
+  }
+  return parsed;
 };
 
-const runGenerate = async () => {
-  const label = getArg("label", "LeetCode Extension");
-  const issuer = getArg("issuer", "LeetCode Extension");
-  const showQr = hasFlag("show-qr");
+const toInt = (value, fallback) => {
+  const parsed = Number.parseInt(value, 10);
+  return Number.isNaN(parsed) ? fallback : parsed;
+};
 
-  const secret = speakeasy.generateSecret({ length: 20 });
+const generateSecret = async (options) => {
+  const label = options.label || "CPCodes";
+  const issuer = options.issuer || "CPCodes";
+  const length = toInt(options.length, 20);
+
+  const secret = speakeasy.generateSecret({ length });
   const otpauthUrl = speakeasy.otpauthURL({
     secret: secret.base32,
     label,
     issuer,
   });
 
-  console.log("Generated 2FA secret:");
-  console.log(`  base32: ${secret.base32}`);
-  console.log(`  otpauth URL: ${otpauthUrl}`);
+  console.log("Secret (base32):", secret.base32);
+  console.log("otpauth URL:", otpauthUrl);
 
-  if (showQr) {
-    const dataUrl = await qrcode.toDataURL(otpauthUrl);
-    console.log("\nQR Code Data URL:");
-    console.log(dataUrl);
+  const token = speakeasy.totp({
+    secret: secret.base32,
+    encoding: "base32",
+  });
+  console.log("Current token:", token);
+
+  if (options["show-qr"]) {
+    const qr = await qrcode.toString(otpauthUrl, { type: "terminal" });
+    console.log("\nQR code:");
+    console.log(qr);
   }
 };
 
-const runVerify = () => {
-  const secret = getArg("secret");
-  const token = getArg("token");
-  const window = Number(getArg("window", "1"));
+const verifyToken = (options) => {
+  const secret = options.secret;
+  const token = (options.token || "").replace(/\D/g, "");
+  const window = toInt(options.window, 1);
+  const encoding = options.encoding || "base32";
 
   if (!secret || !token) {
-    console.error("Missing required arguments: --secret and --token");
-    printHelp();
-    process.exit(1);
+    console.error("Error: --secret and --token are required for verify.");
+    return;
   }
 
-  const normalizedToken = String(token).trim();
-  const verified = speakeasy.totp.verify({
+  const delta = speakeasy.totp.verifyDelta({
     secret,
-    encoding: "base32",
-    token: normalizedToken,
-    window: Number.isNaN(window) ? 1 : window,
+    encoding,
+    token,
+    window,
   });
 
-  console.log(`Now: ${new Date().toISOString()}`);
-  console.log(`Token verified: ${verified}`);
+  if (delta === null) {
+    console.log("Invalid token");
+  } else {
+    console.log("Valid token. Delta steps:", delta);
+  }
 };
 
-const main = async () => {
-  if (!command || command === "-h" || command === "--help") {
-    printHelp();
-    return;
-  }
+const argv = process.argv.slice(2);
+const command = argv[0];
+const options = parseArgs(argv.slice(1));
 
-  if (command === "generate") {
-    await runGenerate();
-    return;
-  }
+if (!command || options.help) {
+  usage();
+  process.exit(command ? 0 : 1);
+}
 
-  if (command === "verify") {
-    runVerify();
-    return;
-  }
+if (command === "generate") {
+  await generateSecret(options);
+  process.exit(0);
+}
 
-  console.error(`Unknown command: ${command}`);
-  printHelp();
-};
+if (command === "verify") {
+  verifyToken(options);
+  process.exit(0);
+}
 
-main();
+console.error(`Unknown command: ${command}`);
+usage();
+process.exit(1);
