@@ -20,6 +20,7 @@ const Profile = () => {
   const [twoFaMessage, setTwoFaMessage] = useState('');
   const [twoFaQrCode, setTwoFaQrCode] = useState('');
   const [showDisableConfirm, setShowDisableConfirm] = useState(false);
+  const [showRegenerateConfirm, setShowRegenerateConfirm] = useState(false);
 
   useEffect(() => {
     fetchProfileData();
@@ -57,6 +58,7 @@ const Profile = () => {
     setTwoFaMessage('');
     setTwoFaQrCode('');
     setShowDisableConfirm(false);
+    setShowRegenerateConfirm(false);
     setTwoFaLoading(true);
 
     try {
@@ -83,7 +85,16 @@ const Profile = () => {
     setTwoFaError('');
     setTwoFaMessage('');
     setTwoFaQrCode('');
+    setShowRegenerateConfirm(false);
     setShowDisableConfirm((prev) => !prev);
+  };
+
+  const toggleRegenerateConfirm = () => {
+    setTwoFaError('');
+    setTwoFaMessage('');
+    setTwoFaQrCode('');
+    setShowDisableConfirm(false);
+    setShowRegenerateConfirm((prev) => !prev);
   };
 
   const handleDisableTwoFactor = async () => {
@@ -382,13 +393,15 @@ const Profile = () => {
                     <button
                       type="button"
                       className="twofa-button"
-                      onClick={handleEnableTwoFactor}
+                      onClick={profile?.twoFactorEnabled ? toggleRegenerateConfirm : handleEnableTwoFactor}
                       disabled={twoFaLoading || disableLoading}
                     >
                       {twoFaLoading
                         ? 'Generating QR...'
                         : profile?.twoFactorEnabled
-                          ? 'Regenerate 2FA'
+                          ? showRegenerateConfirm
+                            ? 'Cancel regenerate'
+                            : 'Regenerate 2FA'
                           : 'Enable 2FA'}
                     </button>
                     {profile?.twoFactorEnabled && (
@@ -402,9 +415,24 @@ const Profile = () => {
                       </button>
                     )}
                   </div>
+                  {showRegenerateConfirm && (
+                    <div className="twofa-regenerate-panel">
+                      <p>Regenerating 2FA will invalidate your current authenticator codes.</p>
+                      <p>To use 2FA again, scan the new QR in your authenticator app and sign in with the new codes.</p>
+                      <button
+                        type="button"
+                        className="twofa-regenerate-confirm"
+                        onClick={handleEnableTwoFactor}
+                        disabled={twoFaLoading}
+                      >
+                        {twoFaLoading ? 'Generating...' : 'Confirm regenerate'}
+                      </button>
+                    </div>
+                  )}
                   {showDisableConfirm && (
                     <div className="twofa-disable-panel">
                       <p>Disabling 2FA removes the authenticator requirement for this account.</p>
+                      <p>To use 2FA again, enable it and scan a new QR code in your authenticator app.</p>
                       <button
                         type="button"
                         className="twofa-disable-confirm"

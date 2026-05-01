@@ -180,7 +180,7 @@ export const twoFactorAuth = async (req, res) => {
     }
 
     const secret = speakeasy.generateSecret({
-      name: `LeetCode Extension:${user.email}`,
+      name: `CodeTrack:${user.email}`,
     });
     user.twoFactorSecret = secret.base32;
     console.log("Generated 2FA secret (base32):", secret.base32);
@@ -272,7 +272,7 @@ export const accessBy2faForGuest = async (req, res) => {
       secret: user.twoFactorSecret,
       encoding: "base32",
       token: tokenOtp,
-      window: 2,
+      window: 1,
     });
 
     if (!verified) {

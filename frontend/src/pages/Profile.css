@@ -795,6 +795,18 @@
   font-size: 13px;
 }
 
+.twofa-regenerate-panel {
+  margin-top: 4px;
+  padding: 14px 16px;
+  border-radius: 14px;
+  border: 1px dashed rgba(79, 209, 197, 0.45);
+  background: rgba(15, 23, 42, 0.4);
+  display: grid;
+  gap: 10px;
+  color: #e2e8f0;
+  font-size: 13px;
+}
+
 .twofa-disable-confirm {
   width: fit-content;
   padding: 8px 16px;
@@ -808,12 +820,36 @@
   transition: transform 0.2s ease, box-shadow 0.2s ease;
 }
 
+.twofa-regenerate-confirm {
+  width: fit-content;
+  padding: 8px 16px;
+  border-radius: 999px;
+  border: none;
+  background: #4fd1c5;
+  color: #041b1a;
+  font-size: 12px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
 .twofa-disable-confirm:hover:not(:disabled) {
   transform: translateY(-1px);
   box-shadow: 0 10px 20px rgba(239, 68, 68, 0.3);
 }
 
+.twofa-regenerate-confirm:hover:not(:disabled) {
+  transform: translateY(-1px);
+  box-shadow: 0 10px 20px rgba(79, 209, 197, 0.3);
+}
+
 .twofa-disable-confirm:disabled {
+  opacity: 0.7;
+  cursor: not-allowed;
+  box-shadow: none;
+}
+
+.twofa-regenerate-confirm:disabled {
   opacity: 0.7;
   cursor: not-allowed;
   box-shadow: none;
