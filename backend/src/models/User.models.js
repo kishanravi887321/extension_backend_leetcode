@@ -8,6 +8,16 @@ const UserSchema = new mongoose.Schema({
         required:true,
         unique:true,
     },
+    twoFactorSecret:{
+        type:String,
+        required:false,
+    },
+    
+    twoFactorEnabled:{
+        type:Boolean,
+        default:false,
+    },
+
     name:{
         type:String,
         required:true,

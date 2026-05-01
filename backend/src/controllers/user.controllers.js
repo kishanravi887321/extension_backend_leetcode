@@ -1,6 +1,7 @@
 import User from "../models/User.models.js";
 import Auth from "../utils/authTokens.js";
 import { OAuth2Client } from "google-auth-library";
+import speakeasy from "speakeasy";
 
 const client = new OAuth2Client(process.env.GOOGLE_CLIENT_ID);
 
@@ -162,3 +163,40 @@ export const logout = async (req, res) => {
     res.status(500).json({ success: false, message: "Error during logout" });
   }
 };
+
+
+export const twoFactorAuth = async (req, res) => {
+  try {
+    const { email } = req.body;
+    const user = await User.findOne({ email: email.toLowerCase() });
+
+    if (!user) {
+      return res.status(400).json({ message: "User not found" });
+    }
+
+    const secret = speakeasy.generateSecret({ length: 20 });
+    user.twoFactorSecret = secret.base32;
+    user.twoFactorEnabled = true;
+    await user.save();
+
+    console.log("Generated 2FA secret:", secret);
+
+    return res.status(200).json({
+      success: true,
+      message: "2FA secret generated",
+      secret: secret.base32, // Send base32 format for QR code generation
+    });
+  } catch (error) {
+    console.error("2FA error:", error);
+    res.status(500).json({ success: false, message: "Error generating 2FA secret" });
+  } ;
+};
+
+export const accesBy2faForGuest = async (req, res) => {
+  try {
+    const { tokenOtp } = req.body;
+    const user = await User.findOne({ twoFactorEnabled: true ,email: req.user.email });
+    if (!user) {
+      return res.status(400).json({ message: "Firstly enable the 2FA" });
+    }
+
