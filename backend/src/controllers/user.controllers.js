@@ -194,7 +194,7 @@ export const twoFactorAuth = async (req, res) => {
 
     // console.log("Generated otpauth URL:", otpauthUrl);
 
-    const qrCodeDataURL = await qrcode.toDataURL(otpauthUrl);
+    const qrCodeDataURL = await Qrrcode.toDataURL(otpauthUrl);
     // console.log("Generated QR Code Data URL:", qrCodeDataURL);
 
     return res.status(200).json({
@@ -263,11 +263,21 @@ export const accessBy2faForGuest = async (req, res) => {
       return res.status(400).json({ message: "Firstly enable the 2FA" });
     }
 
+    console.log("DB secret:", user.twoFactorSecret);
+    console.log(
+      "Server OTP:",
+      speakeasy.totp({
+        secret: user.twoFactorSecret,
+        encoding: "base32",
+      })
+    );
+    console.log("User OTP:", tokenOtp);
+
     const verified = speakeasy.totp.verify({
       secret: user.twoFactorSecret,
       encoding: "base32",
       token: tokenOtp,
-      window: 1,
+      window: 2,
     });
 
     if (!verified) {
