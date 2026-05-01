@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { Link, useNavigate, useLocation } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
-import { getProfile, getQuestStats } from '../api/auth';
+import { enableTwoFactor, getProfile, getQuestStats } from '../api/auth';
 import './Profile.css';
 import './Dashboard.css';
 
@@ -14,6 +14,10 @@ const Profile = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
   const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
+  const [twoFaLoading, setTwoFaLoading] = useState(false);
+  const [twoFaError, setTwoFaError] = useState('');
+  const [twoFaMessage, setTwoFaMessage] = useState('');
+  const [twoFaQrCode, setTwoFaQrCode] = useState('');
 
   useEffect(() => {
     fetchProfileData();
@@ -44,6 +48,32 @@ const Profile = () => {
   const handleLogout = () => {
     logout();
     navigate('/login');
+  };
+
+  const handleEnableTwoFactor = async () => {
+    setTwoFaError('');
+    setTwoFaMessage('');
+    setTwoFaQrCode('');
+    setTwoFaLoading(true);
+
+    try {
+      const response = await enableTwoFactor();
+      if (response.success) {
+        setTwoFaQrCode(response.qrCodeDataURL);
+        setTwoFaMessage(response.message || '2FA enabled successfully.');
+        if (profile) {
+          const nextProfile = { ...profile, twoFactorEnabled: true };
+          setProfile(nextProfile);
+          updateUser(nextProfile);
+        }
+      } else {
+        setTwoFaError(response.message || 'Failed to enable 2FA.');
+      }
+    } catch (err) {
+      setTwoFaError(err.response?.data?.message || 'Failed to enable 2FA.');
+    } finally {
+      setTwoFaLoading(false);
+    }
   };
 
   const menuItems = [
@@ -298,6 +328,49 @@ const Profile = () => {
                       <span>@{profile?.username}</span>
                     </div>
                   </div>
+                </div>
+              </div>
+
+              <div className="profile-card profile-security-card">
+                <div className="card-header">
+                  <h3>Security</h3>
+                  <span className={`twofa-status ${profile?.twoFactorEnabled ? 'enabled' : 'disabled'}`}>
+                    {profile?.twoFactorEnabled ? '2FA Enabled' : '2FA Disabled'}
+                  </span>
+                </div>
+                <div className="card-body">
+                  <p className="twofa-description">
+                    Add an extra layer of protection to your account with a time-based code.
+                  </p>
+                  <button
+                    type="button"
+                    className="twofa-button"
+                    onClick={handleEnableTwoFactor}
+                    disabled={twoFaLoading}
+                  >
+                    {twoFaLoading
+                      ? 'Generating QR...'
+                      : profile?.twoFactorEnabled
+                        ? 'Regenerate 2FA'
+                        : 'Enable 2FA'}
+                  </button>
+                  {twoFaError && <p className="twofa-error">{twoFaError}</p>}
+                  {twoFaMessage && <p className="twofa-success">{twoFaMessage}</p>}
+                  {twoFaQrCode && (
+                    <div className="twofa-qr-panel">
+                      <img src={twoFaQrCode} alt="2FA QR code" />
+                      <div className="twofa-qr-details">
+                        <p>Scan this QR in Google Authenticator, Authy, or Microsoft Authenticator.</p>
+                        <button
+                          type="button"
+                          className="twofa-hide"
+                          onClick={() => setTwoFaQrCode('')}
+                        >
+                          Hide QR
+                        </button>
+                      </div>
+                    </div>
+                  )}
                 </div>
               </div>
 
