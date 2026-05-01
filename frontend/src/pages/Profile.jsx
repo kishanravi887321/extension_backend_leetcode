@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { Link, useNavigate, useLocation } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
-import { enableTwoFactor, getProfile, getQuestStats } from '../api/auth';
+import { disableTwoFactor, enableTwoFactor, getProfile, getQuestStats } from '../api/auth';
 import './Profile.css';
 import './Dashboard.css';
 
@@ -15,9 +15,11 @@ const Profile = () => {
   const [error, setError] = useState('');
   const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
   const [twoFaLoading, setTwoFaLoading] = useState(false);
+  const [disableLoading, setDisableLoading] = useState(false);
   const [twoFaError, setTwoFaError] = useState('');
   const [twoFaMessage, setTwoFaMessage] = useState('');
   const [twoFaQrCode, setTwoFaQrCode] = useState('');
+  const [showDisableConfirm, setShowDisableConfirm] = useState(false);
 
   useEffect(() => {
     fetchProfileData();
@@ -54,6 +56,7 @@ const Profile = () => {
     setTwoFaError('');
     setTwoFaMessage('');
     setTwoFaQrCode('');
+    setShowDisableConfirm(false);
     setTwoFaLoading(true);
 
     try {
@@ -73,6 +76,39 @@ const Profile = () => {
       setTwoFaError(err.response?.data?.message || 'Failed to enable 2FA.');
     } finally {
       setTwoFaLoading(false);
+    }
+  };
+
+  const toggleDisableConfirm = () => {
+    setTwoFaError('');
+    setTwoFaMessage('');
+    setTwoFaQrCode('');
+    setShowDisableConfirm((prev) => !prev);
+  };
+
+  const handleDisableTwoFactor = async () => {
+    setTwoFaError('');
+    setTwoFaMessage('');
+    setTwoFaQrCode('');
+    setDisableLoading(true);
+
+    try {
+      const response = await disableTwoFactor();
+      if (response.success) {
+        setTwoFaMessage(response.message || '2FA disabled successfully.');
+        setShowDisableConfirm(false);
+        if (profile) {
+          const nextProfile = { ...profile, twoFactorEnabled: false };
+          setProfile(nextProfile);
+          updateUser(nextProfile);
+        }
+      } else {
+        setTwoFaError(response.message || 'Failed to disable 2FA.');
+      }
+    } catch (err) {
+      setTwoFaError(err.response?.data?.message || 'Failed to disable 2FA.');
+    } finally {
+      setDisableLoading(false);
     }
   };
 
@@ -342,18 +378,43 @@ const Profile = () => {
                   <p className="twofa-description">
                     Add an extra layer of protection to your account with a time-based code.
                   </p>
-                  <button
-                    type="button"
-                    className="twofa-button"
-                    onClick={handleEnableTwoFactor}
-                    disabled={twoFaLoading}
-                  >
-                    {twoFaLoading
-                      ? 'Generating QR...'
-                      : profile?.twoFactorEnabled
-                        ? 'Regenerate 2FA'
-                        : 'Enable 2FA'}
-                  </button>
+                  <div className="twofa-actions">
+                    <button
+                      type="button"
+                      className="twofa-button"
+                      onClick={handleEnableTwoFactor}
+                      disabled={twoFaLoading || disableLoading}
+                    >
+                      {twoFaLoading
+                        ? 'Generating QR...'
+                        : profile?.twoFactorEnabled
+                          ? 'Regenerate 2FA'
+                          : 'Enable 2FA'}
+                    </button>
+                    {profile?.twoFactorEnabled && (
+                      <button
+                        type="button"
+                        className="twofa-button twofa-button-secondary"
+                        onClick={toggleDisableConfirm}
+                        disabled={twoFaLoading || disableLoading}
+                      >
+                        {showDisableConfirm ? 'Cancel disable' : 'Disable 2FA'}
+                      </button>
+                    )}
+                  </div>
+                  {showDisableConfirm && (
+                    <div className="twofa-disable-panel">
+                      <p>Disabling 2FA removes the authenticator requirement for this account.</p>
+                      <button
+                        type="button"
+                        className="twofa-disable-confirm"
+                        onClick={handleDisableTwoFactor}
+                        disabled={disableLoading}
+                      >
+                        {disableLoading ? 'Disabling...' : 'Confirm disable'}
+                      </button>
+                    </div>
+                  )}
                   {twoFaError && <p className="twofa-error">{twoFaError}</p>}
                   {twoFaMessage && <p className="twofa-success">{twoFaMessage}</p>}
                   {twoFaQrCode && (

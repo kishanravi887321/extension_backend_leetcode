@@ -111,6 +111,11 @@ export const enableTwoFactor = async () => {
   return response.data;
 };
 
+export const disableTwoFactor = async () => {
+  const response = await api.post('/users/2fa/disable');
+  return response.data;
+};
+
 // Profile APIs
 export const getProfile = async () => {
   const response = await api.get('/profile/me');

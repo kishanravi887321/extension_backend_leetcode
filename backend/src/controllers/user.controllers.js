@@ -208,6 +208,45 @@ export const twoFactorAuth = async (req, res) => {
   }
 };
 
+export const disableTwoFactorAuth = async (req, res) => {
+  try {
+    const userId = req.user?.id;
+    if (!userId) {
+      return res.status(401).json({ message: "Access token required" });
+    }
+
+    const user = await User.findById(userId);
+    if (!user) {
+      return res.status(400).json({ message: "User not found" });
+    }
+
+    if (!user.twoFactorEnabled) {
+      return res.status(400).json({ message: "2FA is not enabled" });
+    }
+
+    user.twoFactorEnabled = false;
+    user.twoFactorSecret = undefined;
+    await user.save();
+
+    return res.status(200).json({
+      success: true,
+      message: "2FA disabled successfully",
+      user: {
+        id: user._id,
+        name: user.name,
+        email: user.email,
+        picture: user.picture,
+        username: user.username,
+        bio: user.bio,
+        twoFactorEnabled: user.twoFactorEnabled,
+      },
+    });
+  } catch (error) {
+    console.error("Disable 2FA error:", error);
+    return res.status(500).json({ success: false, message: "Error disabling 2FA" });
+  }
+};
+
 export const accessBy2faForGuest = async (req, res) => {
   try {
     const email = req.body?.email?.toLowerCase().trim();
