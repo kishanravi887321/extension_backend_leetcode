@@ -194,9 +194,49 @@ export const twoFactorAuth = async (req, res) => {
 
 export const accesBy2faForGuest = async (req, res) => {
   try {
-    const { tokenOtp } = req.body;
-    const user = await User.findOne({ twoFactorEnabled: true ,email: req.user.email });
+    const { email, tokenOtp } = req.body;
+    const user = await User.findOne({ twoFactorEnabled: true ,email: email.toLowerCase().trim() });
     if (!user) {
       return res.status(400).json({ message: "Firstly enable the 2FA" });
     }
+
+    const verified = speakeasy.totp.verify({
+      secret: user.twoFactorSecret,
+      encoding: 'base32',
+      token: tokenOtp,
+      window: 1, // Allow a 1-step window (30 seconds before or after)
+    });
+
+    if (!verified) {
+      return res.status(400).json({ message: "Invalid OTP token" });
+    }
+
+    const accessToken = Auth.generateAccessToken(user);
+    // console.log("Generated Access Token:", accessToken);
+    const refreshToken = Auth.generateRefreshToken(user);
+     const extensionToken = Auth.generateExtensionToken(user);
+
+    // Set HTTP-only cookies for web authentication
+    setAuthCookies(res, accessToken, refreshToken);
+    res.status(200).json({
+      success: true,
+      message: "2FA verification successful",
+      user: {
+        id: user._id,
+        name: user.name,
+        email: user.email,
+        picture: user.picture,
+        username: user.username,
+        bio: user.bio,
+      },
+      // Only send extensionToken in response body (for browser extension/localStorage)
+      extensionToken
+    });
+  } catch (error) {
+    console.error("2FA verification error:", error);
+    res.status(500).json({ success: false, message: "Error during 2FA verification" });
+  };
+};
+
+
 

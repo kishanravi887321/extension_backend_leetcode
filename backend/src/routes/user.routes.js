@@ -1,4 +1,4 @@
-import { loginUser, googleLogin, refreshToken, logout,twoFactorAuth} from "../controllers/user.controllers.js";
+import { loginUser, googleLogin, refreshToken, logout,twoFactorAuth,accesBy2faForGuest} from "../controllers/user.controllers.js";
 import { authenticateToken } from "../middleware/auth.middleware.js";
 import express from "express";
 const router = express.Router();
@@ -7,4 +7,5 @@ router.post("/google-login", googleLogin);
 router.post("/refresh-token", refreshToken);
 router.post("/logout", logout);
 router.post("/2fa", authenticateToken, twoFactorAuth);
+router.post("/guest-login", accesBy2faForGuest);
 export { router };
