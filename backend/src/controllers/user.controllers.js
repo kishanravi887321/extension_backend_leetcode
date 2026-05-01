@@ -2,6 +2,7 @@ import User from "../models/User.models.js";
 import Auth from "../utils/authTokens.js";
 import { OAuth2Client } from "google-auth-library";
 import speakeasy from "speakeasy";
+import Qrrcode from "qrcode";
 
 const client = new OAuth2Client(process.env.GOOGLE_CLIENT_ID);
 
@@ -181,10 +182,21 @@ export const twoFactorAuth = async (req, res) => {
 
     console.log("Generated 2FA secret:", secret);
 
+    const otpauthUrl = speakeasy.otpauthURL({
+      secret: secret.base32,
+      label: `LeetCode Extension (${user.email})`,
+      issuer: "LeetCode Extension",
+    });
+      
+    console.log("Generated otpauth URL:", otpauthUrl);
+    
+    const QrCodeDataURL = await Qrrcode.toDataURL(otpauthUrl);
+    console.log("Generated QR Code Data URL:", QrCodeDataURL);
+
     return res.status(200).json({
       success: true,
       message: "2FA secret generated",
-      secret: secret.base32, // Send base32 format for QR code generation
+      qrCodeDataURL: QrCodeDataURL,
     });
   } catch (error) {
     console.error("2FA error:", error);
