@@ -941,6 +941,113 @@
   font-weight: 500;
 }
 
+/* ===== WAVE GUEST LOGIN ===== */
+.wave-guest-section {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  margin-bottom: 8px;
+  position: relative;
+  z-index: 1;
+}
+
+.wave-guest-toggle {
+  width: 100%;
+  padding: 12px 16px;
+  border-radius: 12px;
+  border: 1px dashed rgba(79, 209, 197, 0.4);
+  background: rgba(2, 6, 23, 0.3);
+  color: rgba(255, 255, 255, 0.85);
+  font-size: 14px;
+  font-weight: 600;
+  letter-spacing: 0.3px;
+  cursor: pointer;
+  transition: transform 0.2s ease, border-color 0.2s ease, background 0.2s ease;
+}
+
+.wave-guest-toggle:hover {
+  border-color: rgba(79, 209, 197, 0.7);
+  background: rgba(79, 209, 197, 0.08);
+  transform: translateY(-1px);
+}
+
+.wave-guest-panel {
+  display: grid;
+  gap: 12px;
+  padding: 16px;
+  border-radius: 14px;
+  border: 1px solid rgba(79, 209, 197, 0.2);
+  background: rgba(15, 23, 42, 0.45);
+}
+
+.wave-guest-field {
+  display: grid;
+  gap: 6px;
+}
+
+.wave-guest-label {
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  color: rgba(255, 255, 255, 0.6);
+}
+
+.wave-guest-input {
+  width: 100%;
+  padding: 12px 14px;
+  border-radius: 10px;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  background: rgba(2, 6, 23, 0.6);
+  color: #ffffff;
+  font-size: 14px;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.wave-guest-input::placeholder {
+  color: rgba(255, 255, 255, 0.35);
+}
+
+.wave-guest-input:focus {
+  outline: none;
+  border-color: rgba(79, 209, 197, 0.6);
+  box-shadow: 0 0 0 2px rgba(79, 209, 197, 0.2);
+}
+
+.wave-guest-input:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.wave-guest-hint {
+  margin: 0;
+  font-size: 12px;
+  color: rgba(255, 255, 255, 0.55);
+}
+
+.wave-guest-submit {
+  width: 100%;
+  padding: 12px 16px;
+  border-radius: 12px;
+  border: none;
+  background: linear-gradient(135deg, #4fd1c5 0%, #319795 100%);
+  color: #041b1a;
+  font-size: 14px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.wave-guest-submit:hover:not(:disabled) {
+  transform: translateY(-1px);
+  box-shadow: 0 12px 24px rgba(79, 209, 197, 0.2);
+}
+
+.wave-guest-submit:disabled {
+  opacity: 0.7;
+  cursor: not-allowed;
+  box-shadow: none;
+}
+
 /* ===== WAVE DIVIDER ===== */
 .wave-divider {
   display: flex;

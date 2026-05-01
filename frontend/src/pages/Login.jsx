@@ -2,7 +2,7 @@ import { useState, useEffect, lazy, Suspense } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { GoogleLogin } from '@react-oauth/google';
 import { motion } from 'framer-motion';
-import { googleLogin } from '../api/auth';
+import { googleLogin, guestLogin } from '../api/auth';
 import { useAuth } from '../context/AuthContext';
 import HowToUseModal from '../components/HowToUseModal';
 import './Auth.css';
@@ -15,6 +15,10 @@ const Login = () => {
   const { login, isAuthenticated } = useAuth();
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
+  const [guestLoading, setGuestLoading] = useState(false);
+  const [guestEmail, setGuestEmail] = useState('');
+  const [guestOtp, setGuestOtp] = useState('');
+  const [showGuestLogin, setShowGuestLogin] = useState(false);
   const [showHowToUse, setShowHowToUse] = useState(false);
 
   useEffect(() => {
@@ -41,6 +45,38 @@ const Login = () => {
 
   const handleGoogleError = () => {
     setError('Google login failed. Please try again.');
+  };
+
+  const toggleGuestLogin = () => {
+    setShowGuestLogin((prev) => {
+      const next = !prev;
+      if (!next) {
+        setGuestEmail('');
+        setGuestOtp('');
+      }
+      return next;
+    });
+  };
+
+  const handleGuestLogin = async (event) => {
+    event.preventDefault();
+    setError('');
+
+    if (!guestEmail || !guestOtp) {
+      setError('Email and 2FA code are required.');
+      return;
+    }
+
+    setGuestLoading(true);
+    try {
+      const response = await guestLogin({ email: guestEmail, tokenOtp: guestOtp });
+      await login(response.user, response.extensionToken);
+      navigate('/dashboard');
+    } catch (err) {
+      setError(err.response?.data?.message || 'Guest login failed. Please try again.');
+    } finally {
+      setGuestLoading(false);
+    }
   };
 
   // Animation variants
@@ -205,6 +241,65 @@ const Login = () => {
                   shape="rectangular"
                   width="100%"
                 />
+              )}
+            </div>
+
+            <div className="wave-guest-section">
+              <button
+                type="button"
+                className="wave-guest-toggle"
+                onClick={toggleGuestLogin}
+                aria-expanded={showGuestLogin}
+                aria-controls="guest-login-panel"
+              >
+                {showGuestLogin ? 'Hide guest access' : 'Continue as guest'}
+              </button>
+
+              {showGuestLogin && (
+                <form
+                  id="guest-login-panel"
+                  className="wave-guest-panel"
+                  onSubmit={handleGuestLogin}
+                >
+                  <label className="wave-guest-field">
+                    <span className="wave-guest-label">Email</span>
+                    <input
+                      className="wave-guest-input"
+                      type="email"
+                      name="guestEmail"
+                      placeholder="you@example.com"
+                      autoComplete="email"
+                      value={guestEmail}
+                      onChange={(event) => setGuestEmail(event.target.value)}
+                      disabled={guestLoading}
+                      required
+                    />
+                  </label>
+
+                  <label className="wave-guest-field">
+                    <span className="wave-guest-label">2FA code</span>
+                    <input
+                      className="wave-guest-input"
+                      type="text"
+                      name="guestOtp"
+                      placeholder="123456"
+                      inputMode="numeric"
+                      autoComplete="one-time-code"
+                      value={guestOtp}
+                      onChange={(event) => setGuestOtp(event.target.value)}
+                      disabled={guestLoading}
+                      required
+                    />
+                  </label>
+
+                  <p className="wave-guest-hint">
+                    Requires 2FA to be enabled on your account.
+                  </p>
+
+                  <button className="wave-guest-submit" type="submit" disabled={guestLoading}>
+                    {guestLoading ? 'Verifying...' : 'Access with 2FA'}
+                  </button>
+                </form>
               )}
             </div>
 

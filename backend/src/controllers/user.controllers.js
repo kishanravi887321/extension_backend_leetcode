@@ -168,9 +168,12 @@ export const logout = async (req, res) => {
 
 export const twoFactorAuth = async (req, res) => {
   try {
-    const { email } = req.body;
-    const user = await User.findOne({ email: email.toLowerCase() });
+    const userId = req.user?.id;
+    if (!userId) {
+      return res.status(401).json({ message: "Access token required" });
+    }
 
+    const user = await User.findById(userId);
     if (!user) {
       return res.status(400).json({ message: "User not found" });
     }
@@ -187,36 +190,42 @@ export const twoFactorAuth = async (req, res) => {
       label: `LeetCode Extension (${user.email})`,
       issuer: "LeetCode Extension",
     });
-      
+
     console.log("Generated otpauth URL:", otpauthUrl);
-    
-    const QrCodeDataURL = await Qrrcode.toDataURL(otpauthUrl);
-    console.log("Generated QR Code Data URL:", QrCodeDataURL);
+
+    const qrCodeDataURL = await Qrrcode.toDataURL(otpauthUrl);
+    console.log("Generated QR Code Data URL:", qrCodeDataURL);
 
     return res.status(200).json({
       success: true,
       message: "2FA secret generated",
-      qrCodeDataURL: QrCodeDataURL,
+      qrCodeDataURL,
     });
   } catch (error) {
     console.error("2FA error:", error);
-    res.status(500).json({ success: false, message: "Error generating 2FA secret" });
-  } ;
+    return res.status(500).json({ success: false, message: "Error generating 2FA secret" });
+  }
 };
 
-export const accesBy2faForGuest = async (req, res) => {
+export const accessBy2faForGuest = async (req, res) => {
   try {
-    const { email, tokenOtp } = req.body;
-    const user = await User.findOne({ twoFactorEnabled: true ,email: email.toLowerCase().trim() });
-    if (!user) {
+    const email = req.body?.email?.toLowerCase().trim();
+    const tokenOtp = req.body?.tokenOtp?.trim();
+
+    if (!email || !tokenOtp) {
+      return res.status(400).json({ message: "Email and OTP token are required" });
+    }
+
+    const user = await User.findOne({ twoFactorEnabled: true, email });
+    if (!user || !user.twoFactorSecret) {
       return res.status(400).json({ message: "Firstly enable the 2FA" });
     }
 
     const verified = speakeasy.totp.verify({
       secret: user.twoFactorSecret,
-      encoding: 'base32',
+      encoding: "base32",
       token: tokenOtp,
-      window: 1, // Allow a 1-step window (30 seconds before or after)
+      window: 1,
     });
 
     if (!verified) {
@@ -224,13 +233,11 @@ export const accesBy2faForGuest = async (req, res) => {
     }
 
     const accessToken = Auth.generateAccessToken(user);
-    // console.log("Generated Access Token:", accessToken);
     const refreshToken = Auth.generateRefreshToken(user);
-     const extensionToken = Auth.generateExtensionToken(user);
+    const extensionToken = Auth.generateExtensionToken(user);
 
-    // Set HTTP-only cookies for web authentication
     setAuthCookies(res, accessToken, refreshToken);
-    res.status(200).json({
+    return res.status(200).json({
       success: true,
       message: "2FA verification successful",
       user: {
@@ -241,13 +248,12 @@ export const accesBy2faForGuest = async (req, res) => {
         username: user.username,
         bio: user.bio,
       },
-      // Only send extensionToken in response body (for browser extension/localStorage)
-      extensionToken
+      extensionToken,
     });
   } catch (error) {
     console.error("2FA verification error:", error);
-    res.status(500).json({ success: false, message: "Error during 2FA verification" });
-  };
+    return res.status(500).json({ success: false, message: "Error during 2FA verification" });
+  }
 };
 
 

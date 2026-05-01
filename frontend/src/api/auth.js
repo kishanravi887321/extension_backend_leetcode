@@ -101,6 +101,11 @@ export const googleLogin = async (credential) => {
   return response.data;
 };
 
+export const guestLogin = async (payload) => {
+  const response = await api.post('/users/guest-login', payload);
+  return response.data;
+};
+
 // Profile APIs
 export const getProfile = async () => {
   const response = await api.get('/profile/me');
