@@ -192,7 +192,7 @@ export const twoFactorAuth = async (req, res) => {
       issuer: "LeetCode Extension",
     });
 
-    console.log("Generated otpauth URL:", otpauthUrl);
+    // console.log("Generated otpauth URL:", otpauthUrl);
 
     const qrCodeDataURL = await Qrrcode.toDataURL(otpauthUrl);
     console.log("Generated QR Code Data URL:", qrCodeDataURL);
