@@ -215,6 +215,7 @@ export const disableTwoFactorAuth = async (req, res) => {
       return res.status(401).json({ message: "Access token required" });
     }
 
+    console.log("Disable 2FA request for user ID:", userId);
     const user = await User.findById(userId);
     if (!user) {
       return res.status(400).json({ message: "User not found" });
@@ -255,6 +256,7 @@ export const accessBy2faForGuest = async (req, res) => {
     if (!email || !tokenOtp) {
       return res.status(400).json({ message: "Email and OTP token are required" });
     }
+    console.log("2FA access request for email:", email);
 
     const user = await User.findOne({ twoFactorEnabled: true, email });
     if (!user || !user.twoFactorSecret) {
