@@ -23,27 +23,47 @@ export const redis = new Redis({
 });
 
 export const cacheSet = async (key, value, ttlSeconds) => {
-  const payload = JSON.stringify(value);
-  if (typeof ttlSeconds === "number" && ttlSeconds > 0) {
-    await redis.set(key, payload, { ex: ttlSeconds });
-    return;
-  }
-
-  await redis.set(key, payload);
-};
-
-export const cacheGet = async (key) => {
-  const raw = await redis.get(key);
-  if (raw == null) return null;
-
   try {
-    return JSON.parse(raw);
-  } catch {
-    // Fallback for non-JSON payloads
-    return raw;
+    const payload = JSON.stringify(value);
+    if (typeof ttlSeconds === "number" && ttlSeconds > 0) {
+      await redis.set(key, payload, { ex: ttlSeconds });
+      return;
+    }
+
+    await redis.set(key, payload);
+  } catch (error) {
+    console.warn("Redis cacheSet failed:", error?.message || error);
   }
 };
 
-export const cacheDel = async (key) => redis.del(key);
+export const cacheGet = async (key, ttlSeconds) => {
+  try {
+    const raw = await redis.get(key);
+    if (raw == null) return null;
+
+    if (typeof ttlSeconds === "number" && ttlSeconds > 0) {
+      await redis.expire(key, ttlSeconds);
+    }
+
+    try {
+      return JSON.parse(raw);
+    } catch {
+      // Fallback for non-JSON payloads
+      return raw;
+    }
+  } catch (error) {
+    console.warn("Redis cacheGet failed:", error?.message || error);
+    return null;
+  }
+};
+
+export const cacheDel = async (key) => {
+  try {
+    return await redis.del(key);
+  } catch (error) {
+    console.warn("Redis cacheDel failed:", error?.message || error);
+    return 0;
+  }
+};
 
 export default redis;

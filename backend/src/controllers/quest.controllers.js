@@ -1,6 +1,30 @@
 import Quest from "../models/Quest.models.js";
 import mongoose from "mongoose";
 import { generateUniqueId, generateQuestionId, normalizeTitle } from "../utils/uniqueId.js";
+import { cacheDel, cacheGet, cacheSet } from "../db/redis.db.js";
+import dotenv from "dotenv";
+import path from "path";
+import { fileURLToPath } from "url";
+
+const filename = fileURLToPath(import.meta.url);
+const dirname = path.dirname(filename);
+
+// Load env from backend/.env regardless of CWD
+dotenv.config({ path: path.resolve(dirname, "../../../../.env") });
+
+
+const parseCacheTtlSeconds = (value, fallback) => {
+  const parsed = Number.parseInt(value, 10);
+  return Number.isFinite(parsed) && parsed > 0 ? parsed : fallback;
+};
+
+const QUEST_CACHE_TTL_SECONDS = parseCacheTtlSeconds(
+  process.env.REDIS_CACHE_TTL_SECONDS,
+  1800
+);
+console.log(`Using Redis cache TTL: ${QUEST_CACHE_TTL_SECONDS} seconds`);
+
+const getQuestCacheKey = (userId, questId) => `quest:${userId}:${questId}`;
 
 // @desc    Upsert a question (create or update based on uniqueId)
 // @route   POST /api/quests/upsert
@@ -82,6 +106,12 @@ export const upsertQuest = async (req, res) => {
     // Check if it was an insert or update by comparing timestamps
     const isNew = quest.createdAt.getTime() === quest.updatedAt.getTime();
 
+    await cacheSet(
+      getQuestCacheKey(req.user.id, quest._id.toString()),
+      quest.toObject(),
+      QUEST_CACHE_TTL_SECONDS
+    );
+
     res.status(isNew ? 201 : 200).json({
       success: true,
       message: isNew ? "Question created successfully" : "Question updated successfully",
@@ -124,6 +154,12 @@ export const createQuest = async (req, res) => {
       description: description || "",
       companyTags: companyTags || []
     });
+
+    await cacheSet(
+      getQuestCacheKey(req.user.id, quest._id.toString()),
+      quest.toObject(),
+      QUEST_CACHE_TTL_SECONDS
+    );
 
     res.status(201).json({
       success: true,
@@ -322,7 +358,17 @@ export const getQuestById = async (req, res) => {
       });
     }
 
-    const quest = await Quest.findOne({ _id: id, user: req.user.id });
+    const cacheKey = getQuestCacheKey(req.user.id, id);
+    const cachedQuest = await cacheGet(cacheKey, QUEST_CACHE_TTL_SECONDS);
+
+    if (cachedQuest) {
+      return res.json({
+        success: true,
+        quest: cachedQuest
+      });
+    }
+
+    const quest = await Quest.findOne({ _id: id, user: req.user.id }).lean();
 
     if (!quest) {
       return res.status(404).json({
@@ -330,6 +376,8 @@ export const getQuestById = async (req, res) => {
         message: "Question not found"
       });
     }
+
+    await cacheSet(cacheKey, quest, QUEST_CACHE_TTL_SECONDS);
 
     res.json({
       success: true,
@@ -378,6 +426,12 @@ export const updateQuest = async (req, res) => {
     if (companyTags !== undefined) quest.companyTags = companyTags;
 
     await quest.save();
+
+    await cacheSet(
+      getQuestCacheKey(req.user.id, quest._id.toString()),
+      quest.toObject(),
+      QUEST_CACHE_TTL_SECONDS
+    );
 
     res.json({
       success: true,
@@ -431,6 +485,12 @@ export const updateQuestStatus = async (req, res) => {
       });
     }
 
+    await cacheSet(
+      getQuestCacheKey(req.user.id, quest._id.toString()),
+      quest.toObject(),
+      QUEST_CACHE_TTL_SECONDS
+    );
+
     res.json({
       success: true,
       message: "Status updated successfully",
@@ -470,6 +530,12 @@ export const toggleBookmark = async (req, res) => {
 
     quest.bookmarked = !quest.bookmarked;
     await quest.save();
+
+    await cacheSet(
+      getQuestCacheKey(req.user.id, quest._id.toString()),
+      quest.toObject(),
+      QUEST_CACHE_TTL_SECONDS
+    );
 
     res.json({
       success: true,
@@ -512,6 +578,12 @@ export const markAsRevised = async (req, res) => {
       });
     }
 
+    await cacheSet(
+      getQuestCacheKey(req.user.id, quest._id.toString()),
+      quest.toObject(),
+      QUEST_CACHE_TTL_SECONDS
+    );
+
     res.json({
       success: true,
       message: "Marked as revised",
@@ -548,6 +620,8 @@ export const deleteQuest = async (req, res) => {
         message: "Question not found"
       });
     }
+
+    await cacheDel(getQuestCacheKey(req.user.id, id));
 
     res.json({
       success: true,
