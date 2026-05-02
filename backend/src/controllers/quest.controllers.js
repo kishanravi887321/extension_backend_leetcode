@@ -265,8 +265,11 @@ export const getQuests = async (req, res) => {
 
     const cachedList = await cacheGet(listCacheKey, QUEST_CACHE_TTL_SECONDS);
     if (cachedList) {
+      console.log("[Cache hit] GET /api/quests", listCacheKey);
       return res.json(cachedList);
     }
+
+    console.log("[Cache miss] GET /api/quests", listCacheKey);
 
     const pageNum = parseInt(page);
     const limitNum = parseInt(limit);
@@ -438,11 +441,14 @@ export const getQuestById = async (req, res) => {
     const cachedQuest = await cacheGet(cacheKey, QUEST_CACHE_TTL_SECONDS);
 
     if (cachedQuest) {
+      console.log(`[Cache hit] GET /api/quests/${id}`);
       return res.json({
         success: true,
         quest: cachedQuest
       });
     }
+
+    console.log(`[Cache miss] GET /api/quests/${id}`);
 
     const quest = await Quest.findOne({ _id: id, user: req.user.id }).lean();
 

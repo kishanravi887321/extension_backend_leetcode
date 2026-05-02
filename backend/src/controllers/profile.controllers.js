@@ -32,11 +32,14 @@ export const getProfile = async (req, res) => {
     const cacheKey = getProfileCacheKey(req.user.id);
     const cachedProfile = await cacheGet(cacheKey, PROFILE_CACHE_TTL_SECONDS);
     if (cachedProfile) {
+      console.log("[Cache hit] GET /api/profile/me");
       return res.status(200).json({
         success: true,
         user: cachedProfile
       });
     }
+
+    console.log("[Cache miss] GET /api/profile/me");
 
     const user = await User.findById(req.user.id).select('-password -googleId');
     

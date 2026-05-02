@@ -32,14 +32,14 @@ const clearAuthCookies = (res) => {
 export const googleLogin = async (req, res) => {
   try {
     const { credential } = req.body;
-    console.log("Received credential:", credential);
+    // console.log("Received credential:", credential);
     // Verify Google token
     const ticket = await client.verifyIdToken({
       idToken: credential,
       audience: process.env.GOOGLE_CLIENT_ID,
     });
     
-    console.log("Google ticket:", ticket);
+    // console.log("Google ticket:", ticket);
     
     const payload = ticket.getPayload();
     const { sub: googleId, email, name, picture } = payload;
