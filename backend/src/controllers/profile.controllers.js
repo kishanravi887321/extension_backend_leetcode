@@ -1,28 +1,55 @@
 import User from "../models/User.models.js";
 import { uploadToCloudinary, deleteFromCloudinary } from "../utils/cloudinary.js";
+import { cacheGet, cacheSet } from "../db/redis.db.js";
+
+const parseCacheTtlSeconds = (value, fallback) => {
+  const parsed = Number.parseInt(value, 10);
+  return Number.isFinite(parsed) && parsed > 0 ? parsed : fallback;
+};
+
+const PROFILE_CACHE_TTL_SECONDS = parseCacheTtlSeconds(
+  process.env.REDIS_CACHE_TTL_SECONDS,
+  1800
+);
+
+const getProfileCacheKey = (userId) => `profile:${userId}`;
+
+const buildProfilePayload = (user) => ({
+  id: user._id,
+  username: user.username,
+  name: user.name,
+  email: user.email,
+  picture: user.picture,
+  coverImage: user.coverImage || "",
+  bio: user.bio || "",
+  twoFactorEnabled: user.twoFactorEnabled,
+  createdAt: user.createdAt,
+});
 
 // Get current user's profile
 export const getProfile = async (req, res) => {
   try {
+    const cacheKey = getProfileCacheKey(req.user.id);
+    const cachedProfile = await cacheGet(cacheKey, PROFILE_CACHE_TTL_SECONDS);
+    if (cachedProfile) {
+      return res.status(200).json({
+        success: true,
+        user: cachedProfile
+      });
+    }
+
     const user = await User.findById(req.user.id).select('-password -googleId');
     
     if (!user) {
       return res.status(404).json({ message: "User not found" });
     }
+
+    const profilePayload = buildProfilePayload(user);
+    await cacheSet(cacheKey, profilePayload, PROFILE_CACHE_TTL_SECONDS);
     
     res.status(200).json({
       success: true,
-      user: {
-        id: user._id,
-        username: user.username,
-        name: user.name,
-        email: user.email,
-        picture: user.picture,
-        coverImage: user.coverImage || '',
-        bio: user.bio || '',
-        twoFactorEnabled: user.twoFactorEnabled,
-        createdAt: user.createdAt,
-      }
+      user: profilePayload
     });
   } catch (error) {
     console.error("Get profile error:", error);
@@ -62,20 +89,18 @@ export const updateProfile = async (req, res) => {
     if (!user) {
       return res.status(404).json({ message: "User not found" });
     }
+
+    const profilePayload = buildProfilePayload(user);
+    await cacheSet(
+      getProfileCacheKey(userId),
+      profilePayload,
+      PROFILE_CACHE_TTL_SECONDS
+    );
     
     res.status(200).json({
       success: true,
       message: "Profile updated successfully",
-      user: {
-        id: user._id,
-        username: user.username,
-        name: user.name,
-        email: user.email,
-        picture: user.picture,
-        coverImage: user.coverImage || '',
-        bio: user.bio || '',
-        twoFactorEnabled: user.twoFactorEnabled,
-      }
+      user: profilePayload
     });
   } catch (error) {
     console.error("Update profile error:", error);
@@ -109,6 +134,13 @@ export const uploadProfileImage = async (req, res) => {
     user.picture = result.secure_url;
     user.profileImagePublicId = result.public_id;
     await user.save();
+
+    const profilePayload = buildProfilePayload(user);
+    await cacheSet(
+      getProfileCacheKey(userId),
+      profilePayload,
+      PROFILE_CACHE_TTL_SECONDS
+    );
     
     res.status(200).json({
       success: true,
@@ -147,6 +179,13 @@ export const uploadCoverImage = async (req, res) => {
     user.coverImage = result.secure_url;
     user.coverImagePublicId = result.public_id;
     await user.save();
+
+    const profilePayload = buildProfilePayload(user);
+    await cacheSet(
+      getProfileCacheKey(userId),
+      profilePayload,
+      PROFILE_CACHE_TTL_SECONDS
+    );
     
     res.status(200).json({
       success: true,

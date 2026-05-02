@@ -25,6 +25,48 @@ const QUEST_CACHE_TTL_SECONDS = parseCacheTtlSeconds(
 console.log(`Using Redis cache TTL: ${QUEST_CACHE_TTL_SECONDS} seconds`);
 
 const getQuestCacheKey = (userId, questId) => `quest:${userId}:${questId}`;
+const getQuestListVersionKey = (userId) => `questlist:version:${userId}`;
+
+const normalizeQueryList = (value) => {
+  if (value == null) return "";
+  const items = Array.isArray(value)
+    ? value
+    : typeof value === "string"
+      ? value.split(",")
+      : [value];
+
+  return items
+    .map((item) => String(item).trim())
+    .filter(Boolean)
+    .sort()
+    .join(",");
+};
+
+const buildQuestListCacheKey = (userId, query, version) => {
+  const keyParts = {
+    page: query.page ?? 1,
+    limit: query.limit ?? 20,
+    status: query.status ?? "",
+    difficulty: normalizeQueryList(query.difficulty),
+    platform: normalizeQueryList(query.platform),
+    topics: normalizeQueryList(query.topics),
+    bookmarked: query.bookmarked ?? "",
+    search: query.search ?? "",
+    searchBy: query.searchBy ?? "",
+    sortBy: query.sortBy ?? "companyCount",
+    sortOrder: query.sortOrder ?? "desc"
+  };
+
+  const serialized = Object.entries(keyParts)
+    .map(([key, value]) => `${key}=${encodeURIComponent(String(value))}`)
+    .join("&");
+
+  return `questlist:${userId}:${version}:${serialized}`;
+};
+
+const bumpQuestListVersion = async (userId) => {
+  await cacheSet(getQuestListVersionKey(userId), Date.now());
+};
 
 // @desc    Upsert a question (create or update based on uniqueId)
 // @route   POST /api/quests/upsert
@@ -111,6 +153,7 @@ export const upsertQuest = async (req, res) => {
       quest.toObject(),
       QUEST_CACHE_TTL_SECONDS
     );
+    await bumpQuestListVersion(req.user.id);
 
     res.status(isNew ? 201 : 200).json({
       success: true,
@@ -160,6 +203,7 @@ export const createQuest = async (req, res) => {
       quest.toObject(),
       QUEST_CACHE_TTL_SECONDS
     );
+    await bumpQuestListVersion(req.user.id);
 
     res.status(201).json({
       success: true,
@@ -199,6 +243,30 @@ export const getQuests = async (req, res) => {
       sortBy = "companyCount",
       sortOrder = "desc"
     } = req.query;
+
+    const listVersion = (await cacheGet(getQuestListVersionKey(req.user.id))) || 0;
+    const listCacheKey = buildQuestListCacheKey(
+      req.user.id,
+      {
+        page,
+        limit,
+        status,
+        difficulty,
+        platform,
+        topics,
+        bookmarked,
+        search,
+        searchBy,
+        sortBy,
+        sortOrder
+      },
+      listVersion
+    );
+
+    const cachedList = await cacheGet(listCacheKey, QUEST_CACHE_TTL_SECONDS);
+    if (cachedList) {
+      return res.json(cachedList);
+    }
 
     const pageNum = parseInt(page);
     const limitNum = parseInt(limit);
@@ -286,7 +354,7 @@ export const getQuests = async (req, res) => {
       
       const totalPages = Math.ceil(totalCount / limitNum);
       
-      return res.json({
+      const response = {
         success: true,
         quests,
         pagination: {
@@ -297,7 +365,11 @@ export const getQuests = async (req, res) => {
           hasNextPage: pageNum < totalPages,
           hasPrevPage: pageNum > 1
         }
-      });
+      };
+
+      await cacheSet(listCacheKey, response, QUEST_CACHE_TTL_SECONDS);
+
+      return res.json(response);
     }
     
     if (validSortFields.includes(sortBy)) {
@@ -323,7 +395,7 @@ export const getQuests = async (req, res) => {
 
     const totalPages = Math.ceil(totalCount / limitNum);
 
-    res.json({
+    const response = {
       success: true,
       quests,
       pagination: {
@@ -334,7 +406,11 @@ export const getQuests = async (req, res) => {
         hasNextPage: pageNum < totalPages,
         hasPrevPage: pageNum > 1
       }
-    });
+    };
+
+    await cacheSet(listCacheKey, response, QUEST_CACHE_TTL_SECONDS);
+
+    res.json(response);
   } catch (error) {
     console.error("Get quests error:", error);
     res.status(500).json({
@@ -432,6 +508,7 @@ export const updateQuest = async (req, res) => {
       quest.toObject(),
       QUEST_CACHE_TTL_SECONDS
     );
+    await bumpQuestListVersion(req.user.id);
 
     res.json({
       success: true,
@@ -490,6 +567,7 @@ export const updateQuestStatus = async (req, res) => {
       quest.toObject(),
       QUEST_CACHE_TTL_SECONDS
     );
+    await bumpQuestListVersion(req.user.id);
 
     res.json({
       success: true,
@@ -536,6 +614,7 @@ export const toggleBookmark = async (req, res) => {
       quest.toObject(),
       QUEST_CACHE_TTL_SECONDS
     );
+    await bumpQuestListVersion(req.user.id);
 
     res.json({
       success: true,
@@ -583,6 +662,7 @@ export const markAsRevised = async (req, res) => {
       quest.toObject(),
       QUEST_CACHE_TTL_SECONDS
     );
+    await bumpQuestListVersion(req.user.id);
 
     res.json({
       success: true,
@@ -622,6 +702,7 @@ export const deleteQuest = async (req, res) => {
     }
 
     await cacheDel(getQuestCacheKey(req.user.id, id));
+    await bumpQuestListVersion(req.user.id);
 
     res.json({
       success: true,
@@ -928,6 +1009,8 @@ export const bulkCreateQuests = async (req, res) => {
 
     const result = await Quest.insertMany(questsToInsert, { ordered: false });
 
+    await bumpQuestListVersion(req.user.id);
+
     res.status(201).json({
       success: true,
       message: `${result.length} questions added successfully`,
@@ -937,6 +1020,7 @@ export const bulkCreateQuests = async (req, res) => {
     if (error.code === 11000) {
       // Some duplicates were skipped
       const insertedCount = error.result?.nInserted || 0;
+      await bumpQuestListVersion(req.user.id);
       return res.status(207).json({
         success: true,
         message: `${insertedCount} questions added. Some duplicates were skipped.`,
