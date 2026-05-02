@@ -7,7 +7,7 @@ const filename = fileURLToPath(import.meta.url);
 const dirname = path.dirname(filename);
 
 // Load env from backend/.env regardless of CWD
-dotenv.config({ path: path.resolve(dirname, "../../../.env") });
+dotenv.config({ path: path.resolve(dirname, "../../../../.env") });
 
 const { UPSTASH_REDIS_REST_URL, UPSTASH_REDIS_REST_TOKEN } = process.env;
 
