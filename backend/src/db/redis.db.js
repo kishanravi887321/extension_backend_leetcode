@@ -22,4 +22,28 @@ export const redis = new Redis({
   token: UPSTASH_REDIS_REST_TOKEN,
 });
 
+export const cacheSet = async (key, value, ttlSeconds) => {
+  const payload = JSON.stringify(value);
+  if (typeof ttlSeconds === "number" && ttlSeconds > 0) {
+    await redis.set(key, payload, { ex: ttlSeconds });
+    return;
+  }
+
+  await redis.set(key, payload);
+};
+
+export const cacheGet = async (key) => {
+  const raw = await redis.get(key);
+  if (raw == null) return null;
+
+  try {
+    return JSON.parse(raw);
+  } catch {
+    // Fallback for non-JSON payloads
+    return raw;
+  }
+};
+
+export const cacheDel = async (key) => redis.del(key);
+
 export default redis;
