@@ -3,6 +3,7 @@ import { Link, useNavigate, useLocation } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import { getQuestStats, getQuests } from '../api/auth';
 import './Dashboard.css';
+import ProgressBar from '../components/ProgressBar';
 
 const Dashboard = () => {
   const navigate = useNavigate();
@@ -260,40 +261,28 @@ const Dashboard = () => {
               <h3>Difficulty Breakdown</h3>
               <div className="difficulty-cards">
                 <div className="difficulty-card easy">
-                  <div className="diff-header">
-                    <span className="diff-label">Easy</span>
-                    <span className="diff-count">{stats.byDifficulty.easy?.solved || 0}/{stats.byDifficulty.easy?.total || 0}</span>
-                  </div>
-                  <div className="diff-bar">
-                    <div 
-                      className="diff-fill" 
-                      style={{ width: `${stats.byDifficulty.easy?.total ? (stats.byDifficulty.easy.solved / stats.byDifficulty.easy.total) * 100 : 0}%` }}
-                    ></div>
-                  </div>
+                  <ProgressBar
+                    label="Easy"
+                    solved={stats.byDifficulty.easy?.solved || 0}
+                    total={stats.byDifficulty.easy?.total || 0}
+                    color="green"
+                  />
                 </div>
                 <div className="difficulty-card medium">
-                  <div className="diff-header">
-                    <span className="diff-label">Medium</span>
-                    <span className="diff-count">{stats.byDifficulty.medium?.solved || 0}/{stats.byDifficulty.medium?.total || 0}</span>
-                  </div>
-                  <div className="diff-bar">
-                    <div 
-                      className="diff-fill" 
-                      style={{ width: `${stats.byDifficulty.medium?.total ? (stats.byDifficulty.medium.solved / stats.byDifficulty.medium.total) * 100 : 0}%` }}
-                    ></div>
-                  </div>
+                  <ProgressBar
+                    label="Medium"
+                    solved={stats.byDifficulty.medium?.solved || 0}
+                    total={stats.byDifficulty.medium?.total || 0}
+                    color="yellow"
+                  />
                 </div>
                 <div className="difficulty-card hard">
-                  <div className="diff-header">
-                    <span className="diff-label">Hard</span>
-                    <span className="diff-count">{stats.byDifficulty.hard?.solved || 0}/{stats.byDifficulty.hard?.total || 0}</span>
-                  </div>
-                  <div className="diff-bar">
-                    <div 
-                      className="diff-fill" 
-                      style={{ width: `${stats.byDifficulty.hard?.total ? (stats.byDifficulty.hard.solved / stats.byDifficulty.hard.total) * 100 : 0}%` }}
-                    ></div>
-                  </div>
+                  <ProgressBar
+                    label="Hard"
+                    solved={stats.byDifficulty.hard?.solved || 0}
+                    total={stats.byDifficulty.hard?.total || 0}
+                    color="red"
+                  />
                 </div>
               </div>
             </div>
