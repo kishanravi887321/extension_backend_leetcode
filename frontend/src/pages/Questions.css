@@ -61,12 +61,12 @@
 .questions-layout .header-left h1 {
   font-size: 1.75rem;
   font-weight: 700;
-  color: #fff;
+  color: var(--text);
   margin: 0;
 }
 
 .questions-layout .header-left p {
-  color: #888;
+  color: var(--muted);
   font-size: 0.9rem;
   margin: 0.25rem 0 0;
 }
@@ -104,7 +104,7 @@
 .questions-layout .search-box svg {
   width: 18px;
   height: 18px;
-  color: #888;
+  color: var(--muted);
   flex-shrink: 0;
 }
 
@@ -113,7 +113,7 @@
   background: transparent;
   border: none;
   outline: none;
-  color: #fff;
+  color: var(--text);
   font-size: 0.9rem;
   margin-left: 0.75rem;
 }
@@ -200,13 +200,13 @@
   display: block;
   font-size: 1.25rem;
   font-weight: 700;
-  color: #fff;
+  color: var(--text);
 }
 
 .stat-card .stat-label {
   display: block;
   font-size: 0.75rem;
-  color: #888;
+  color: var(--muted);
   margin-top: 0.15rem;
 }
 
@@ -246,7 +246,7 @@
   border: 1px solid rgba(255, 255, 255, 0.15);
   border-radius: 8px;
   padding: 0.5rem 1rem;
-  color: #888;
+  color: var(--muted);
   font-size: 0.875rem;
   font-weight: 500;
   cursor: pointer;
@@ -254,13 +254,13 @@
 
 .status-tab:hover {
   background: rgba(255, 255, 255, 0.05);
-  color: #fff;
+  color: var(--text);
 }
 
 .status-tab.active {
   background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%);
   border-color: transparent;
-  color: #fff;
+  color: var(--text);
 }
 
 /* Filter Controls */
@@ -279,7 +279,7 @@
 
 .filter-group label {
   font-size: 0.75rem;
-  color: #888;
+  color: var(--muted);
   text-transform: uppercase;
   letter-spacing: 0.5px;
 }
@@ -289,7 +289,7 @@
   border: 1px solid rgba(255, 255, 255, 0.15);
   border-radius: 6px;
   padding: 0.5rem 2rem 0.5rem 0.75rem;
-  color: #fff;
+  color: var(--text);
   font-size: 0.85rem;
   min-width: 140px;
   cursor: pointer;
@@ -308,7 +308,7 @@
 
 .filter-group select option {
   background: #1a1a2e;
-  color: #fff;
+  color: var(--text);
   padding: 0.5rem;
 }
 
@@ -317,7 +317,7 @@
   border: 1px solid rgba(255, 255, 255, 0.1);
   border-radius: 8px;
   padding: 0.5rem 2rem 0.5rem 1rem;
-  color: #fff;
+  color: var(--text);
   font-size: 0.85rem;
   cursor: pointer;
   appearance: none;
@@ -330,7 +330,7 @@
 
 .search-by-select option {
   background: #1a1a2e;
-  color: #fff;
+  color: var(--text);
 }
 
 /* Difficulty Chips */
@@ -344,7 +344,7 @@
   border: 1px solid rgba(255, 255, 255, 0.15);
   border-radius: 20px;
   padding: 0.35rem 0.75rem;
-  color: #888;
+  color: var(--muted);
   font-size: 0.8rem;
   cursor: pointer;
 }
