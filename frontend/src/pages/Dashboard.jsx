@@ -8,13 +8,9 @@ import './Dashboard.css';
 const navItems = [
   { path: '/dashboard', icon: 'home', label: 'Dashboard' },
   { path: '/problems', icon: 'problems', label: 'Problems' },
-  { path: '/analytics', icon: 'contest', label: 'Contests' },
   { path: '/bookmarks', icon: 'bookmark', label: 'Bookmarks' },
   { path: '/analytics', icon: 'analytics', label: 'Analytics' },
-  { path: '/dashboard', icon: 'streak', label: 'Streaks' },
-  { path: '/dashboard', icon: 'notes', label: 'Notes' },
   { path: '/profile', icon: 'profile', label: 'Profile' },
-  { path: '/profile/edit', icon: 'settings', label: 'Settings' },
 ];
 
 const quickActions = [
