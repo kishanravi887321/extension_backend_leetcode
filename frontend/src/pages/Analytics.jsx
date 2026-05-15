@@ -10,6 +10,7 @@ const Analytics = () => {
   const navigate = useNavigate();
   const location = useLocation();
   const { user, logout } = useAuth();
+  const { toggleTheme, isDark } = useTheme();
   const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
 
   const [stats, setStats] = useState(null);
@@ -79,6 +80,16 @@ const Analytics = () => {
       profile: (
         <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor">
           <path strokeLinecap="round" strokeLinejoin="round" d="M15.75 6a3.75 3.75 0 1 1-7.5 0 3.75 3.75 0 0 1 7.5 0ZM4.501 20.118a7.5 7.5 0 0 1 14.998 0A17.933 17.933 0 0 1 12 21.75c-2.676 0-5.216-.584-7.499-1.632Z" />
+        </svg>
+      ),
+      sun: (
+        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor">
+          <path strokeLinecap="round" strokeLinejoin="round" d="M12 3v2.25m6.364.386l-1.591 1.591M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0zm0 0v-2.25m-6.364.386l1.591 1.591M12 18.75V21m4.243-3.757l1.591 1.591M5.25 19.243l1.591-1.591M3 12.75h2.25m16.5 0h2.25" />
+        </svg>
+      ),
+      moon: (
+        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor">
+          <path strokeLinecap="round" strokeLinejoin="round" d="M21.752 15.002A9.718 9.718 0 0 1 18 15.75c-5.385 0-9.75-4.365-9.75-9.75 0-1.33.266-2.597.748-3.752A9.753 9.753 0 0 0 3 11.25C3 16.635 7.365 21 12.75 21a9.753 9.753 0 0 0 9.002-5.998Z" />
         </svg>
       ),
     };
@@ -191,6 +202,11 @@ const Analytics = () => {
           <div className="header-left">
             <h1>Analytics</h1>
             <p>Track your progress and identify weak areas</p>
+          </div>
+          <div className="header-right">
+            <button className="icon-chip" type="button" aria-label="Theme toggle" onClick={toggleTheme}>
+              {isDark ? getIcon('sun') : getIcon('moon')}
+            </button>
           </div>
         </header>
 
