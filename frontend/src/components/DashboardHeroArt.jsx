@@ -1,48 +1,47 @@
 const DashboardHeroArt = () => {
   return (
-    <div className="dashboard-hero-art" aria-hidden="true">
+      <svg viewBox="0 0 420 300" role="presentation">
       <svg viewBox="0 0 440 320" role="presentation">
         <defs>
-          <linearGradient id="heroSky" x1="0" y1="0" x2="1" y2="1">
-            <stop offset="0%" stopColor="#12246f" />
-            <stop offset="55%" stopColor="#4c1d95" />
+            <stop offset="0%" stopColor="#13205f" />
+            <stop offset="55%" stopColor="#41157d" />
+            <stop offset="100%" stopColor="#080c2e" />
             <stop offset="100%" stopColor="#090f3f" />
           </linearGradient>
           <linearGradient id="robotBody" x1="0" y1="0" x2="1" y2="1">
-            <stop offset="0%" stopColor="#f8f7ff" />
-            <stop offset="50%" stopColor="#c4b5fd" />
+            <stop offset="55%" stopColor="#d8c7ff" />
+            <stop offset="100%" stopColor="#7c3aed" />
             <stop offset="100%" stopColor="#6d28d9" />
           </linearGradient>
-          <radialGradient id="robotGlow" cx="50%" cy="50%" r="50%">
+            <stop offset="0%" stopColor="#8b5cf6" stopOpacity="0.7" />
             <stop offset="0%" stopColor="#8b5cf6" stopOpacity="0.8" />
             <stop offset="100%" stopColor="#8b5cf6" stopOpacity="0" />
           </radialGradient>
-          <linearGradient id="faceGlow" x1="0" y1="0" x2="1" y2="1">
-            <stop offset="0%" stopColor="#0ea5e9" />
+            <stop offset="0%" stopColor="#14b8ff" />
+            <stop offset="100%" stopColor="#a855f7" />
             <stop offset="100%" stopColor="#9333ea" />
           </linearGradient>
         </defs>
-
-        <rect x="0" y="0" width="440" height="320" rx="30" fill="url(#heroSky)" opacity="0.15" />
-        <path d="M20 248C102 220 146 240 224 214C302 188 338 148 420 160" stroke="#6d28d9" strokeWidth="2" strokeOpacity="0.35" fill="none" />
-        <path d="M18 202C104 178 150 190 221 166C292 142 336 108 424 118" stroke="#3b82f6" strokeWidth="1.5" strokeOpacity="0.32" fill="none" />
-        <ellipse cx="246" cy="240" rx="80" ry="18" fill="#0f0f1b" opacity="0.65" />
+        <rect x="0" y="0" width="420" height="300" rx="28" fill="url(#heroSky)" opacity="0.14" />
+        <path d="M18 228C100 202 150 216 220 194C292 172 330 136 404 146" stroke="#6d28d9" strokeWidth="1.8" strokeOpacity="0.32" fill="none" />
+        <path d="M18 182C104 162 148 174 222 150C294 126 332 98 404 108" stroke="#38bdf8" strokeWidth="1.4" strokeOpacity="0.28" fill="none" />
+        <ellipse cx="228" cy="228" rx="74" ry="16" fill="#080b18" opacity="0.7" />
+        <ellipse cx="228" cy="224" rx="88" ry="18" fill="url(#robotGlow)" opacity="0.85" />
         <ellipse cx="246" cy="236" rx="90" ry="20" fill="url(#robotGlow)" opacity="0.9" />
 
-        <g transform="translate(180 56)">
-          <circle cx="68" cy="72" r="64" fill="#ffffff" opacity="0.04" />
-          <circle cx="68" cy="72" r="53" fill="url(#robotBody)" opacity="0.18" />
-          <rect x="20" y="36" width="96" height="110" rx="48" fill="url(#robotBody)" />
-          <rect x="31" y="47" width="74" height="64" rx="26" fill="#0f172a" />
-          <rect x="36" y="52" width="64" height="54" rx="22" fill="#070b1f" />
-          <path d="M53 80h14l-8-7" stroke="url(#faceGlow)" strokeWidth="4" strokeLinecap="round" strokeLinejoin="round" fill="none" />
-          <path d="M83 73l8 7h-14" stroke="url(#faceGlow)" strokeWidth="4" strokeLinecap="round" strokeLinejoin="round" fill="none" />
-          <rect x="58" y="112" width="20" height="20" rx="10" fill="#e5e7eb" opacity="0.82" />
-          <circle cx="68" cy="74" r="64" fill="none" stroke="#f5f3ff" strokeWidth="1.5" strokeOpacity="0.28" />
-          <circle cx="68" cy="74" r="56" fill="none" stroke="#8b5cf6" strokeWidth="8" strokeOpacity="0.18" />
-          <circle cx="68" cy="16" r="8" fill="#c4b5fd" />
-          <rect x="60" y="0" width="16" height="22" rx="8" fill="#c4b5fd" opacity="0.85" />
-          <circle cx="42" cy="154" r="8" fill="#f5f3ff" opacity="0.65" />
+          <circle cx="64" cy="70" r="58" fill="#ffffff" opacity="0.035" />
+          <rect x="20" y="34" width="88" height="104" rx="42" fill="url(#robotBody)" />
+          <rect x="30" y="44" width="68" height="60" rx="22" fill="#090d20" />
+          <rect x="34" y="48" width="60" height="52" rx="20" fill="#050817" />
+          <path className="robot-eye left" d="M48 73h12l-7-6" stroke="url(#faceGlow)" strokeWidth="3.6" strokeLinecap="round" strokeLinejoin="round" fill="none" />
+          <path className="robot-eye right" d="M76 67l7 6h-12" stroke="url(#faceGlow)" strokeWidth="3.6" strokeLinecap="round" strokeLinejoin="round" fill="none" />
+          <rect x="56" y="105" width="16" height="16" rx="8" fill="#f5f3ff" opacity="0.85" />
+          <circle cx="64" cy="72" r="58" fill="none" stroke="#f5f3ff" strokeWidth="1.4" strokeOpacity="0.24" />
+          <circle cx="64" cy="72" r="51" fill="none" stroke="#8b5cf6" strokeWidth="7" strokeOpacity="0.16" />
+          <circle cx="64" cy="14" r="7" fill="#d8c7ff" />
+          <rect x="57" y="0" width="14" height="18" rx="7" fill="#d8c7ff" opacity="0.82" />
+          <circle cx="40" cy="150" r="7" fill="#f5f3ff" opacity="0.72" />
+          <circle cx="88" cy="150" r="7" fill="#f5f3ff" opacity="0.72" />
           <circle cx="94" cy="154" r="8" fill="#f5f3ff" opacity="0.65" />
         </g>
 
