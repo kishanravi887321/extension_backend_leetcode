@@ -22,11 +22,11 @@
 
 /* Light Theme */
 :root[data-theme="light"] {
-  --bg: #ffffff;
-  --panel: rgba(248, 250, 252, 0.95);
-  --panel-soft: rgba(0, 0, 0, 0.02);
-  --border: rgba(0, 0, 0, 0.08);
-  --text: #1e293b;
+  --bg: #f8fafc;
+  --panel: #ffffff;
+  --panel-soft: rgba(15, 23, 42, 0.03);
+  --border: rgba(15, 23, 42, 0.12);
+  --text: #0f172a;
   --muted: #64748b;
   --text-secondary: #475569;
   --success: #059669;
