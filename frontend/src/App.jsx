@@ -1,6 +1,7 @@
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 import { GoogleOAuthProvider } from '@react-oauth/google';
 import { AuthProvider } from './context/AuthContext';
+import { ThemeProvider } from './context/ThemeContext';
 import ProtectedRoute from './components/ProtectedRoute';
 import Login from './pages/Login';
 import Dashboard from './pages/Dashboard';
@@ -16,8 +17,9 @@ const GOOGLE_CLIENT_ID = '768344103052-7i9achpngakskdrnvunosqg81rvfpu9o.apps.goo
 function App() {
   return (
     <GoogleOAuthProvider clientId={GOOGLE_CLIENT_ID}>
-      <Router>
-        <AuthProvider>
+      <ThemeProvider>
+        <Router>
+          <AuthProvider>
           <Routes>
             <Route path="/" element={<Navigate to="/dashboard" replace />} />
             <Route path="/login" element={<Login />} />
@@ -88,6 +90,7 @@ function App() {
           </Routes>
         </AuthProvider>
       </Router>
+      </ThemeProvider>
     </GoogleOAuthProvider>
   );
 }

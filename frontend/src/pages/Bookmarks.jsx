@@ -1,6 +1,7 @@
 import { useState, useEffect, useCallback } from 'react';
 import { Link, useNavigate, useLocation } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
+import { useTheme } from '../context/ThemeContext';
 import { getQuests, updateQuestStatus, toggleBookmark, deleteQuest, updateQuest } from '../api/quests';
 import QuestionList from '../components/QuestionList';
 import EditQuestionModal from '../components/EditQuestionModal';

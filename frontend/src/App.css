@@ -4,6 +4,37 @@
   box-sizing: border-box;
 }
 
+/* Dark Theme (Default) */
+:root,
+:root[data-theme="dark"] {
+  --bg: #050816;
+  --panel: rgba(8, 12, 28, 0.8);
+  --panel-soft: rgba(255, 255, 255, 0.04);
+  --border: rgba(255, 255, 255, 0.08);
+  --text: #f8fafc;
+  --muted: #94a3b8;
+  --text-secondary: #cbd5e1;
+  --success: #6ee7b7;
+  --warning: #fbbf24;
+  --error: #f87171;
+  --info: #60a5fa;
+}
+
+/* Light Theme */
+:root[data-theme="light"] {
+  --bg: #ffffff;
+  --panel: rgba(248, 250, 252, 0.95);
+  --panel-soft: rgba(0, 0, 0, 0.02);
+  --border: rgba(0, 0, 0, 0.08);
+  --text: #1e293b;
+  --muted: #64748b;
+  --text-secondary: #475569;
+  --success: #059669;
+  --warning: #d97706;
+  --error: #dc2626;
+  --info: #2563eb;
+}
+
 body, html, #root {
   width: 100%;
   height: 100%;

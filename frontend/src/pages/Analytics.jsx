@@ -1,6 +1,7 @@
 import { useState, useEffect, useCallback } from 'react';
 import { Link, useNavigate, useLocation } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
+import { useTheme } from '../context/ThemeContext';
 import { getQuestStats, getHeatmapData, getQuestsGroupedByTopic } from '../api/quests';
 import './Dashboard.css'; // For sidebar styles
 import './Analytics.css';

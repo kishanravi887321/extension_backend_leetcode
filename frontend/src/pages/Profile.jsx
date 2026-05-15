@@ -1,6 +1,7 @@
 import { useEffect, useMemo, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
+import { useTheme } from '../context/ThemeContext';
 import { disableTwoFactor, enableTwoFactor, getProfile, getQuestStats } from '../api/auth';
 import './Profile.css';
 
