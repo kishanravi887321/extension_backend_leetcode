@@ -59,7 +59,7 @@
 }
 
 .questions-layout .header-left h1 {
-  font-size: 1.75rem;
+  font-size: 2rem;
   font-weight: 700;
   color: var(--text);
   margin: 0;
@@ -170,16 +170,19 @@
 
 .stat-card {
   flex: 1;
-  min-width: 100px;
-  background: rgba(255, 255, 255, 0.03);
-  border: 1px solid rgba(255, 255, 255, 0.08);
-  border-radius: 10px;
-  padding: 0.625rem 1rem;
-  text-align: center;
+  min-width: 120px;
+  background: linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  border-radius: 12px;
+  padding: 0.75rem 1rem;
+  text-align: left;
   cursor: pointer;
   user-select: none;
-  backdrop-filter: blur(10px);
-  -webkit-backdrop-filter: blur(10px);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
 }
 
 .stat-card:hover {
@@ -198,8 +201,8 @@
 
 .stat-card .stat-value {
   display: block;
-  font-size: 1.25rem;
-  font-weight: 700;
+  font-size: 1.4rem;
+  font-weight: 800;
   color: var(--text);
 }
 
@@ -208,6 +211,15 @@
   font-size: 0.75rem;
   color: var(--muted);
   margin-top: 0.15rem;
+}
+
+/* small sparkline placeholder inside stat card */
+.stat-card .stat-sparkline {
+  height: 24px;
+  width: 100%;
+  background: linear-gradient(90deg, rgba(99,102,241,0.12), rgba(168,85,247,0.08));
+  border-radius: 6px;
+  margin-top: 6px;
 }
 
 .stat-card.solved { border-left: 3px solid #10b981; }
@@ -224,13 +236,12 @@
 
 /* Filters Section */
 .filters-section {
-  background: rgba(255, 255, 255, 0.03);
-  border: 1px solid rgba(255, 255, 255, 0.08);
-  border-radius: 10px;
-  padding: 0.625rem 1rem;
-  margin-bottom: 0.75rem;
-  backdrop-filter: blur(10px);
-  -webkit-backdrop-filter: blur(10px);
+  background: rgba(10,11,20,0.55);
+  border: 1px solid rgba(99,102,241,0.06);
+  border-radius: 12px;
+  padding: 0.75rem 1rem;
+  margin-bottom: 0.9rem;
+  box-shadow: 0 8px 30px rgba(8,10,20,0.6), inset 0 1px 0 rgba(255,255,255,0.02);
 }
 
 /* Status Tabs */
@@ -517,7 +528,7 @@
 
 /* Questions Content */
 .questions-content {
-  min-height: 400px;
+  min-height: 420px;
 }
 
 /* Questions Grid */
@@ -834,12 +845,12 @@
 /* Floating Notes Preview Overlay */
 .notes-preview-overlay {
   position: fixed;
-  top: 100px;
-  right: 30px;
-  width: 460px;
-  max-width: 90vw;
+  top: 90px;
+  right: 26px;
+  width: 480px;
+  max-width: 92vw;
   max-height: calc(100vh - 140px);
-  background: linear-gradient(145deg, rgba(10, 15, 30, 0.95), rgba(20, 25, 45, 0.95));
+  background: linear-gradient(145deg, rgba(8, 10, 18, 0.96), rgba(22, 24, 40, 0.96));
   border: 2px solid transparent;
   border-radius: 20px;
   box-shadow: 
@@ -879,6 +890,7 @@
     #f59e0b 75%,
     #10b981 100%
   );
+  mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
   -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
   -webkit-mask-composite: xor;
   mask-composite: exclude;
@@ -942,6 +954,12 @@
   transform: translateX(0) scale(1) rotateY(0deg);
   pointer-events: auto;
   animation: floatIdle 4s ease-in-out infinite, glowPulse 3s ease-in-out infinite;
+}
+
+/* slightly larger close button for parity with screenshot */
+.notes-panel-header .close-notes-btn {
+  font-size: 1.1rem;
+  padding: 0.35rem 0.7rem;
 }
 
 .notes-panel-header {
