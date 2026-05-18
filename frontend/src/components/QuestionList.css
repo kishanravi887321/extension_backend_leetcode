@@ -9,16 +9,16 @@
 /* List Header */
 .list-header {
   display: grid;
-  grid-template-columns: 60px 1fr 180px 80px 110px 140px;
-  gap: 0.6rem;
-  padding: 0.75rem 0 0.5rem 0;
+  grid-template-columns: 50px 1fr 180px 70px 90px 140px;
+  gap: 0.4rem;
+  padding: 0.6rem 0;
   background: transparent;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.06);
-  font-size: 0.68rem;
-  font-weight: 700;
-  color: #8b93b8;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  font-size: 0.65rem;
+  font-weight: 600;
+  color: #888;
   text-transform: uppercase;
-  letter-spacing: 0.7px;
+  letter-spacing: 0.5px;
   margin-bottom: 0.4rem;
 }
 
@@ -31,10 +31,8 @@
 
 /* List Row */
 .list-row {
-  border-bottom: 1px solid rgba(255, 255, 255, 0.04);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
   cursor: pointer;
-  padding: 0.35rem 0;
-  transition: background 0.18s ease, transform 0.12s ease;
 }
 
 
@@ -57,8 +55,8 @@
 
 .row-main {
   display: grid;
-  grid-template-columns: 60px 1fr 180px 80px 110px 140px;
-  gap: 0.6rem;
+  grid-template-columns: 50px 1fr 180px 70px 90px 140px;
+  gap: 0.4rem;
   padding: 0.6rem 0;
   align-items: center;
 }
@@ -130,7 +128,7 @@
 }
 
 .question-link:hover {
-  color: #9aa2ff;
+  color: #6366f1;
 }
 
 .question-number {
@@ -313,19 +311,18 @@
 
 /* Company Dropdown */
 .company-dropdown {
-.company-dropdown {
   position: absolute;
   top: 100%;
   left: 0;
   z-index: 100;
-  background: linear-gradient(180deg, #0f1320, #121427);
-  border: 1px solid rgba(99,102,241,0.06);
-  border-radius: 10px;
-  box-shadow: 0 12px 40px rgba(2,6,23,0.7);
-  min-width: 200px;
-  max-height: 260px;
+  background: #1a1a2e;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 8px;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
+  min-width: 180px;
+  max-height: 240px;
   overflow-y: auto;
-  margin-top: 6px;
+  margin-top: 4px;
 }
 
 .company-dropdown-header {
@@ -339,12 +336,10 @@
 }
 
 .company-dropdown-item {
-.company-dropdown-item {
   display: flex;
   align-items: center;
   gap: 10px;
   padding: 8px 12px;
-  border-radius: 6px;
 }
 
 .company-dropdown-item:hover {
@@ -400,7 +395,7 @@
 }
 
 .company-logo-wrapper:hover {
-  transform: scale(1.12);
+  transform: scale(1.1);
 }
 
 /* Company Logo SVG */
@@ -646,8 +641,8 @@
 }
 
 .platform-badge:hover {
-  background: rgba(255, 255, 255, 0.04);
-  transform: scale(1.08);
+  background: rgba(255, 255, 255, 0.1);
+  transform: scale(1.1);
 }
 
 /* Topic chips for expanded row */
@@ -754,8 +749,8 @@
 }
 
 .action-btn {
-  width: 34px;
-  height: 34px;
+  width: 30px;
+  height: 30px;
   border: 1px solid transparent;
   background: rgba(255, 255, 255, 0.03);
   cursor: pointer;
@@ -789,8 +784,8 @@
 }
 
 .action-btn svg {
-  width: 16px;
-  height: 16px;
+  width: 15px;
+  height: 15px;
   position: relative;
   z-index: 1;
   transition: all 0.25s ease;
@@ -813,8 +808,8 @@
 }
 
 .action-btn.notes.has-notes {
-  color: #c4b5fd;
-  background: linear-gradient(90deg, rgba(168,85,247,0.06), rgba(99,102,241,0.04));
+  color: #a78bfa;
+  background: rgba(139, 92, 246, 0.08);
   border-color: rgba(139, 92, 246, 0.15);
   animation: notesGlow 3s ease-in-out infinite;
 }
@@ -850,8 +845,8 @@
 
 .action-btn.bookmark.active {
   color: #fbbf24;
-  background: linear-gradient(90deg, rgba(251,191,36,0.08), rgba(99,102,241,0.02));
-  border-color: rgba(251, 191, 36, 0.18);
+  background: rgba(251, 191, 36, 0.1);
+  border-color: rgba(251, 191, 36, 0.2);
   animation: bookmarkPulse 2s ease-in-out infinite;
 }
 
@@ -1099,6 +1094,3 @@
   background: rgba(255, 255, 255, 0.2);
 }
 
-}
-
-}
