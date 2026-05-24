@@ -1,7 +1,8 @@
 import axios from 'axios';
 
-const API_BASE_URL = 'https://cpbackend.saksin.online/api';
-// const API_BASE_URL = 'http://localhost:3000/api';
+const API_BASE_URL = import.meta.env.VITE_ENVIRONMENT === 'production' || import.meta.env.PROD 
+  ? 'https://cpbackend.saksin.online/api' 
+  : 'http://localhost:3000/api';
 
 const api = axios.create({
   baseURL: API_BASE_URL,
