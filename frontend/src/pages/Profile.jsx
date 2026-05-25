@@ -2,6 +2,7 @@ import { useEffect, useMemo, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import { useTheme } from '../context/ThemeContext';
+import { useTheme } from '../context/ThemeContext';
 import { disableTwoFactor, enableTwoFactor, getProfile, getQuestStats } from '../api/auth';
 import './Profile.css';
 
@@ -44,6 +45,12 @@ const getIcon = (iconName) => {
     shield: (
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8"><path strokeLinecap="round" strokeLinejoin="round" d="M12 3.75 19.5 6v5.25c0 4.95-3.05 8.7-7.5 10.5-4.45-1.8-7.5-5.55-7.5-10.5V6L12 3.75Z" /></svg>
     ),
+    sun: (
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8"><path strokeLinecap="round" strokeLinejoin="round" d="M12 3v2.25m6.364.386-1.591 1.591M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Zm0 0v-2.25m-6.364.386 1.591 1.591M12 18.75V21m4.243-3.757 1.591 1.591M5.25 19.243l1.591-1.591M3 12.75h2.25m16.5 0h2.25" /></svg>
+    ),
+    moon: (
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8"><path strokeLinecap="round" strokeLinejoin="round" d="M21.752 15.002A9.718 9.718 0 0 1 18 15.75c-5.385 0-9.75-4.365-9.75-9.75 0-1.33.266-2.597.748-3.752A9.753 9.753 0 0 0 3 11.25C3 16.635 7.365 21 12.75 21a9.753 9.753 0 0 0 9.002-5.998Z" /></svg>
+    ),
   };
 
   return icons[iconName];
@@ -58,6 +65,7 @@ const formatJoined = (dateString) => {
 const Profile = () => {
   const navigate = useNavigate();
   const { user, logout, updateUser } = useAuth();
+  const { toggleTheme, isDark } = useTheme();
   const [profile, setProfile] = useState(null);
   const [stats, setStats] = useState(null);
   const [loading, setLoading] = useState(true);
@@ -193,10 +201,16 @@ const Profile = () => {
             <span>{getIcon('back')}</span>
             Back to Dashboard
           </Link>
-          <Link to="/profile/edit" className="profile-edit-btn">
-            <span>{getIcon('edit')}</span>
-            Edit Profile
-          </Link>
+          <div className="profile-top-actions-right">
+            <button className="profile-theme-btn" type="button" aria-label="Toggle theme" onClick={toggleTheme}>
+              <span>{isDark ? getIcon('sun') : getIcon('moon')}</span>
+              Theme
+            </button>
+            <Link to="/profile/edit" className="profile-edit-btn">
+              <span>{getIcon('edit')}</span>
+              Edit Profile
+            </Link>
+          </div>
         </div>
 
         <section className="profile-hero">

@@ -1,7 +1,6 @@
 import { useEffect, useMemo, useState } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
-import { useTheme } from '../context/ThemeContext';
 import { getQuestStats, getQuests } from '../api/auth';
 import DashboardHeroArt from '../components/DashboardHeroArt';
 import './Dashboard.css';
@@ -103,12 +102,6 @@ const getIcon = (iconName) => {
     bell: (
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8"><path strokeLinecap="round" strokeLinejoin="round" d="M15 17.25H9M19.5 17.25H4.5c1.25-1.25 2.25-2.5 2.25-4.5v-1.5A5.25 5.25 0 0 1 12 6V5.25a1.5 1.5 0 0 1 3 0V6a5.25 5.25 0 0 1 5.25 5.25v1.5c0 2 1 3.25 2.25 4.5Z" /></svg>
     ),
-    moon: (
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8"><path strokeLinecap="round" strokeLinejoin="round" d="M20.25 15.25A8.5 8.5 0 0 1 8.75 3.75a7.25 7.25 0 1 0 11.5 11.5Z" /></svg>
-    ),
-    sun: (
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8"><path strokeLinecap="round" strokeLinejoin="round" d="M12 2.25v3M12 18.75v3M4.22 4.22l2.12 2.12M17.66 17.66l2.12 2.12M2.25 12h3M18.75 12h3M4.22 19.78l2.12-2.12M17.66 6.34l2.12-2.12" /><path strokeLinecap="round" strokeLinejoin="round" d="M12 8.25a3.75 3.75 0 1 1 0 7.5 3.75 3.75 0 0 1 0-7.5Z" /></svg>
-    ),
     search: (
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8"><path strokeLinecap="round" strokeLinejoin="round" d="m21 21-4.2-4.2m1.2-4.8a6 6 0 1 1-12 0 6 6 0 0 1 12 0Z" /></svg>
     ),
@@ -158,7 +151,6 @@ const Dashboard = () => {
   const navigate = useNavigate();
   const location = useLocation();
   const { user, logout } = useAuth();
-  const { toggleTheme, isDark } = useTheme();
   const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
   const [stats, setStats] = useState(null);
   const [recentQuests, setRecentQuests] = useState([]);
@@ -322,10 +314,6 @@ const Dashboard = () => {
             <button className="icon-chip" type="button" aria-label="Notifications">
               {getIcon('bell')}
               <span className="notification-badge">3</span>
-            </button>
-
-            <button className="icon-chip" type="button" aria-label="Theme toggle" onClick={toggleTheme}>
-              {isDark ? getIcon('sun') : getIcon('moon')}
             </button>
 
             <div className="date-chip">
