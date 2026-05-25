@@ -1,8 +1,8 @@
 /* Question Card */
 .question-card {
   position: relative;
-  background: rgba(255, 255, 255, 0.03);
-  border: 1px solid rgba(255, 255, 255, 0.08);
+  background: var(--panel-soft);
+  border: 1px solid var(--border);
   border-radius: 12px;
   padding: 1.25rem;
   transition: all 0.3s ease;
@@ -10,7 +10,7 @@
 
 .question-card:hover {
   transform: translateY(-2px);
-  border-color: rgba(255, 255, 255, 0.15);
+  border-color: var(--border);
   background: rgba(255, 255, 255, 0.05);
 }
 
@@ -41,7 +41,7 @@
 
 .question-number {
   font-size: 0.8rem;
-  color: #888;
+  color: var(--muted);
   font-weight: 500;
 }
 
@@ -49,7 +49,7 @@
   display: flex;
   align-items: center;
   gap: 0.5rem;
-  color: #fff;
+  color: var(--text);
   font-size: 1rem;
   font-weight: 600;
   text-decoration: none;
@@ -78,7 +78,7 @@
   border: none;
   cursor: pointer;
   padding: 0.25rem;
-  color: #888;
+  color: var(--muted);
   transition: all 0.2s ease;
 }
 
@@ -125,8 +125,8 @@
 
 .company-more-card {
   font-size: 0.65rem;
-  color: #888;
-  background: rgba(255, 255, 255, 0.08);
+  color: var(--muted);
+  background: var(--panel-soft);
   padding: 0.15rem 0.4rem;
   border-radius: 10px;
 }
@@ -146,11 +146,11 @@
   display: inline-flex;
   align-items: center;
   gap: 0.35rem;
-  background: rgba(255, 255, 255, 0.05);
+  background: var(--panel-soft);
   border-radius: 20px;
   padding: 0.25rem 0.75rem;
   font-size: 0.75rem;
-  color: #aaa;
+  color: var(--text-secondary);
 }
 
 .difficulty-badge {
@@ -218,8 +218,8 @@
 }
 
 .topic-tag.more {
-  background: rgba(255, 255, 255, 0.1);
-  color: #888;
+  background: var(--panel-soft);
+  color: var(--muted);
 }
 
 /* Card Notes */
@@ -227,7 +227,7 @@
   display: flex;
   align-items: flex-start;
   gap: 0.5rem;
-  background: rgba(255, 255, 255, 0.03);
+  background: var(--panel-soft);
   border-radius: 6px;
   padding: 0.5rem 0.75rem;
   margin-bottom: 0.75rem;
@@ -236,14 +236,14 @@
 .card-notes svg {
   width: 14px;
   height: 14px;
-  color: #888;
+  color: var(--muted);
   flex-shrink: 0;
   margin-top: 2px;
 }
 
 .notes-preview {
   font-size: 0.8rem;
-  color: #888;
+  color: var(--muted);
   line-height: 1.4;
 }
 
@@ -254,7 +254,7 @@
   align-items: center;
   margin-top: 0.5rem;
   padding-top: 0.75rem;
-  border-top: 1px solid rgba(255, 255, 255, 0.05);
+  border-top: 1px solid var(--border);
 }
 
 .card-dates {
@@ -268,7 +268,7 @@
   align-items: center;
   gap: 0.35rem;
   font-size: 0.7rem;
-  color: #666;
+  color: var(--muted);
 }
 
 .date-item svg {
@@ -297,8 +297,8 @@
   justify-content: center;
   width: 32px;
   height: 32px;
-  background: rgba(255, 255, 255, 0.05);
-  border: 1px solid rgba(255, 255, 255, 0.1);
+  background: var(--panel-soft);
+  border: 1px solid var(--border);
   border-radius: 6px;
   cursor: pointer;
   transition: all 0.2s ease;
@@ -341,7 +341,7 @@
 }
 
 .action-btn.more {
-  color: #888;
+  color: var(--muted);
 }
 
 .action-btn:disabled {
@@ -358,8 +358,8 @@
   position: absolute;
   bottom: 100%;
   right: 0;
-  background: #1e1e2e;
-  border: 1px solid rgba(255, 255, 255, 0.15);
+  background: var(--panel);
+  border: 1px solid var(--border);
   border-radius: 8px;
   padding: 0.5rem;
   min-width: 120px;
@@ -376,11 +376,23 @@
   background: transparent;
   border: none;
   padding: 0.5rem 0.75rem;
-  color: #ddd;
+  color: var(--text);
   font-size: 0.85rem;
   cursor: pointer;
   border-radius: 4px;
   transition: background 0.2s ease;
+}
+
+:root[data-theme="light"] .question-card {
+  background: var(--panel);
+}
+
+:root[data-theme="light"] .question-card:hover {
+  background: rgba(15, 23, 42, 0.04);
+}
+
+:root[data-theme="light"] .topic-tag {
+  color: #3730a3;
 }
 
 .actions-dropdown button:hover {

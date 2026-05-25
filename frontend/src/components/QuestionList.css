@@ -13,10 +13,10 @@
   gap: 0.4rem;
   padding: 0.6rem 0;
   background: transparent;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  border-bottom: 1px solid var(--border);
   font-size: 0.65rem;
   font-weight: 600;
-  color: #888;
+  color: var(--muted);
   text-transform: uppercase;
   letter-spacing: 0.5px;
   margin-bottom: 0.4rem;
@@ -31,7 +31,7 @@
 
 /* List Row */
 .list-row {
-  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+  border-bottom: 1px solid var(--border);
   cursor: pointer;
 }
 
@@ -97,7 +97,7 @@
 }
 
 .status-check.unsolved svg {
-  color: #555;
+  color: var(--muted);
   stroke-width: 1.5;
 }
 
@@ -121,7 +121,7 @@
   display: flex;
   align-items: center;
   gap: 0.4rem;
-  color: #fff;
+  color: var(--text);
   text-decoration: none;
   min-width: 0;
   flex: 1;
@@ -132,7 +132,7 @@
 }
 
 .question-number {
-  color: #888;
+  color: var(--muted);
   font-size: 0.8rem;
   flex-shrink: 0;
 }
@@ -224,7 +224,7 @@
   padding: 0.15rem 0.4rem;
   border-radius: 12px;
   background: rgba(255, 255, 255, 0.08);
-  color: #888;
+  color: var(--muted);
   border: 1px solid rgba(255, 255, 255, 0.1);
   cursor: default;
 }
@@ -286,7 +286,7 @@
 
 .col-company .company-badge.empty {
   background: transparent;
-  color: #555;
+  color: var(--muted);
 }
 
 .col-company .company-badges-wrapper {
@@ -315,8 +315,8 @@
   top: 100%;
   left: 0;
   z-index: 100;
-  background: #1a1a2e;
-  border: 1px solid rgba(255, 255, 255, 0.1);
+  background: var(--panel);
+  border: 1px solid var(--border);
   border-radius: 8px;
   box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
   min-width: 180px;
@@ -329,10 +329,10 @@
   padding: 8px 12px;
   font-size: 0.7rem;
   font-weight: 600;
-  color: #888;
+  color: var(--muted);
   text-transform: uppercase;
   letter-spacing: 0.5px;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+  border-bottom: 1px solid var(--border);
 }
 
 .company-dropdown-item {
@@ -355,10 +355,45 @@
 
 .company-dropdown-item .company-name {
   font-size: 0.8rem;
-  color: #e0e0e0;
+  color: var(--text);
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
+}
+
+:root[data-theme="light"] .list-row:hover {
+  background: rgba(15, 23, 42, 0.04);
+}
+
+:root[data-theme="light"] .list-row.odd {
+  background: rgba(15, 23, 42, 0.02);
+}
+
+:root[data-theme="light"] .list-row.odd:hover {
+  background: rgba(15, 23, 42, 0.05);
+}
+
+:root[data-theme="light"] .inline-topic-chip {
+  color: #3730a3;
+  background: rgba(99, 102, 241, 0.16);
+  border-color: rgba(99, 102, 241, 0.3);
+}
+
+:root[data-theme="light"] .inline-topic-chip:nth-child(3n+2) {
+  color: #047857;
+  background: rgba(16, 185, 129, 0.16);
+  border-color: rgba(16, 185, 129, 0.3);
+}
+
+:root[data-theme="light"] .inline-topic-chip:nth-child(3n) {
+  color: #b45309;
+  background: rgba(245, 158, 11, 0.16);
+  border-color: rgba(245, 158, 11, 0.3);
+}
+
+:root[data-theme="light"] .inline-topic-more {
+  background: rgba(15, 23, 42, 0.05);
+  border-color: rgba(15, 23, 42, 0.12);
 }
 
 /* Company Icons */
