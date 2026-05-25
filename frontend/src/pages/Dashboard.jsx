@@ -298,16 +298,6 @@ const Dashboard = () => {
           </div>
 
           <div className="sidebar-metrics">
-            <div className="streak-card">
-              <div className="streak-icon">🔥</div>
-              {!sidebarCollapsed && (
-                <div>
-                  <span className="streak-label">Current Streak</span>
-                  <strong>{stats?.currentStreak || 17} days</strong>
-                  <span className="streak-note">Keep it up!</span>
-                </div>
-              )}
-            </div>
             <button className="logout-btn" onClick={handleLogout} title="Logout" aria-label="Logout">
               {getIcon('logout')}
             </button>

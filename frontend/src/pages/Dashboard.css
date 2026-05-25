@@ -405,7 +405,7 @@
 .difficulty-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 10px; }
 .difficulty-card { display: grid; justify-items: center; gap: 8px; }
 .difficulty-ring { width: 88px; height: 88px; border-radius: 50%; padding: 7px; position: relative; }
-.difficulty-ring::before { content: ''; position: absolute; inset: 7px; border-radius: 50%; background: rgba(7, 10, 22, 0.96); }
+.difficulty-ring::before { content: ''; position: absolute; inset: 7px; border-radius: 50%; background: var(--panel); }
 .difficulty-ring-inner { position: absolute; inset: 0; display: grid; place-items: center; text-align: center; }
 .difficulty-ring-inner strong { font-size: 1rem; font-weight: 800; }
 .difficulty-ring-inner span { color: var(--muted); font-size: 0.6rem; }
