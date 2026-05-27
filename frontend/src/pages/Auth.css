@@ -813,8 +813,14 @@
 }
 
 .wave-feature-icon {
-  font-size: 18px;
+  width: 16px;
+  height: 16px;
+  margin-right: 8px;
+  font-size: 14px;
   color: #4fd1c5;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
 }
 
 /* ===== WAVE AUTH CARD ===== */
