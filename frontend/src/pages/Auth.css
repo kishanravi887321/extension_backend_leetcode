@@ -969,12 +969,18 @@
   font-weight: 600;
   letter-spacing: 0.3px;
   cursor: pointer;
-  transition: transform 0.2s ease, border-color 0.2s ease, background 0.2s ease;
+  text-decoration: none;
+  box-shadow: 0 0 0 1px rgba(79, 209, 197, 0.08), 0 6px 16px rgba(2, 6, 23, 0.35);
+  transition: transform 0.2s ease, border-color 0.2s ease, background 0.2s ease, box-shadow 0.2s ease, text-decoration-color 0.2s ease;
 }
 
 .wave-guest-toggle:hover {
   border-color: rgba(79, 209, 197, 0.7);
   background: rgba(79, 209, 197, 0.08);
+  text-decoration: underline;
+  text-decoration-color: rgba(79, 209, 197, 0.8);
+  text-underline-offset: 4px;
+  box-shadow: 0 0 0 1px rgba(79, 209, 197, 0.2), 0 10px 24px rgba(2, 6, 23, 0.45);
   transform: translateY(-1px);
 }
 

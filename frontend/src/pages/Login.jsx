@@ -147,8 +147,8 @@ const Login = () => {
           </motion.div>
 
           <motion.h1 className="wave-brand-headline" variants={itemVariants}>
-            Master Your
-            <span className="wave-gradient-text"> Coding Journey</span>
+            Track DSA Progress
+            <span className="wave-gradient-text"> with Analytics + Sync</span>
           </motion.h1>
 
           <motion.p className="wave-brand-description" variants={itemVariants}>
