@@ -905,14 +905,21 @@
   margin: 24px 0;
   position: relative;
   z-index: 1;
+  background-color: #f8fafc;
+  color: #0f172a;
+  border-radius: 14px;
+  padding: 6px;
+  border: 1px solid #e2e8f0;
 }
 
 .wave-google-login-wrapper > div {
   width: 100% !important;
+  border-radius: 10px;
 }
 
 .wave-google-login-wrapper iframe {
   width: 100% !important;
+  border-radius: 10px;
 }
 
 .wave-loading-state {
@@ -921,22 +928,22 @@
   align-items: center;
   gap: 16px;
   padding: 24px;
-  background: rgba(255, 255, 255, 0.05);
+  background: #ffffff;
   border-radius: 12px;
-  border: 1px solid rgba(255, 255, 255, 0.1);
+  border: 1px dashed #cbd5f5;
 }
 
 .wave-spinner {
   width: 40px;
   height: 40px;
-  border: 3px solid rgba(255, 255, 255, 0.1);
-  border-top-color: #4fd1c5;
+  border: 3px solid #cbd5f5;
+  border-top-color: #0ea5a1;
   border-radius: 50%;
   animation: spin 0.8s linear infinite;
 }
 
 .wave-loading-state span {
-  color: rgba(255, 255, 255, 0.6);
+  color: #0f172a;
   font-size: 14px;
   font-weight: 500;
 }
