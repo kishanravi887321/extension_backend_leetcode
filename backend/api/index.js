@@ -59,6 +59,8 @@ const allowedOrigins = [
   'https://cpcoders.saksin.online', 
   'http://cpcoders.saksin.online',
   'https://cp.saksin.online',
+  'https://cp.ziax.online',
+  'http://cp.ziax.online',
   'https://leetcode.com',
   'https://www.leetcode.com',
   'https://www.interviewbit.com',
