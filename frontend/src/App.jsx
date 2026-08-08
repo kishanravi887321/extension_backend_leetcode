@@ -12,7 +12,7 @@ import Analytics from './pages/Analytics';
 import Bookmarks from './pages/Bookmarks';
 import './App.css';
 
-const GOOGLE_CLIENT_ID = '768344103052-7i9achpngakskdrnvunosqg81rvfpu9o.apps.googleusercontent.com';
+const GOOGLE_CLIENT_ID = import.meta.env.VITE_GOOGLE_CLIENT_ID || '768344103052-7i9achpngakskdrnvunosqg81rvfpu9o.apps.googleusercontent.com';
 
 function App() {
   return (
